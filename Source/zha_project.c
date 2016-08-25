@@ -83,7 +83,7 @@
 #include "zcl_diagnostic.h"
 
 #include "zha_project.h"
-
+#include "SerialApp.h"
 #include "onboard.h"
 
 /* HAL */
@@ -313,7 +313,7 @@ void zha_project_Init( byte task_id )
 
   // This app is part of the Home Automation Profile
   zclHA_Init( &zha_project_SimpleDesc );
-
+  SerialApp_Init();
   // Register the ZCL General Cluster Library callback functions
   zclGeneral_RegisterCmdCallbacks( SAMPLELIGHT_ENDPOINT, &zha_project_CmdCallbacks );
 

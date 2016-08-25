@@ -4631,6 +4631,12 @@
       <name>$PROJ_DIR$\..\Source\OSAL_zha_project.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\Source\SerialApp.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\SerialApp.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\Source\zha_project.c</name>
     </file>
     <file>
