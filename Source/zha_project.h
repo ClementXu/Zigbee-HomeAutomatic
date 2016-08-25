@@ -54,13 +54,20 @@ extern "C"
 /*********************************************************************
  * CONSTANTS
  */
-#define SAMPLELIGHT_ENDPOINT            8
+#define SAMPLELIGHT_ENDPOINT            1
 
 #define LIGHT_OFF                       0x00
 #define LIGHT_ON                        0x01
 
 // Application Events
-
+#define ZHA_ATTRIBUTE_REQ_EVT            0x0004
+#define ZHA_ACTIVE_EP_EVT                0x0008 
+#define SIMPLE_DESC_QUERY_EVT            0x0010 
+#define ZONE_TYPE_EVT                    0x0020    
+#define SIMPLE_DESC_EVT                  0x0040   
+#define DEVICE_STATUS_EVT                0x0100
+#define ZHA_ATTRIBUTE_POWER_EVT          0x0080
+#define RESET_EVT                        0x0200  
 
 // Application Display Modes
 #define LIGHT_MAINMODE      0x00

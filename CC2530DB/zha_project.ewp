@@ -317,7 +317,7 @@
           <state>ZCL_READ</state>
           <state>ZCL_WRITE</state>
           <state>ZCL_REPORT</state>
-          <state>xZCL_EZMODE</state>
+          <state>ZCL_EZMODE</state>
           <state>ZCL_BASIC</state>
           <state>ZCL_IDENTIFY</state>
           <state>ZCL_ON_OFF</state>

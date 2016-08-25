@@ -73,9 +73,12 @@
 
 #include "nwk_util.h"
 
+#include "ZDObject.h"
+#include "ZDProfile.h"
 #include "zcl.h"
 #include "zcl_general.h"
 #include "zcl_ha.h"
+#include "zcl_ss.h"
 #include "zcl_ezmode.h"
 #include "zcl_diagnostic.h"
 
@@ -131,7 +134,11 @@
  */
 byte zha_project_TaskID;
 uint8 zha_projectSeqNum;
-
+ZDO_ActiveEndpointRsp_t   *zclZHAtest_ActiveEP;
+endPointDesc_t zclZHAtest_epDesc;
+afAddrType_t zclZHAtest_DstAddr;
+static zAddrType_t simpleDescReqAddr;
+uint8 ep[5];
 
 /*********************************************************************
  * GLOBAL FUNCTIONS
@@ -148,14 +155,14 @@ static void zha_project_EZModeCB( zlcEZMode_State_t state, zclEZMode_CBData_t *p
 
 
 // register EZ-Mode with task information (timeout events, callback, etc...)
-static const zclEZMode_RegisterData_t zha_project_RegisterEZModeData =
-{
-  &zha_project_TaskID,
-  SAMPLELIGHT_EZMODE_NEXTSTATE_EVT,
-  SAMPLELIGHT_EZMODE_TIMEOUT_EVT,
-  &zha_projectSeqNum,
-  zha_project_EZModeCB
-};
+//static const zclEZMode_RegisterData_t zha_project_RegisterEZModeData =
+//{
+//  &zha_project_TaskID,
+//  SAMPLELIGHT_EZMODE_NEXTSTATE_EVT,
+//  SAMPLELIGHT_EZMODE_TIMEOUT_EVT,
+//  &zha_projectSeqNum,
+//  zha_project_EZModeCB
+//};
 
 #else
 uint16 bindingInClusters[] =
@@ -196,6 +203,9 @@ uint8 zha_project_LevelLastLevel;  // to save the Current Level before the light
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
+
+
+
 static void zha_project_HandleKeys( byte shift, byte keys );
 static void zha_project_BasicResetCB( void );
 static void zha_project_IdentifyCB( zclIdentify_t *pCmd );
@@ -326,33 +336,17 @@ void zha_project_Init( byte task_id )
 
 #ifdef ZCL_EZMODE
   // Register EZ-Mode
-  zcl_RegisterEZMode( &zha_project_RegisterEZModeData );
+  //zcl_RegisterEZMode( &zha_project_RegisterEZModeData );
 
   // Register with the ZDO to receive Match Descriptor Responses
-  ZDO_RegisterForZDOMsg(task_id, Match_Desc_rsp);
+    ZDO_RegisterForZDOMsg(task_id, Match_Desc_rsp);
+    ZDO_RegisterForZDOMsg( task_id, End_Device_Bind_rsp );
+    ZDO_RegisterForZDOMsg( task_id, Match_Desc_rsp );
+    ZDO_RegisterForZDOMsg( task_id, Active_EP_rsp );
+    ZDO_RegisterForZDOMsg( task_id, Simple_Desc_rsp );
+    ZDO_RegisterForZDOMsg( task_id, Device_annce );
 #endif
 
-
-#if (defined HAL_BOARD_ZLIGHT) || (defined HAL_PWM)
-  HalTimer1Init( 0 );
-  halTimer1SetChannelDuty( WHITE_LED, 0 );
-  halTimer1SetChannelDuty( RED_LED, 0 );
-  halTimer1SetChannelDuty( BLUE_LED, 0 );
-  halTimer1SetChannelDuty( GREEN_LED, 0 );
-
-  // find if we are already on a network from NV_RESTORE
-  uint8 state;
-  NLME_GetRequest( nwkNwkState, 0, &state );
-
-  if ( state < NWK_ENDDEVICE )
-  {
-    // Start EZMode on Start up to avoid button press
-    osal_start_timerEx( zha_project_TaskID, SAMPLELIGHT_START_EZMODE_EVT, 500 );
-  }
-#if ZCL_LEVEL_CTRL
-  zha_project_DefaultMove();
-#endif
-#endif // #if (defined HAL_BOARD_ZLIGHT) || (defined HAL_PWM)
 
 #ifdef ZCL_DIAGNOSTIC
   // Register the application's callback function to read/write attribute data.
@@ -389,58 +383,146 @@ uint16 zha_project_event_loop( uint8 task_id, uint16 events )
 
   (void)task_id;  // Intentionally unreferenced parameter
 
-  if ( events & SYS_EVENT_MSG )
-  {
-    while ( (MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive( zha_project_TaskID )) )
+    if ( events & SYS_EVENT_MSG )
     {
-      switch ( MSGpkt->hdr.event )
-      {
-#ifdef ZCL_EZMODE
-        case ZDO_CB_MSG:
-          zha_project_ProcessZDOMsgs( (zdoIncomingMsg_t *)MSGpkt );
-          break;
-#endif
-        case ZCL_INCOMING_MSG:
-          // Incoming ZCL Foundation command/response messages
-          zha_project_ProcessIncomingMsg( (zclIncomingMsg_t *)MSGpkt );
-          break;
+        while ( (MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive( zha_project_TaskID )) )
+        {
+            switch ( MSGpkt->hdr.event )
+            {
+                #ifdef ZCL_EZMODE
+                case ZDO_CB_MSG:
+                    zha_project_ProcessZDOMsgs( (zdoIncomingMsg_t *)MSGpkt );
+                    break;
+                #endif
+                case ZCL_INCOMING_MSG:
+                // Incoming ZCL Foundation command/response messages
+                    zha_project_ProcessIncomingMsg( (zclIncomingMsg_t *)MSGpkt );
+                    break;
 
-        case KEY_CHANGE:
-          zha_project_HandleKeys( ((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys );
-          break;
+                case KEY_CHANGE:
+                    zha_project_HandleKeys( ((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys );
+                    break;
+                case AF_INCOMING_MSG_CMD:
+                    zcl_ProcessMessageMSG(MSGpkt);
 
-        case ZDO_STATE_CHANGE:
-          zha_project_NwkState = (devStates_t)(MSGpkt->hdr.status);
+                    //ZHAtest_MessageMSGCB( MSGpkt );
+                    break;    
+                
 
-          // now on the network
-          if ( (zha_project_NwkState == DEV_ZB_COORD) ||
-               (zha_project_NwkState == DEV_ROUTER)   ||
-               (zha_project_NwkState == DEV_END_DEVICE) )
-          {
-            giLightScreenMode = LIGHT_MAINMODE;
-            //zha_project_LcdDisplayUpdate();
-#ifdef ZCL_EZMODE
-            zcl_EZModeAction( EZMODE_ACTION_NETWORK_STARTED, NULL );
-#endif // ZCL_EZMODE
-          }
-          break;
+                case ZDO_STATE_CHANGE:
+                    zha_project_NwkState = (devStates_t)(MSGpkt->hdr.status);
 
-        default:
-          break;
-      }
+                    // now on the network
+                    if ( (zha_project_NwkState == DEV_ZB_COORD) ||
+                    (zha_project_NwkState == DEV_ROUTER)   ||
+                    (zha_project_NwkState == DEV_END_DEVICE) )
+                    {
+                    giLightScreenMode = LIGHT_MAINMODE;
+                    //zha_project_LcdDisplayUpdate();
+                    #ifdef ZCL_EZMODE
+                    zcl_EZModeAction( EZMODE_ACTION_NETWORK_STARTED, NULL );
+                    #endif // ZCL_EZMODE
+                    }
+                break;
 
-      // Release the memory
-      osal_msg_deallocate( (uint8 *)MSGpkt );
+                default:
+                    break;
+            }
+
+          // Release the memory
+          osal_msg_deallocate( (uint8 *)MSGpkt );
+        }
+        return (events ^ SYS_EVENT_MSG);
+    }
+    if ( events & ZHA_ATTRIBUTE_REQ_EVT )
+    {
+        uint8 i=0;
+        afAddrType_t  dscReqAddr;
+        dscReqAddr.addrMode=afAddr16Bit;
+        dscReqAddr.addr.shortAddr=simpleDescReqAddr.addr.shortAddr;
+        dscReqAddr.endPoint=1;
+        zclReadCmd_t BasicAttrsList;
+        BasicAttrsList.numAttr = 5;
+        BasicAttrsList.attrID[0] = ATTRID_BASIC_ZCL_VERSION;
+        BasicAttrsList.attrID[1] = ATTRID_BASIC_HW_VERSION;
+        BasicAttrsList.attrID[2] = ATTRID_BASIC_MODEL_ID;
+        BasicAttrsList.attrID[3] = ATTRID_BASIC_MANUFACTURER_NAME;
+        //BasicAttrsList.attrID[5] = ATTRID_BASIC_DATE_CODE;
+        BasicAttrsList.attrID[4] = ATTRID_BASIC_POWER_SOURCE;
+        zcl_SendRead( 1, &dscReqAddr,ZCL_CLUSTER_ID_GEN_BASIC, &BasicAttrsList,
+                    ZCL_FRAME_CLIENT_SERVER_DIR, 0, 0);
+        
+        //return ( events ^ ZHA_ATTRIBUTE_REQ_EVT );
+    }  
+  
+    if(events & ZHA_ATTRIBUTE_POWER_EVT)
+    {
+        afAddrType_t  dscReqAddr;
+        dscReqAddr.addrMode=afAddr16Bit;
+        dscReqAddr.addr.shortAddr=simpleDescReqAddr.addr.shortAddr;
+        dscReqAddr.endPoint=1;
+        zclReadCmd_t BasicAttrsList;
+        BasicAttrsList.numAttr = 2;
+        BasicAttrsList.attrID[0] = ATTRID_POWER_CFG_BATTERY_VOLTAGE;
+        BasicAttrsList.attrID[1] = 0x0021;
+        zcl_SendRead( 1, &dscReqAddr,
+                    ZCL_CLUSTER_ID_GEN_POWER_CFG, &BasicAttrsList,
+                    ZCL_FRAME_CLIENT_SERVER_DIR, 0, 0);
+        //return ( events ^ ZHA_ATTRIBUTE_POWER_EVT );    
+    }
+    if ( events & ZONE_TYPE_EVT )
+    {
+        afAddrType_t  dscReqAddr;
+        dscReqAddr.addrMode=afAddr16Bit;
+        dscReqAddr.addr.shortAddr=simpleDescReqAddr.addr.shortAddr;
+        dscReqAddr.endPoint=1;
+        zclReadCmd_t BasicAttrsList;
+        BasicAttrsList.numAttr = 1;
+        BasicAttrsList.attrID[0] = ATTRID_SS_IAS_ZONE_TYPE;
+        zcl_SendRead( 1, &dscReqAddr,
+                    ZCL_CLUSTER_ID_SS_IAS_ZONE, &BasicAttrsList,
+                    ZCL_FRAME_CLIENT_SERVER_DIR, 0, 0); 
+        return ( events ^ ZONE_TYPE_EVT );
+    } 
+    if ( events & ZHA_ACTIVE_EP_EVT )
+    {
+        ZDP_ActiveEPReq( &simpleDescReqAddr, simpleDescReqAddr.addr.shortAddr, 0);
+        //return ( events ^ ZHA_ACTIVE_EP_EVT );
+    }  
+  
+  // event to get simple descriptor of the newly joined device
+    if ( events & SIMPLE_DESC_QUERY_EVT )
+    {
+        uint8 i;
+        for(i=0;i<=zclZHAtest_ActiveEP->cnt;i++)
+        {
+            if(ep[i]!=0)
+            {
+                  ZDP_SimpleDescReq( &simpleDescReqAddr, simpleDescReqAddr.addr.shortAddr,
+                            ep[i], 0);
+            }
+        }
+        osal_memset(ep,0,sizeof(ep));
+        //return ( events ^ SIMPLE_DESC_QUERY_EVT );
     }
 
-    // return unprocessed events
-    return (events ^ SYS_EVENT_MSG);
-  }
+  // handle processing of timeout event triggered by request fast polling command
 
+    if ( events & SIMPLE_DESC_EVT )
+    {
+        ZDP_SimpleDescReq( &simpleDescReqAddr, simpleDescReqAddr.addr.shortAddr,1, 0);
+        //return ( events ^ SIMPLE_DESC_QUERY_EVT );
+    }
+    if ( events & RESET_EVT )
+    {
+        Onboard_soft_reset();
+        return ( events ^ RESET_EVT );
+    }  
  
   // Discard unknown events
   return 0;
 }
+
 
 /*********************************************************************
  * @fn      zha_project_HandleKeys
@@ -833,17 +915,352 @@ static void zha_project_ProcessIncomingMsg( zclIncomingMsg_t *pInMsg )
 static uint8 zha_project_ProcessInReadRspCmd( zclIncomingMsg_t *pInMsg )
 {
   zclReadRspCmd_t *readRspCmd;
-  uint8 i;
+    uint8 i,k;
+    uint8 *j;
+    uint16 *p;
+    readRspCmd = (zclReadRspCmd_t *)pInMsg->attrCmd; 
+    switch(pInMsg->clusterId)
+    {
+      case ZCL_CLUSTER_ID_GEN_BASIC:
+        {
+          for (i = 0; i < readRspCmd->numAttr; i++)
+          {
+                zclReadRspStatus_t *statusRec = &(readRspCmd->attrList[i]);
+                j=statusRec->data;
+                switch(statusRec->attrID)
+                {
+                    case ATTRID_BASIC_POWER_SOURCE:
+                        uint8 zclZHAtest_PowerSource=*j;
+                        break;
+//                    case ATTRID_POWER_CFG_BATTERY_VOLTAGE:
+//                        zclZHAtest_BatteryVoltage=*j;
+//                        SetTempDeviceBAT(pInMsg->srcAddr.addr.shortAddr,zclZHAtest_BatteryVoltage);
+//                        break;
+                    case ATTRID_BASIC_ZCL_VERSION:
+                        break;
+                    case ATTRID_BASIC_MODEL_ID:
+                        break;
+                    case ATTRID_BASIC_MANUFACTURER_NAME:
+                        //SetTempDeviceManuName(pInMsg->srcAddr.addr.shortAddr,j);
+                        break;
+                    case ATTRID_BASIC_HW_VERSION:
+                        uint8 zclZHAtest_HWRevision = *j;
+                        //SetTempDeviceHW(pInMsg->srcAddr.addr.shortAddr,zclZHAtest_HWRevision);
+                        break;                        
+                    default:
+                      break;
+                
+                }
 
-  readRspCmd = (zclReadRspCmd_t *)pInMsg->attrCmd;
-  for (i = 0; i < readRspCmd->numAttr; i++)
-  {
-    // Notify the originator of the results of the original read attributes
-    // attempt and, for each successfull request, the value of the requested
+          }
+        }
+        //osal_set_event( zclZHAtest_TaskID,ZHAtest_ATTRIBUTE_POWER_EVT);
+        
+        break;
+        
+      case ZCL_CLUSTER_ID_GEN_POWER_CFG:
+        {
+          for (i = 0; i < readRspCmd->numAttr; i++)
+          {
+                zclReadRspStatus_t *statusRec = &(readRspCmd->attrList[i]);
+                j=statusRec->data;
+                switch(statusRec->attrID)
+                {
+                    case ATTRID_POWER_CFG_BATTERY_VOLTAGE:
+                        uint8 zclZHAtest_BatteryVoltage=*j;
+                        //SetTempDeviceBAT(pInMsg->srcAddr.addr.shortAddr,zclZHAtest_BatteryVoltage);
+                        break;
+                    default:
+                      break;
+                
+                }
+
+          }
+      
+        }        
+        
+        
+        //osal_set_event( zclZHAtest_TaskID, ZHAtest_ACTIVE_EP_EVT );
+        break;
+//      case ZCL_CLUSTER_ID_GEN_ON_OFF:
+//        {
+//          for (i = 0; i < readRspCmd->numAttr; i++)
+//          {
+//            zclReadRspStatus_t *statusRec = &(readRspCmd->attrList[i]);
+//            j=statusRec->data;
+//            switch(statusRec->attrID)
+//            {
+//                case ATTRID_ON_OFF:
+//                    uint16 buf[3];
+//                    osal_memset(buf,0,sizeof(buf));
+//                    zclZHAtest_OnOff=*j;
+//                    NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[0]=zclZHAtest_OnOff;
+//                    Return_Message(1);
+//                    buf[0] = zclZHAtest_OnOff;
+//                    UpdateDeviceStatus1(pInMsg->srcAddr.addr.shortAddr,buf);
+//                  break;
+//                default:
+//                  break;
+//            
+//            }
+//
+//          }
+//      
+//        }
+//        break;
+//        case ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL:
+//            {
+//                for (i = 0; i < readRspCmd->numAttr; i++)
+//                {
+//                    zclReadRspStatus_t *statusRec = &(readRspCmd->attrList[i]);
+//                    p=(uint16 *)statusRec->data;
+//                    //j = zclSerializeData( statusRec->dataType, statusRec->data, j );
+//                    switch(statusRec->attrID)
+//                    {
+//                        case ATTRID_LIGHTING_COLOR_CONTROL_COLOR_TEMPERATURE:
+//                            zclZHAtest_Light_Color_Status = *p;
+//                            uint16 buf[3];
+//                            osal_memset(buf,0,sizeof(buf));
+//                            buf[2] = zclZHAtest_Light_Color_Status;
+//                            UpdateDeviceStatus3(pInMsg->srcAddr.addr.shortAddr,buf);
+//                            NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[0]=zclZHAtest_Light_Color_Status&0x00FF;
+//                            NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[1]=(zclZHAtest_Light_Color_Status&0xFF00)>>8;
+//                            Return_Message(2);
+//                        break;
+//                        case ATTRID_LIGHTING_COLOR_CONTROL_CURRENT_HUE:
+//                            zclZHAtest_HUE_Status = *p;
+//                            NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[0]=zclZHAtest_HUE_Status&0x00FF;
+//                            NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[1]=(zclZHAtest_HUE_Status&0xFF00)>>8;
+//                            Return_Message(2); 
+//                          break;
+//                        case ATTRID_LIGHTING_COLOR_CONTROL_CURRENT_SATURATION:
+//                            zclZHAtest_Saturation = *p;
+//                            NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[0]=zclZHAtest_Saturation;
+//                            Return_Message(1);                           
+//                          break;
+//                        default:
+//                        break;
+//
+//                    }
+//
+//                }
+//
+//             }
+//    
+//        break;
+//        case ZCL_CLUSTER_ID_SS_IAS_ZONE:
+//       {        uint16 supportOD = 0;
+//                uint8 sensorType = 0;
+//                for (i = 0; i < readRspCmd->numAttr; i++)
+//                {
+//                    zclReadRspStatus_t *statusRec = &(readRspCmd->attrList[i]);
+//                    p=(uint16 *)statusRec->data;
+//                    //j = zclSerializeData( statusRec->dataType, statusRec->data, j );
+//                    switch(statusRec->attrID)
+//                    {
+//                        case ATTRID_SS_IAS_ZONE_STATUS:
+//                            zclZHAtest_Alarm_Status = *p;
+//                            uint16 buf[3];
+//                            osal_memset(buf,0,sizeof(buf));
+//                            buf[0] = zclZHAtest_Alarm_Status;
+//                            UpdateDeviceStatus1(pInMsg->srcAddr.addr.shortAddr,buf);
+//                            NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[0]=zclZHAtest_Alarm_Status&0x00FF;
+//                            NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[1]=(zclZHAtest_Alarm_Status&0xFF00)>>8;
+//                            //NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[0]=zclZHAtest_Alarm_Status;
+//                            //NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[1]=(zclZHAtest_Light_Color_Status&0xFF00)>>8;
+//                            Return_Message(2);
+//                        break;
+//                        case ATTRID_SS_IAS_ZONE_TYPE:
+//                            zAddrType_t addr;
+//                            uint8 address[8];
+//                            uint8 pValue[Z_EXTADDR_LEN];
+//                            addr.addrMode = Addr64Bit;
+//                            osal_nv_read(ZCD_NV_EXTADDR ,0, Z_EXTADDR_LEN, pValue);
+//                            //osal_memcpy(pValue,addr.addr.extAddr,8);
+//                            osal_memcpy(addr.addr.extAddr,pValue,8);
+//                            //addr.addr.shortAddr=pSimpleDescRsp->nwkAddr;
+//                            APSME_LookupExtAddr(pInMsg->srcAddr.addr.shortAddr,address);
+//                            ZDP_BindUnbindReq(Bind_req, &dstAddr, address,
+//                                                   1,
+//                                                   0x0020,
+//                                                   &addr,  pInMsg->endPoint,
+//                                                    FALSE );
+//                            zclZHAtest_Smoke_Type = *p;
+//                            //uint16 buf[3];
+//                            osal_memset(buf,0,sizeof(buf));
+//                            buf[1] = zclZHAtest_Smoke_Type;
+//                            UpdateDeviceStatus2(pInMsg->srcAddr.addr.shortAddr,buf);
+//                            //zclSS_IAS_Send_ZoneStatusEnrollRequestCmd(0x01,&destAddr,zclZHAtest_Smoke_Type,0,false,0);
+//                            NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[0]=zclZHAtest_Smoke_Type&0x00FF;
+//                            NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[1]=(zclZHAtest_Smoke_Type&0xFF00)>>8;                                
+//                            //NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[0+i]=zclZHAtest_Smoke_Type;
+//                            //NWK_command.NWK_General_Frame.NWK_AppDev_Frame.NWKCA_Data[1]=(zclZHAtest_Light_Color_Status&0xFF00)>>8;
+//                            //Return_Message(2+i);  
+//                            SetTempDeviceOD(pInMsg->srcAddr.addr.shortAddr,zclZHAtest_Smoke_Type);
+//                         break;
+//                      
+//                        default:
+//                        break;
+//
+//                    }
+//
+//                }
+//
+//             }
+//      
+//      break;
+//      case ZCL_CLUSTER_ID_SS_IAS_WD:
+//            {
+//                for (i = 0; i < readRspCmd->numAttr; i++)
+//                {
+//                    zclReadRspStatus_t *statusRec = &(readRspCmd->attrList[i]);
+//                    j=statusRec->data;
+//                    switch(statusRec->attrID)
+//                    {
+//                        case COMMAND_SS_IAS_WD_START_WARNING:
+//                            //zclZHAtest_Warning = *j;
+//                            uint16 buf[3];
+//                            osal_memset(buf,0,sizeof(buf));
+//                            //buf[0] = zclZHAtest_Warning;
+//                            //UpdateDeviceStatus1(pInMsg->srcAddr.addr.shortAddr,buf);
+//                            break;
+//                        case COMMAND_SS_IAS_WD_SQUAWK:
+//                            //zclZHAtest_WD_SQUAWK = *j;
+//                            //uint16 buf[3];
+//                            osal_memset(buf,0,sizeof(buf));
+//                           // buf[1] = zclZHAtest_WD_SQUAWK;
+//                            //UpdateDeviceStatus2(pInMsg->srcAddr.addr.shortAddr,buf);
+//                            break;
+//
+//                        default:
+//                            break;
+//
+//                    }
+//
+//                }
+//
+//             }        
+//        
+//        break;
+//      
+//      case ZCL_CLUSTER_ID_MS_TEMPERATURE_MEASUREMENT:
+//       {
+//                for (i = 0; i < readRspCmd->numAttr; i++)
+//                {
+//                    zclReadRspStatus_t *statusRec = &(readRspCmd->attrList[i]);
+//                    p=(uint16 *)statusRec->data;
+//                    switch(statusRec->attrID)
+//                    {
+//                        case ATTRID_MS_TEMPERATURE_MEASURED_VALUE:
+//                            //zclZHAtest_Temperature_Value = *p;
+//                            uint16 buf[3];
+//                            osal_memset(buf,0,sizeof(buf));
+//                            //buf[0] = zclZHAtest_Temperature_Value;
+//                            //UpdateDeviceStatus1(pInMsg->srcAddr.addr.shortAddr,buf);
+//                            
+//                        break;
+//                        default:
+//                        break;
+//
+//                    }
+//
+//                }
+//
+//             }
+//         break;
+//        case ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL:
+//           {
+//                for (i = 0; i < readRspCmd->numAttr; i++)
+//                {
+//                    zclReadRspStatus_t *statusRec = &(readRspCmd->attrList[i]);
+//                    j=statusRec->data;
+//                    //j = zclSerializeData( statusRec->dataType, statusRec->data, j );
+//                    switch(statusRec->attrID)
+//                    {
+//                        case ATTRID_MS_TEMPERATURE_MEASURED_VALUE:
+//                            uint16 buf[3];
+//                            osal_memset(buf,0,sizeof(buf));
+//                            //zclZHAtest_Level_to_Level = *j;
+//                            buf[1] = zclZHAtest_Level_to_Level;
+//                           // UpdateDeviceStatus2(pInMsg->srcAddr.addr.shortAddr,buf); 
+//                        break;
+//                        default:
+//                        break;
+//
+//                    }
+//
+//                }
+//
+//             }
+//    
+//        break;
+//      case ZCL_CLUSTER_ID_MS_RELATIVE_HUMIDITY:
+//           {
+//                for (i = 0; i < readRspCmd->numAttr; i++)
+//                {
+//                    zclReadRspStatus_t *statusRec = &(readRspCmd->attrList[i]);
+//                    p=(uint16 *)statusRec->data;
+//                    //j = zclSerializeData( statusRec->dataType, statusRec->data, j );
+//                    switch(statusRec->attrID)
+//                    {
+//                        case ATTRID_MS_RELATIVE_HUMIDITY_MEASURED_VALUE:
+//                            //zclZHAtest_Humidity_Value = *p;
+//                            uint16 buf[3];
+//                            osal_memset(buf,0,sizeof(buf));
+//                           // buf[0] = zclZHAtest_Humidity_Value;
+//                            //UpdateDeviceStatus1(pInMsg->srcAddr.addr.shortAddr,buf);
+//                            
+//                        break;
+//                        default:
+//                        break;
+//
+//                    }
+//
+//                }
+//
+//             }     
+//        
+//        
+//        break;   
+//      case ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT:
+//           {
+//                for (i = 0; i < readRspCmd->numAttr; i++)
+//                {
+//                    zclReadRspStatus_t *statusRec = &(readRspCmd->attrList[i]);
+//                    p=(uint16 *)statusRec->data;
+//                    //j = zclSerializeData( statusRec->dataType, statusRec->data, j );
+//                    switch(statusRec->attrID)
+//                    {
+//                        case ATTRID_MS_ILLUMINANCE_MEASURED_VALUE:
+//                            //zclZHAtest_Illumiance_Value = *p;
+//                            uint16 buf[3];
+//                            osal_memset(buf,0,sizeof(buf));
+//                            //buf[0] = zclZHAtest_Illumiance_Value;
+//                            //UpdateDeviceStatus1(pInMsg->srcAddr.addr.shortAddr,buf);
+//                            
+//                        break;
+//                        default:
+//                        break;
+//
+//                    }
+//
+//                }
+//
+//             }          
+//        
+//        
+//        break;
+      default:
+        break;
+    //ReadRspStatus.attrID = readRspCmd->attrList;
+    // Notify the originator of the results of the original read attributes 
+    // attempt and, for each successfull request, the value of the requested 
     // attribute
   }
 
-  return ( TRUE );
+  
+  
+  return TRUE; 
 }
 #endif // ZCL_READ
 
@@ -979,13 +1396,165 @@ static void zha_project_ProcessZDOMsgs( zdoIncomingMsg_t *pMsg )
   ZDO_MatchDescRsp_t *pMatchDescRsp;
 
   // Let EZ-Mode know of the Simple Descriptor Response
-  if ( pMsg->clusterID == Match_Desc_rsp )
-  {
-    pMatchDescRsp = ZDO_ParseEPListRsp( pMsg );
-    data.pMatchDescRsp = pMatchDescRsp;
-    zcl_EZModeAction( EZMODE_ACTION_MATCH_DESC_RSP, &data );
-    osal_mem_free( pMatchDescRsp );
-  }
+    ZDO_DeviceAnnce_t devAnnce;
+    zAddrType_t addr;
+    afAddrType_t destAddr;
+    uint8 *pData;
+    uint8 address[8];
+    uint8 i;
+    uint8 pValue[Z_EXTADDR_LEN];
+    uint8 pValue1[Z_EXTADDR_LEN];
+    switch ( pMsg->clusterID )
+    {
+        case End_Device_Bind_rsp:
+        {
+            if ( ZDO_ParseBindRsp( pMsg ) == ZSuccess )
+            {
+
+            // Light LED
+            //HalUARTWrite(HAL_UART_PORT_0,"Bind established",sizeof("Bind established"));
+                HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
+            }
+            #if defined( BLINK_LEDS )
+            else
+            {
+            // Flash LED to show failure
+                HalLedSet ( HAL_LED_4, HAL_LED_MODE_FLASH );
+            }
+            #endif
+            break;
+        }
+        case Match_Desc_rsp:
+        {
+            ZDO_ActiveEndpointRsp_t *pRsp = ZDO_ParseEPListRsp( pMsg );
+            if ( pRsp )
+            {
+                if ( pRsp->status == ZSuccess && pRsp->cnt )
+                {
+                    zclZHAtest_DstAddr.addrMode = (afAddrMode_t)Addr16Bit;
+                    zclZHAtest_DstAddr.addr.shortAddr = pRsp->nwkAddr;
+                    // Take the first endpoint, Can be changed to search through endpoints
+                    zclZHAtest_DstAddr.endPoint = pRsp->epList[0];
+
+                    // Light LED
+                    HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
+                }
+                osal_mem_free( pRsp );
+            }
+            break;
+        }
+        case Device_annce:
+        { 
+            uint8 k=0;
+            ZDO_ParseDeviceAnnce( pMsg, &devAnnce );
+            
+            
+            for(i=0;i<6;i++)
+            {
+
+                if(AssociatedDevList[i].shortAddr!=devAnnce.nwkAddr)
+                {
+                    //SetTempDeviceSA(devAnnce.nwkAddr,devAnnce.extAddr);
+                }
+            }
+            // set simple descriptor query event
+            //DelayMS(50);
+            simpleDescReqAddr.addrMode = (afAddrMode_t)Addr16Bit;
+            simpleDescReqAddr.addr.shortAddr = devAnnce.nwkAddr;
+            osal_start_timerEx( zha_project_TaskID, ZHA_ATTRIBUTE_REQ_EVT ,100);
+            //osal_start_timerEx( zha_project_TaskID, SIMPLE_DESC_EVT,200);
+            osal_start_timerEx( zha_project_TaskID, ZHA_ATTRIBUTE_POWER_EVT,300);
+            osal_start_timerEx( zha_project_TaskID, ZHA_ACTIVE_EP_EVT,500);
+            osal_start_timerEx( zha_project_TaskID, SIMPLE_DESC_QUERY_EVT,1000);
+            //osal_set_event( zclZHAtest_TaskID, SIMPLE_DESC_QUERY_EVT );
+            break;
+        }
+
+        case Active_EP_rsp:
+        {
+            ZDO_ActiveEndpointRsp_t *pRsp = ZDO_ParseEPListRsp( pMsg );
+            *zclZHAtest_ActiveEP = *pRsp;
+            osal_memset(ep,0,sizeof(ep));
+            osal_memcpy(ep,pRsp->epList,pRsp->cnt);
+            simpleDescReqAddr.addrMode = (afAddrMode_t)Addr16Bit;
+            simpleDescReqAddr.addr.shortAddr = pRsp->nwkAddr;
+            //HalUARTWrite(HAL_UART_PORT_0,ep,pRsp->cnt);
+            //zclZHAtest_ActiveEP.status = pRsp->status;
+            //zclZHAtest_ActiveEP.nwkAddr= pRsp->nwkAddr;
+            //osal_memcpy(zclZHAtest_ActiveEP.epList,pRsp->epList,sizeof(uint8));
+            //zclZHAtest_ActiveEP.epList[] = pRsp->epList[];
+            //DelayMS(50);
+            //SetTempDeviceEP(pRsp->nwkAddr , ep );
+            //osal_set_event( zha_project_TaskID, SIMPLE_DESC_QUERY_EVT );
+            osal_mem_free( pRsp ); 
+            break;
+        }
+        case Simple_Desc_rsp:
+        {
+            uint8 k=0;
+            ZDO_SimpleDescRsp_t *pSimpleDescRsp;   // pointer to received simple desc response
+            pSimpleDescRsp = (ZDO_SimpleDescRsp_t *)osal_mem_alloc( sizeof( ZDO_SimpleDescRsp_t ) );
+
+
+            if(pSimpleDescRsp)
+            {
+                pSimpleDescRsp->simpleDesc.pAppInClusterList = NULL;
+                pSimpleDescRsp->simpleDesc.pAppOutClusterList = NULL;
+
+                ZDO_ParseSimpleDescRsp( pMsg, pSimpleDescRsp );
+                if(pSimpleDescRsp->simpleDesc.AppDeviceId ==0x0402)
+                {
+                    afAddrType_t  dscReqAddr;
+                    dscReqAddr.addrMode=afAddr16Bit;
+                    dscReqAddr.addr.shortAddr=pSimpleDescRsp->nwkAddr;
+                    dscReqAddr.endPoint=1;
+                    zclReadCmd_t BasicAttrsList;
+                    BasicAttrsList.numAttr = 1;
+                    BasicAttrsList.attrID[0] = ATTRID_SS_IAS_ZONE_TYPE;
+                    zcl_SendRead( 1, &dscReqAddr,
+                    ZCL_CLUSTER_ID_SS_IAS_ZONE, &BasicAttrsList,
+                    ZCL_FRAME_CLIENT_SERVER_DIR, 0, 0); 
+                    osal_set_event( zha_project_TaskID, ZONE_TYPE_EVT );
+                    //DelayMS(100);
+                    //zclSampleCIE_WriteIAS_CIE_Address(&destAddr); 
+                }
+                //else
+                    //SetTempDeviceOD(pSimpleDescRsp->nwkAddr,pSimpleDescRsp->simpleDesc.AppDeviceId);
+                //osal_mem_free( pSimpleDescRsp );
+                // free memory for InClusterList
+                if (pSimpleDescRsp->simpleDesc.pAppInClusterList)
+                {
+                    osal_mem_free(pSimpleDescRsp->simpleDesc.pAppInClusterList);
+                }
+
+                // free memory for OutClusterList
+                if (pSimpleDescRsp->simpleDesc.pAppOutClusterList)
+                {
+                    osal_mem_free(pSimpleDescRsp->simpleDesc.pAppOutClusterList);
+                }
+
+                osal_mem_free( pSimpleDescRsp );
+            }
+            break;
+        }
+
+        case Bind_rsp:
+            ZDO_MgmtBindRsp_t *Bind_pRsp =ZDO_ParseMgmtBindRsp( pMsg ) ;
+            afAddrType_t  dscReqAddr;
+            dscReqAddr.addrMode=afAddr16Bit;
+            if ( Bind_pRsp )
+            {
+              //osal_memcpy(dstAddr.addr.extAddr,NWK_command.NWK_General_Frame.NWKCG_TargetAddress,8);
+              //dstAddr.addr.shortAddr=Node_Info.uiNwk_Addr;
+              dscReqAddr.addr.shortAddr=AssociatedDevList[0].shortAddr;
+              dscReqAddr.endPoint=0x01;
+              //zclSampleCIE_WriteIAS_CIE_Address(&dscReqAddr);   
+            }
+            osal_mem_free( Bind_pRsp );
+            break;
+        default:
+            break;
+    }
 }
 
 /*********************************************************************
@@ -1013,7 +1582,7 @@ static void zha_project_EZModeCB( zlcEZMode_State_t state, zclEZMode_CBData_t *p
 #endif
 
     zha_project_IdentifyTime = ( EZMODE_TIME / 1000 );  // convert to seconds
-    zha_project_ProcessIdentifyTimeChange();
+    //zha_project_ProcessIdentifyTimeChange();
   }
 
   // autoclosing, show what happened (success, cancelled, etc...)
@@ -1045,7 +1614,7 @@ static void zha_project_EZModeCB( zlcEZMode_State_t state, zclEZMode_CBData_t *p
   {
     // turn off identify mode
     zha_project_IdentifyTime = 0;
-    zha_project_ProcessIdentifyTimeChange();
+    //zha_project_ProcessIdentifyTimeChange();
 
 #ifdef LCD_SUPPORTED
     // if successful, inform user which nwkaddr/ep we bound to

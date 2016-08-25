@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR C/C++ Compiler V9.30.1.3056 for 8051               23/Aug/2016  23:34:20
+// IAR C/C++ Compiler V9.30.1.3056 for 8051               24/Aug/2016  23:46:09
 // Copyright 2004-2015 IAR Systems AB.
 //
 //    Core               =  plain
@@ -42,7 +42,7 @@
 //        -D SECURE=1 -D TC_LINKKEY_JOIN -D NV_INIT -D xNV_RESTORE -D
 //        xHOLD_AUTO_START -D ZTOOL_P1 -D MT_TASK -D MT_APP_FUNC -D MT_SYS_FUNC
 //        -D MT_ZDO_FUNC -D xLCD_SUPPORTED=DEBUG -D MULTICAST_ENABLED=FALSE -D
-//        ZCL_READ -D ZCL_WRITE -D ZCL_REPORT -D xZCL_EZMODE -D ZCL_BASIC -D
+//        ZCL_READ -D ZCL_WRITE -D ZCL_REPORT -D ZCL_EZMODE -D ZCL_BASIC -D
 //        ZCL_IDENTIFY -D ZCL_ON_OFF -D ZCL_SCENES -D ZCL_GROUPS -D
 //        xZCL_LEVEL_CTRL -D ZCL_DIAGNOSTIC -D FEATURE_SYSTEM_STATS -lC
 //        "C:\Texas Instruments\Z-Stack Home
@@ -133,6 +133,7 @@
         PUBLIC zha_project_DateCode
         PUBLIC zha_project_DeviceEnable
         PUBLIC zha_project_HWRevision
+        PUBLIC zha_project_IdentifyCommissionState
         PUBLIC zha_project_IdentifyTime
         PUBLIC zha_project_InClusterList
         PUBLIC zha_project_LocationDescription
@@ -352,7 +353,13 @@ zha_project_IdentifyTime:
         DS 2
         REQUIRE __INIT_XDATA_Z
 //  102 #ifdef ZCL_EZMODE
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+        DATA8
 //  103 uint8  zha_project_IdentifyCommissionState;
+zha_project_IdentifyCommissionState:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
 //  104 #endif
 //  105 
 //  106 // On/Off Cluster
@@ -524,6 +531,13 @@ zha_project_Attrs:
         DB 3
         DATA16
         DW zha_project_IdentifyTime
+        DW 3
+        DW 1
+        DATA8
+        DB 32
+        DB 1
+        DATA16
+        DW zha_project_IdentifyCommissionState
         DW 6
         DW 0
         DATA8
@@ -1237,7 +1251,7 @@ zha_project_Attrs:
         DATA8
 //  671 uint8 CONST zha_project_NumAttributes = ( sizeof(zha_project_Attrs) / sizeof(zha_project_Attrs[0]) );
 zha_project_NumAttributes:
-        DB 43
+        DB 44
 //  672 
 //  673 /*********************************************************************
 //  674  * SIMPLE DESCRIPTOR
@@ -1251,41 +1265,80 @@ zha_project_NumAttributes:
 zha_project_InClusterList:
         DATA16
         DW 0
+        DW 5
+        DW 4
+        DW 6
+        DW 1280
+        DW 1026
+        DW 1029
+        DW 1024
+        DW 1282
+        DW 768
         DW 3
         DW 4
-        DW 5
-        DW 6
 //  679 {
 //  680   ZCL_CLUSTER_ID_GEN_BASIC,
-//  681   ZCL_CLUSTER_ID_GEN_IDENTIFY,
+//  681   ZCL_CLUSTER_ID_GEN_SCENES,
 //  682   ZCL_CLUSTER_ID_GEN_GROUPS,
-//  683   ZCL_CLUSTER_ID_GEN_SCENES,
-//  684   ZCL_CLUSTER_ID_GEN_ON_OFF
-//  685 #ifdef ZCL_LEVEL_CTRL
-//  686   , ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL
-//  687 #endif
-//  688 };
-//  689 // work-around for compiler bug... IAR can't calculate size of array with #if options.
-//  690 #ifdef ZCL_LEVEL_CTRL
-//  691  #define ZCLSAMPLELIGHT_MAX_INCLUSTERS   6
-//  692 #else
-//  693  #define ZCLSAMPLELIGHT_MAX_INCLUSTERS   5
+//  683   ZCL_CLUSTER_ID_GEN_ON_OFF,
+//  684   ZCL_CLUSTER_ID_SS_IAS_ZONE,
+//  685   ZCL_CLUSTER_ID_MS_TEMPERATURE_MEASUREMENT,
+//  686   ZCL_CLUSTER_ID_MS_RELATIVE_HUMIDITY,
+//  687   ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT,
+//  688   ZCL_CLUSTER_ID_SS_IAS_WD,
+//  689   ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL,
+//  690   ZCL_CLUSTER_ID_GEN_IDENTIFY,
+//  691   ZCL_CLUSTER_ID_GEN_GROUPS,
+//  692 #ifdef ZCL_LEVEL_CTRL
+//  693   , ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL
 //  694 #endif
-//  695 
+//  695 };
+//  696 // work-around for compiler bug... IAR can't calculate size of array with #if options.
+//  697 #ifdef ZCL_LEVEL_CTRL
+//  698  #define ZCLSAMPLELIGHT_MAX_INCLUSTERS   6
+//  699 #else
+//  700  #define ZCLSAMPLELIGHT_MAX_INCLUSTERS   5
+//  701 #endif
+//  702 
 
         RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA16
-//  696 const cId_t zha_project_OutClusterList[] =
+        DATA8
+//  703 const cId_t zha_project_OutClusterList[] =
 zha_project_OutClusterList:
+        DATA16
         DW 0
-//  697 {
-//  698   ZCL_CLUSTER_ID_GEN_BASIC
-//  699 };
-//  700 #define ZCLSAMPLELIGHT_MAX_OUTCLUSTERS  (sizeof(zha_project_OutClusterList) / sizeof(zha_project_OutClusterList[0]))
-//  701 
+        DW 5
+        DW 4
+        DW 6
+        DW 8
+        DW 1280
+        DW 1026
+        DW 1029
+        DW 1024
+        DW 1282
+        DW 768
+        DW 3
+        DW 4
+//  704 {
+//  705   ZCL_CLUSTER_ID_GEN_BASIC,
+//  706   ZCL_CLUSTER_ID_GEN_SCENES,
+//  707   ZCL_CLUSTER_ID_GEN_GROUPS,
+//  708   ZCL_CLUSTER_ID_GEN_ON_OFF,
+//  709   ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
+//  710   ZCL_CLUSTER_ID_SS_IAS_ZONE,
+//  711   ZCL_CLUSTER_ID_MS_TEMPERATURE_MEASUREMENT,
+//  712   ZCL_CLUSTER_ID_MS_RELATIVE_HUMIDITY,
+//  713   ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT,
+//  714   ZCL_CLUSTER_ID_SS_IAS_WD,
+//  715   ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL,
+//  716   ZCL_CLUSTER_ID_GEN_IDENTIFY,
+//  717   ZCL_CLUSTER_ID_GEN_GROUPS,
+//  718 };
+//  719 #define ZCLSAMPLELIGHT_MAX_OUTCLUSTERS  (sizeof(zha_project_OutClusterList) / sizeof(zha_project_OutClusterList[0]))
+//  720 
 
         RSEG XDATA_I:XDATA:NOROOT(0)
-//  702 SimpleDescriptionFormat_t zha_project_SimpleDesc =
+//  721 SimpleDescriptionFormat_t zha_project_SimpleDesc =
 zha_project_SimpleDesc:
         DATA8
         DS 12
@@ -1321,7 +1374,7 @@ zha_project_SimpleDesc:
         RSEG XDATA_ID:CODE:NOROOT(0)
 `?<Initializer for zha_project_SimpleDesc>`:
         DATA8
-        DB 8
+        DB 1
         DATA16
         DW 260
         DW 256
@@ -1331,49 +1384,49 @@ zha_project_SimpleDesc:
         DATA16
         DW zha_project_InClusterList
         DATA8
-        DB 1
+        DB 13
         DATA16
         DW zha_project_OutClusterList
 
         END
-//  703 {
-//  704   SAMPLELIGHT_ENDPOINT,                  //  int Endpoint;
-//  705   ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId;
-//  706 #ifdef ZCL_LEVEL_CTRL
-//  707   ZCL_HA_DEVICEID_DIMMABLE_LIGHT,        //  uint16 AppDeviceId;
-//  708 #else
-//  709   ZCL_HA_DEVICEID_ON_OFF_LIGHT,          //  uint16 AppDeviceId;
-//  710 #endif
-//  711   SAMPLELIGHT_DEVICE_VERSION,            //  int   AppDevVer:4;
-//  712   SAMPLELIGHT_FLAGS,                     //  int   AppFlags:4;
-//  713   ZCLSAMPLELIGHT_MAX_INCLUSTERS,         //  byte  AppNumInClusters;
-//  714   (cId_t *)zha_project_InClusterList, //  byte *pAppInClusterList;
-//  715   ZCLSAMPLELIGHT_MAX_OUTCLUSTERS,        //  byte  AppNumInClusters;
-//  716   (cId_t *)zha_project_OutClusterList //  byte *pAppInClusterList;
-//  717 };
-//  718 
-//  719 /*********************************************************************
-//  720  * GLOBAL FUNCTIONS
-//  721  */
-//  722 
-//  723 /*********************************************************************
-//  724  * LOCAL FUNCTIONS
-//  725  */
-//  726 
-//  727 /****************************************************************************
-//  728 ****************************************************************************/
-//  729 
-//  730 
+//  722 {
+//  723   SAMPLELIGHT_ENDPOINT,                  //  int Endpoint;
+//  724   ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId;
+//  725 #ifdef ZCL_LEVEL_CTRL
+//  726   ZCL_HA_DEVICEID_DIMMABLE_LIGHT,        //  uint16 AppDeviceId;
+//  727 #else
+//  728   ZCL_HA_DEVICEID_ON_OFF_LIGHT,          //  uint16 AppDeviceId;
+//  729 #endif
+//  730   SAMPLELIGHT_DEVICE_VERSION,            //  int   AppDevVer:4;
+//  731   SAMPLELIGHT_FLAGS,                     //  int   AppFlags:4;
+//  732   ZCLSAMPLELIGHT_MAX_INCLUSTERS,         //  byte  AppNumInClusters;
+//  733   (cId_t *)zha_project_InClusterList, //  byte *pAppInClusterList;
+//  734   ZCLSAMPLELIGHT_MAX_OUTCLUSTERS,        //  byte  AppNumInClusters;
+//  735   (cId_t *)zha_project_OutClusterList //  byte *pAppInClusterList;
+//  736 };
+//  737 
+//  738 /*********************************************************************
+//  739  * GLOBAL FUNCTIONS
+//  740  */
+//  741 
+//  742 /*********************************************************************
+//  743  * LOCAL FUNCTIONS
+//  744  */
+//  745 
+//  746 /****************************************************************************
+//  747 ****************************************************************************/
+//  748 
+//  749 
 // 
-// 345 bytes in segment CODE_C
+// 353 bytes in segment CODE_C
 //  30 bytes in segment XDATA_I
 //  30 bytes in segment XDATA_ID
-//  66 bytes in segment XDATA_ROM_C
-//   4 bytes in segment XDATA_Z
+// 104 bytes in segment XDATA_ROM_C
+//   5 bytes in segment XDATA_Z
 // 
-// 375 bytes of CODE  memory
-//  66 bytes of CONST memory
-//  34 bytes of XDATA memory
+// 383 bytes of CODE  memory
+// 104 bytes of CONST memory
+//  35 bytes of XDATA memory
 //
 //Errors: none
 //Warnings: none
