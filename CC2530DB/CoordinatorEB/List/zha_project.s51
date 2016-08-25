@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR C/C++ Compiler V9.30.1.3056 for 8051               24/Aug/2016  23:48:58
+// IAR C/C++ Compiler V9.30.1.3056 for 8051               25/Aug/2016  23:03:58
 // Copyright 2004-2015 IAR Systems AB.
 //
 //    Core               =  plain
@@ -378,6 +378,8 @@ NLME_SendNetworkStatus SYMBOL "NLME_SendNetworkStatus"
 `??NLME_SendNetworkStatus::?relay` SYMBOL "?relay", NLME_SendNetworkStatus
 RegisterForKeys     SYMBOL "RegisterForKeys"
 `??RegisterForKeys::?relay` SYMBOL "?relay", RegisterForKeys
+SerialApp_Init      SYMBOL "SerialApp_Init"
+`??SerialApp_Init::?relay` SYMBOL "?relay", SerialApp_Init
 ZDApp_LeaveReset    SYMBOL "ZDApp_LeaveReset"
 `??ZDApp_LeaveReset::?relay` SYMBOL "?relay", ZDApp_LeaveReset
 ZDO_ParseDeviceAnnce SYMBOL "ZDO_ParseDeviceAnnce"
@@ -416,8 +418,8 @@ osal_start_timerEx  SYMBOL "osal_start_timerEx"
 `??osal_start_timerEx::?relay` SYMBOL "?relay", osal_start_timerEx
 zclDiagnostic_InitStats SYMBOL "zclDiagnostic_InitStats"
 `??zclDiagnostic_InitStats::?relay` SYMBOL "?relay", zclDiagnostic_InitStats
-`?<Name zclDiagnostic_ReadWr 48>` SYMBOL "zclDiagnostic_ReadWriteAttrCB"
-`??zclDiagnostic_ReadWriteAttrCB::?relay` SYMBOL "?relay", `?<Name zclDiagnostic_ReadWr 48>`
+`?<Name zclDiagnostic_ReadWr 50>` SYMBOL "zclDiagnostic_ReadWriteAttrCB"
+`??zclDiagnostic_ReadWriteAttrCB::?relay` SYMBOL "?relay", `?<Name zclDiagnostic_ReadWr 50>`
 zclGeneral_RegisterCmdCallbacks SYMBOL "zclGeneral_RegisterCmdCallbacks"
 `??zclGeneral_RegisterCmdCallbacks::?relay` SYMBOL "?relay", zclGeneral_RegisterCmdCallbacks
 zclHA_Init          SYMBOL "zclHA_Init"
@@ -455,6 +457,8 @@ zha_project_event_loop SYMBOL "zha_project_event_loop"
         FUNCTION `??NLME_SendNetworkStatus::?relay`,00H
         EXTERN `??RegisterForKeys::?relay`
         FUNCTION `??RegisterForKeys::?relay`,00H
+        EXTERN `??SerialApp_Init::?relay`
+        FUNCTION `??SerialApp_Init::?relay`,00H
         EXTERN `??ZDApp_LeaveReset::?relay`
         FUNCTION `??ZDApp_LeaveReset::?relay`,00H
         EXTERN `??ZDO_ParseDeviceAnnce::?relay`
@@ -554,6 +558,13 @@ zha_project_event_loop SYMBOL "zha_project_event_loop"
         ARGFRAME DOVERLAY, 0, STATIC
         EXTERN RegisterForKeys
         FUNCTION RegisterForKeys,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN SerialApp_Init
+        FUNCTION SerialApp_Init,0202H
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
         ARGFRAME XSTACK, 9, STACK
@@ -861,7 +872,7 @@ zha_project_event_loop SYMBOL "zha_project_event_loop"
 //   83 #include "zcl_diagnostic.h"
 //   84 
 //   85 #include "zha_project.h"
-//   86 
+//   86 #include "SerialApp.h"
 //   87 #include "onboard.h"
 //   88 
 //   89 /* HAL */
@@ -1180,6 +1191,17 @@ zha_project_Init:
         ARGFRAME XSTACK, 9, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL zha_project_Init, SerialApp_Init
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL zha_project_Init, zclGeneral_RegisterCmdCallbacks
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -1364,7 +1386,9 @@ zha_project_Init:
         MOV     R2,#zha_project_SimpleDesc & 0xff
         MOV     R3,#(zha_project_SimpleDesc >> 8) & 0xff
         LCALL   `??zclHA_Init::?relay`; Banked call to: zclHA_Init
-//  316 
+//  316   SerialApp_Init();
+        ; Setup parameters for call to function SerialApp_Init
+        LCALL   `??SerialApp_Init::?relay`; Banked call to: SerialApp_Init
 //  317   // Register the ZCL General Cluster Library callback functions
 //  318   zclGeneral_RegisterCmdCallbacks( SAMPLELIGHT_ENDPOINT, &zha_project_CmdCallbacks );
         ; Setup parameters for call to function zclGeneral_RegisterCmdCallbacks
@@ -5753,14 +5777,14 @@ __Constant_3e8:
 // 1655 
 // 1656 
 // 
-// 2 090 bytes in segment BANKED_CODE
+// 2 093 bytes in segment BANKED_CODE
 //    48 bytes in segment BANK_RELAYS
 //    39 bytes in segment XDATA_I
 //    39 bytes in segment XDATA_ID
 //    16 bytes in segment XDATA_ROM_C
 //    50 bytes in segment XDATA_Z
 // 
-// 2 177 bytes of CODE  memory
+// 2 180 bytes of CODE  memory
 //     0 bytes of CONST memory (+ 16 bytes shared)
 //    89 bytes of XDATA memory
 //

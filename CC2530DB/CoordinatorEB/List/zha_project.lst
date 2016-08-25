@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR C/C++ Compiler V9.30.1.3056 for 8051                24/Aug/2016  23:48:58
+# IAR C/C++ Compiler V9.30.1.3056 for 8051                25/Aug/2016  23:03:58
 # Copyright 2004-2015 IAR Systems AB.
 #
 #    Core               =  plain
@@ -196,7 +196,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Projects\zstack\HomeAutomation\Zi
      83          #include "zcl_diagnostic.h"
      84          
      85          #include "zha_project.h"
-     86          
+     86          #include "SerialApp.h"
      87          #include "onboard.h"
      88          
      89          /* HAL */
@@ -518,34 +518,36 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Projects\zstack\HomeAutomation\Zi
    \   000018   7A..         MOV     R2,#zha_project_SimpleDesc & 0xff
    \   00001A   7B..         MOV     R3,#(zha_project_SimpleDesc >> 8) & 0xff
    \   00001C   12....       LCALL   `??zclHA_Init::?relay`; Banked call to: zclHA_Init
-    316          
+    316            SerialApp_Init();
+   \   00001F                ; Setup parameters for call to function SerialApp_Init
+   \   00001F   12....       LCALL   `??SerialApp_Init::?relay`; Banked call to: SerialApp_Init
     317            // Register the ZCL General Cluster Library callback functions
     318            zclGeneral_RegisterCmdCallbacks( SAMPLELIGHT_ENDPOINT, &zha_project_CmdCallbacks );
-   \   00001F                ; Setup parameters for call to function zclGeneral_RegisterCmdCallbacks
-   \   00001F   7A..         MOV     R2,#zha_project_CmdCallbacks & 0xff
-   \   000021   7B..         MOV     R3,#(zha_project_CmdCallbacks >> 8) & 0xff
-   \   000023   7901         MOV     R1,#0x1
-   \   000025   12....       LCALL   `??zclGeneral_RegisterCmdCallbacks::?relay`; Banked call to: zclGeneral_RegisterCmdCallbacks
+   \   000022                ; Setup parameters for call to function zclGeneral_RegisterCmdCallbacks
+   \   000022   7A..         MOV     R2,#zha_project_CmdCallbacks & 0xff
+   \   000024   7B..         MOV     R3,#(zha_project_CmdCallbacks >> 8) & 0xff
+   \   000026   7901         MOV     R1,#0x1
+   \   000028   12....       LCALL   `??zclGeneral_RegisterCmdCallbacks::?relay`; Banked call to: zclGeneral_RegisterCmdCallbacks
     319          
     320            // Register the application's attribute list
     321            zcl_registerAttrList( SAMPLELIGHT_ENDPOINT, zha_project_NumAttributes, zha_project_Attrs );
-   \   000028                ; Setup parameters for call to function zcl_registerAttrList
-   \   000028   7C..         MOV     R4,#zha_project_Attrs & 0xff
-   \   00002A   7D..         MOV     R5,#(zha_project_Attrs >> 8) & 0xff
-   \   00002C   90....       MOV     DPTR,#zha_project_NumAttributes
-   \   00002F   E4           CLR     A
-   \   000030   93           MOVC    A,@A+DPTR
-   \   000031   FA           MOV     R2,A
-   \   000032   7901         MOV     R1,#0x1
-   \   000034   12....       LCALL   `??zcl_registerAttrList::?relay`; Banked call to: zcl_registerAttrList
+   \   00002B                ; Setup parameters for call to function zcl_registerAttrList
+   \   00002B   7C..         MOV     R4,#zha_project_Attrs & 0xff
+   \   00002D   7D..         MOV     R5,#(zha_project_Attrs >> 8) & 0xff
+   \   00002F   90....       MOV     DPTR,#zha_project_NumAttributes
+   \   000032   E4           CLR     A
+   \   000033   93           MOVC    A,@A+DPTR
+   \   000034   FA           MOV     R2,A
+   \   000035   7901         MOV     R1,#0x1
+   \   000037   12....       LCALL   `??zcl_registerAttrList::?relay`; Banked call to: zcl_registerAttrList
     322          
     323            // Register the Application to receive the unprocessed Foundation command/response messages
     324            zcl_registerForMsg( zha_project_TaskID );
-   \   000037                ; Setup parameters for call to function zcl_registerForMsg
-   \   000037   90....       MOV     DPTR,#zha_project_TaskID
-   \   00003A   E0           MOVX    A,@DPTR
-   \   00003B   F9           MOV     R1,A
-   \   00003C   12....       LCALL   `??zcl_registerForMsg::?relay`; Banked call to: zcl_registerForMsg
+   \   00003A                ; Setup parameters for call to function zcl_registerForMsg
+   \   00003A   90....       MOV     DPTR,#zha_project_TaskID
+   \   00003D   E0           MOVX    A,@DPTR
+   \   00003E   F9           MOV     R1,A
+   \   00003F   12....       LCALL   `??zcl_registerForMsg::?relay`; Banked call to: zcl_registerForMsg
     325          
     326          #ifdef ZCL_DISCOVER
     327            // Register the application's command list
@@ -554,18 +556,18 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Projects\zstack\HomeAutomation\Zi
     330          
     331            // Register for all key events - This app will handle all key events
     332            RegisterForKeys( zha_project_TaskID );
-   \   00003F                ; Setup parameters for call to function RegisterForKeys
-   \   00003F   90....       MOV     DPTR,#zha_project_TaskID
-   \   000042   E0           MOVX    A,@DPTR
-   \   000043   F9           MOV     R1,A
-   \   000044   12....       LCALL   `??RegisterForKeys::?relay`; Banked call to: RegisterForKeys
+   \   000042                ; Setup parameters for call to function RegisterForKeys
+   \   000042   90....       MOV     DPTR,#zha_project_TaskID
+   \   000045   E0           MOVX    A,@DPTR
+   \   000046   F9           MOV     R1,A
+   \   000047   12....       LCALL   `??RegisterForKeys::?relay`; Banked call to: RegisterForKeys
     333          
     334            // Register for a test endpoint
     335            afRegister( &sampleLight_TestEp );
-   \   000047                ; Setup parameters for call to function afRegister
-   \   000047   7A..         MOV     R2,#sampleLight_TestEp & 0xff
-   \   000049   7B..         MOV     R3,#(sampleLight_TestEp >> 8) & 0xff
-   \   00004B   12....       LCALL   `??afRegister::?relay`; Banked call to: afRegister
+   \   00004A                ; Setup parameters for call to function afRegister
+   \   00004A   7A..         MOV     R2,#sampleLight_TestEp & 0xff
+   \   00004C   7B..         MOV     R3,#(sampleLight_TestEp >> 8) & 0xff
+   \   00004E   12....       LCALL   `??afRegister::?relay`; Banked call to: afRegister
     336          
     337          #ifdef ZCL_EZMODE
     338            // Register EZ-Mode
@@ -573,47 +575,47 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Projects\zstack\HomeAutomation\Zi
     340          
     341            // Register with the ZDO to receive Match Descriptor Responses
     342              ZDO_RegisterForZDOMsg(task_id, Match_Desc_rsp);
-   \   00004E                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
-   \   00004E   7A06         MOV     R2,#0x6
-   \   000050   7B80         MOV     R3,#-0x80
-   \   000052   EE           MOV     A,R6
-   \   000053   F9           MOV     R1,A
-   \   000054   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
+   \   000051                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
+   \   000051   7A06         MOV     R2,#0x6
+   \   000053   7B80         MOV     R3,#-0x80
+   \   000055   EE           MOV     A,R6
+   \   000056   F9           MOV     R1,A
+   \   000057   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
     343              ZDO_RegisterForZDOMsg( task_id, End_Device_Bind_rsp );
-   \   000057                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
-   \   000057   7A20         MOV     R2,#0x20
-   \   000059   7B80         MOV     R3,#-0x80
-   \   00005B   EE           MOV     A,R6
-   \   00005C   F9           MOV     R1,A
-   \   00005D   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
+   \   00005A                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
+   \   00005A   7A20         MOV     R2,#0x20
+   \   00005C   7B80         MOV     R3,#-0x80
+   \   00005E   EE           MOV     A,R6
+   \   00005F   F9           MOV     R1,A
+   \   000060   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
     344              ZDO_RegisterForZDOMsg( task_id, Match_Desc_rsp );
-   \   000060                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
-   \   000060   7A06         MOV     R2,#0x6
-   \   000062   7B80         MOV     R3,#-0x80
-   \   000064   EE           MOV     A,R6
-   \   000065   F9           MOV     R1,A
-   \   000066   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
+   \   000063                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
+   \   000063   7A06         MOV     R2,#0x6
+   \   000065   7B80         MOV     R3,#-0x80
+   \   000067   EE           MOV     A,R6
+   \   000068   F9           MOV     R1,A
+   \   000069   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
     345              ZDO_RegisterForZDOMsg( task_id, Active_EP_rsp );
-   \   000069                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
-   \   000069   7A05         MOV     R2,#0x5
-   \   00006B   7B80         MOV     R3,#-0x80
-   \   00006D   EE           MOV     A,R6
-   \   00006E   F9           MOV     R1,A
-   \   00006F   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
+   \   00006C                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
+   \   00006C   7A05         MOV     R2,#0x5
+   \   00006E   7B80         MOV     R3,#-0x80
+   \   000070   EE           MOV     A,R6
+   \   000071   F9           MOV     R1,A
+   \   000072   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
     346              ZDO_RegisterForZDOMsg( task_id, Simple_Desc_rsp );
-   \   000072                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
-   \   000072   7A04         MOV     R2,#0x4
-   \   000074   7B80         MOV     R3,#-0x80
-   \   000076   EE           MOV     A,R6
-   \   000077   F9           MOV     R1,A
-   \   000078   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
+   \   000075                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
+   \   000075   7A04         MOV     R2,#0x4
+   \   000077   7B80         MOV     R3,#-0x80
+   \   000079   EE           MOV     A,R6
+   \   00007A   F9           MOV     R1,A
+   \   00007B   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
     347              ZDO_RegisterForZDOMsg( task_id, Device_annce );
-   \   00007B                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
-   \   00007B   7A13         MOV     R2,#0x13
-   \   00007D   7B00         MOV     R3,#0x0
-   \   00007F   EE           MOV     A,R6
-   \   000080   F9           MOV     R1,A
-   \   000081   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
+   \   00007E                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
+   \   00007E   7A13         MOV     R2,#0x13
+   \   000080   7B00         MOV     R3,#0x0
+   \   000082   EE           MOV     A,R6
+   \   000083   F9           MOV     R1,A
+   \   000084   12....       LCALL   `??ZDO_RegisterForZDOMsg::?relay`; Banked call to: ZDO_RegisterForZDOMsg
     348          #endif
     349          
     350          
@@ -621,17 +623,17 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Projects\zstack\HomeAutomation\Zi
     352            // Register the application's callback function to read/write attribute data.
     353            // This is only required when the attribute data format is unknown to ZCL.
     354            zcl_registerReadWriteCB( SAMPLELIGHT_ENDPOINT, zclDiagnostic_ReadWriteAttrCB, NULL );
-   \   000084                ; Setup parameters for call to function zcl_registerReadWriteCB
-   \   000084   7C00         MOV     R4,#0x0
-   \   000086   7D00         MOV     R5,#0x0
-   \   000088   7A..         MOV     R2,#`??zclDiagnostic_ReadWriteAttrCB::?relay` & 0xff
-   \   00008A   7B..         MOV     R3,#(`??zclDiagnostic_ReadWriteAttrCB::?relay` >> 8) & 0xff
-   \   00008C   7901         MOV     R1,#0x1
-   \   00008E   12....       LCALL   `??zcl_registerReadWriteCB::?relay`; Banked call to: zcl_registerReadWriteCB
+   \   000087                ; Setup parameters for call to function zcl_registerReadWriteCB
+   \   000087   7C00         MOV     R4,#0x0
+   \   000089   7D00         MOV     R5,#0x0
+   \   00008B   7A..         MOV     R2,#`??zclDiagnostic_ReadWriteAttrCB::?relay` & 0xff
+   \   00008D   7B..         MOV     R3,#(`??zclDiagnostic_ReadWriteAttrCB::?relay` >> 8) & 0xff
+   \   00008F   7901         MOV     R1,#0x1
+   \   000091   12....       LCALL   `??zcl_registerReadWriteCB::?relay`; Banked call to: zcl_registerReadWriteCB
     355          
     356            if ( zclDiagnostic_InitStats() == ZSuccess )
-   \   000091                ; Setup parameters for call to function zclDiagnostic_InitStats
-   \   000091   12....       LCALL   `??zclDiagnostic_InitStats::?relay`; Banked call to: zclDiagnostic_InitStats
+   \   000094                ; Setup parameters for call to function zclDiagnostic_InitStats
+   \   000094   12....       LCALL   `??zclDiagnostic_InitStats::?relay`; Banked call to: zclDiagnostic_InitStats
     357            {
     358              // Here the user could start the timer to save Diagnostics to NV
     359            }
@@ -645,8 +647,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Projects\zstack\HomeAutomation\Zi
     367            zgpTranslationTable_RegisterEP ( &zha_project_SimpleDesc );
     368          #endif
     369          }
-   \   000094   7F01         MOV     R7,#0x1
-   \   000096   02....       LJMP    ?BANKED_LEAVE_XDATA
+   \   000097   7F01         MOV     R7,#0x1
+   \   000099   02....       LJMP    ?BANKED_LEAVE_XDATA
     370          
     371          /*********************************************************************
     372           * @fn          zclSample_event_loop
@@ -3422,6 +3424,7 @@ Warning[Pe177]: function "zha_project_EZModeCB" was declared but never
         2      2   -> zcl_EZModeAction
       0      9   zha_project_Init
         0      9   -> RegisterForKeys
+        0      9   -> SerialApp_Init
         0      9   -> ZDO_RegisterForZDOMsg
         0      9   -> afRegister
         0      9   -> zclDiagnostic_InitStats
@@ -3504,7 +3507,7 @@ Warning[Pe177]: function "zha_project_EZModeCB" was declared but never
        6  zha_project_IdentifyCB::?relay
       33  zha_project_IdentifyQueryRspCB
        6  zha_project_IdentifyQueryRspCB::?relay
-     153  zha_project_Init
+     156  zha_project_Init
        6  zha_project_Init::?relay
        1  zha_project_NwkState
       63  zha_project_OnOffCB
@@ -3516,14 +3519,14 @@ Warning[Pe177]: function "zha_project_EZModeCB" was declared but never
        6  zha_project_event_loop::?relay
 
  
- 2 090 bytes in segment BANKED_CODE
+ 2 093 bytes in segment BANKED_CODE
     48 bytes in segment BANK_RELAYS
     39 bytes in segment XDATA_I
     39 bytes in segment XDATA_ID
     16 bytes in segment XDATA_ROM_C
     50 bytes in segment XDATA_Z
  
- 2 177 bytes of CODE  memory
+ 2 180 bytes of CODE  memory
      0 bytes of CONST memory (+ 16 bytes shared)
     89 bytes of XDATA memory
 
