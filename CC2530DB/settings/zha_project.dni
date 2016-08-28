@@ -9,13 +9,14 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=900871522
+Checksum=1060394091
 [CallStack]
 ShowArgs=0
 [Disassembly]
 MixedMode=1
 [Breakpoints]
-Count=0
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\Source\at_command.c}.97.9" 1 0 0 0 "" 0 ""
+Count=1
 [ChipconEmu]
 Stop timers on halt=0
 Leave target running=1

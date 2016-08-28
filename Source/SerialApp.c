@@ -13,6 +13,8 @@
 
 #include "SerialApp.h"
 
+#include "at_command.h"
+
 //static uint8 sendMsgTo_TaskID;
 static void serialAppInitTransport(void);
 
@@ -64,8 +66,9 @@ void sbpSerialAppCallback(uint8 port, uint8 event)
         osal_memset(pktBuffer,0,SBP_UART_RX_BUF_SIZE);
   	//读取全部有效的数据，这里可以一个一个读取，以解析特定的命令
 	    HalUARTRead (port, pktBuffer, numBytes);
-    
-        HalUARTWrite(port, pktBuffer,numBytes);
+        //testat();
+        At_Command(pktBuffer);
+        //HalUARTWrite(port, pktBuffer,numBytes);
     }
 }
 void sbpSerialAppWrite(uint8 *pBuffer, uint16 length)
