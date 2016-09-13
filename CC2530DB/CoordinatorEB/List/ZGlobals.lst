@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR C/C++ Compiler V9.30.1.3056 for 8051                07/Sep/2016  21:43:56
+# IAR C/C++ Compiler V9.30.1.3056 for 8051                13/Sep/2016  14:45:55
 # Copyright 2004-2015 IAR Systems AB.
 #
 #    Core               =  plain
@@ -701,10 +701,10 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\sys\ZGlobals.c
    \   000001                REQUIRE __INIT_XDATA_Z
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    278          uint8 SerialNumber[8];
+    278          uint8 SerialNumber[10];
    \                     SerialNumber:
-   \   000000                DS 8
-   \   000008                REQUIRE __INIT_XDATA_Z
+   \   000000                DS 10
+   \   00000A                REQUIRE __INIT_XDATA_Z
     279          extern NODE_INFO_t AssoList[];
     280          //#if ZG_BUILD_COORDINATOR_TYPE
     281          //extern NODE_INFO_t AssoList[];
@@ -784,7 +784,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\sys\ZGlobals.c
    \   00000E   0100         DW 1
    \   000010   ....         DW zgDeviceType
    \   000012   8C00         DW 140
-   \   000014   0800         DW 8
+   \   000014   0A00         DW 10
    \   000016   ....         DW SerialNumber
    \   000018   8B00         DW 139
    \   00001A   2C01         DW 300
@@ -2134,7 +2134,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\sys\ZGlobals.c
 
    \                                 In  segment XDATA_ID, align 1, keep-with-next
    \                     `?<Initializer for zgEndDeviceTimeoutValue>`:
-   \   000000   01           DB 1
+   \   000000   08           DB 8
 
    \                                 In  segment XDATA_ID, align 1, keep-with-next
    \                     `?<Initializer for zgChildAgingEnable>`:
@@ -2400,7 +2400,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\sys\ZGlobals.c
       12  ??Subroutine2_0
       10  ?Subroutine0
        7  ?Subroutine1
-       8  SerialNumber
+      10  SerialNumber
        1  zgApsAckWaitMultiplier
        1  zgApsAllowR19Sec
        2  zgApsDefaultMaxBindingTime
@@ -2478,10 +2478,10 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\sys\ZGlobals.c
  348 bytes in segment CODE_C
   65 bytes in segment XDATA_I
   65 bytes in segment XDATA_ID
-  47 bytes in segment XDATA_Z
+  49 bytes in segment XDATA_Z
  
  1 438 bytes of CODE  memory
-   112 bytes of XDATA memory
+   114 bytes of XDATA memory
 
 Errors: none
 Warnings: none

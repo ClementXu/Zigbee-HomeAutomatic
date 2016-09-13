@@ -108,13 +108,13 @@ void StringToHEX(uint8 *data ,uint8 *target,uint8 length)
 /*
 将不可见字符转换为字符串
 */
-void HEXtoString(uint8 *data , uint8 *targetBuf , uint8 length)
+void HEXtoString(uint8 *data , uint8 *targetBuf ,uint8 length )
 {
     uint8 i;
     uint8 *xad;
     //uint8 targetBuf[Z_EXTADDR_LEN*2+1]=0;
     // Display the extended address.
-    xad = data + length / 2 - 1;
+    xad = data + length/2 - 1;
 
     for (i = 0; i < length; xad--)
     {
@@ -455,7 +455,15 @@ uint8 Serial(RawData Setting)
     osal_memset(SerialNumber,0,10);
     osal_nv_read(ZCD_NV_DEVICE_SERIAL, 0, sizeof(SerialNumber),  &SerialNumber);
     osal_memset(buf,0,21);
-    HEXtoString(&SerialNumber[1],buf,SerialNumber[0]);
+    if(SerialNumber[0] == 0)
+    {
+        HEXtoString(&SerialNumber[1],buf,18);
+    }
+    else
+    {
+        HEXtoString(&SerialNumber[1],buf,SerialNumber[0]);
+
+    }
     
     Setting.data[0] =(uint32 *)&buf;
     Setting.length = 1;
@@ -463,7 +471,6 @@ uint8 Serial(RawData Setting)
     AnaDataProcess(&Setting);
     SerialNumber[0] = strlen(buf);
     StringToHEX(buf,&SerialNumber[1],strlen(buf));
-    
     osal_nv_write(ZCD_NV_DEVICE_SERIAL, 0, sizeof(SerialNumber),  &SerialNumber);
 }
 

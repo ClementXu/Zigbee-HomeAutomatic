@@ -539,7 +539,7 @@ AddStatus
 */
 uint8 AddStatus(RawData Setting)
 {
-        /*
+    /*
     example:+OK=sel,deviceName,batteryValue,version,sensorType,0x31
     */
     uint8 i=0,j=0,k=0;
@@ -654,6 +654,20 @@ void SendCommond()
 }
 
 
+uint16 __GetTime(uint16 addr)
+{
+    uint8 i;
+    uint16 time;
+    for(i=0;i<5;i++)
+    {
+        if(addr == AssociatedDevList[i].shortAddr)
+          time = AssociatedDevList[i].endDev.deviceTimeout - AssociatedDevList[i].timeoutCounter;
+          return time;
+            
+    }
+    return 0;
+}
+
 void _SetOnlineDeveice(uint8 *data)
 {
     //1.查询mac地址是否在硬盘表中
@@ -755,12 +769,13 @@ void _GetOnlineDeveice()
     //1.查询在线设备
     //2.根据设备的序列号来索引相应的设备状态
     uint8 i,j=0,k=0;
+    uint16 time;
     devicetype_t device;
     uint8 lightlevel;
     int num=0;
-    uint8 sendBuffer[180];
+    uint8 sendBuffer[200];
     uint8 buf[17];
-    osal_memset(sendBuffer,0,180);
+    osal_memset(sendBuffer,0,200);
     osal_memset(buf,0,17);
     afAddrType_t dstAddr;
     j = sprintf(sendBuffer,"+OK=");
@@ -772,6 +787,7 @@ void _GetOnlineDeveice()
             osal_memcpy(DeviceStatus[i].deviceType,AssoList[i].deviceType,16);
             DeviceStatus[i].uiNwk_Addr=AssoList[i].uiNwk_Addr;
             HEXtoString(AssoList[i].aucMAC,buf,16);
+            time = __GetTime(AssoList[i].uiNwk_Addr);
             if(k!=0)
                 strcat(sendBuffer,";");
             device = Indexofdevice(AssoList[i].deviceType);
@@ -781,56 +797,56 @@ void _GetOnlineDeveice()
                     zha_project_Temperature_Value = (int)DeviceStatus[i].status[0];
                     num = (zha_project_Temperature_Value/100);
                     if(abs(zha_project_Temperature_Value- num*100) < 10)
-                        j += sprintf(sendBuffer+j+k,"%s,%s,%d.0%d",buf,"temp",num,abs(zha_project_Temperature_Value- num*100));
+                        j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d.0%d",buf,"temp",time,num,abs(zha_project_Temperature_Value- num*100));
                     else
-                        j += sprintf(sendBuffer+j+k,"%s,%s,%d.%d",buf,"temp",num,abs(zha_project_Temperature_Value- num*100));
+                        j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d.%d",buf,"temp",time,num,abs(zha_project_Temperature_Value- num*100));
                     break;  
                 case light:
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d",buf,"light",DeviceStatus[i].status[0]);
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"light",time,DeviceStatus[i].status[0]);
                     break; 
                 case level:
                     lightlevel = DeviceStatus[i].status[1]/2.55;
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"level",DeviceStatus[i].status[0],lightlevel);
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"level",time,DeviceStatus[i].status[0],lightlevel);
                     break; 
                 case colortem: 
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"colortem",DeviceStatus[i].status[0],DeviceStatus[i].status[1],DeviceStatus[i].status[2]);
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d,%d",buf,"colortem",time,DeviceStatus[i].status[0],DeviceStatus[i].status[1],DeviceStatus[i].status[2]);
                     break; 
                 case pir:
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"pir",(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"pir",time,(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
                     break; 
                 case humility:
                     zha_project_Humidity_Value = DeviceStatus[i].status[0];
                     num = (zha_project_Humidity_Value/100);
                     if((zha_project_Humidity_Value- num*100) < 10)
-                        j += sprintf(sendBuffer+j+k,"%s,%s,%d.0%d",buf,"humility",num,zha_project_Humidity_Value- num*100);
+                        j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d.0%d",buf,"humility",time,num,zha_project_Humidity_Value- num*100);
                     else
-                        j += sprintf(sendBuffer+j+k,"%s,%s,%d.%d",buf,"humility",num,zha_project_Humidity_Value- num*100);
+                        j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d.%d",buf,"humility",time,num,zha_project_Humidity_Value- num*100);
                     break;  
                 case doorsen:
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"doorsen",(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"doorsen",time,(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
                     break;    
                 case lumin:
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d",buf,"lumin",DeviceStatus[i].status[0]);
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"lumin",time,DeviceStatus[i].status[0]);
                     break; 
                 case slsensor:
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"slsensor",(DeviceStatus[i].status[0]  + DeviceStatus[i].status[1]),DeviceStatus[i].status[2]); 
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"slsensor",time,(DeviceStatus[i].status[0]  + DeviceStatus[i].status[1]),DeviceStatus[i].status[2]); 
                     break; 
                 case smoke:
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"smoke",(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1),DeviceStatus[i].status[1]);
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"smoke",time,(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1));
                     break; 
                 case 0x2BE1:
                     break;   
                 case watersen:
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"watersen",(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"watersen",time,(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
                     break; 
                 case cosensor:
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"cosensor",(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"cosensor",time,(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
                     break;
                 case gassensor:
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"gassensor",(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"gassensor",time,(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
                     break;
                 case glasssen:
-                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"glasssen",(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
+                    j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"glasssen",time,(DeviceStatus[i].status[0] & 0x01),((DeviceStatus[i].status[0] & 0x02)>>1)); 
                     break;
                 case 0x2C88:
                     
@@ -839,7 +855,7 @@ void _GetOnlineDeveice()
                     
                     break;
                 case outlet:
-                    j += sprintf(sendBuffer+j+k,"%s,%x,%d",buf,"outlet",DeviceStatus[i].status[0]);
+                    j += sprintf(sendBuffer+j+k,"%s,%x,%d,%d",buf,"outlet",time,DeviceStatus[i].status[0]);
                     break;
                 default:
                     break;

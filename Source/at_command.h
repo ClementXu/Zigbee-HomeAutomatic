@@ -118,7 +118,7 @@ uint8 testat();
 void SendDatatoComputer(char *p);
 void CleanTempDevice();
 void StringToHEX(uint8 *data ,uint8 *target,uint8 length);
-void HEXtoString(uint8 *data , uint8 *targetBuf , uint8 length);
+void HEXtoString(uint8 *data , uint8 *targetBuf ,uint8 length );
 uint16 CovertACSIIFOUR(uint8 *buf);
 void sendDatatoComputer(RawData *Setting);
 void AnaDataProcess(RawData *Setting);
