@@ -3887,6 +3887,18 @@
       <name>$PROJ_DIR$\..\Source\at_command.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\Source\DeviceFun.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\DeviceFun.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\GatewayFun.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\GatewayFun.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\Source\OSAL_zha_project.c</name>
     </file>
     <file>
@@ -4337,6 +4349,12 @@
       <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_diagnostic.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_electrical_measurement.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_electrical_measurement.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_ezmode.c</name>
     </file>
     <file>
@@ -4353,6 +4371,24 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\zcl_ha.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_lighting.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_lighting.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_ms.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_ms.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_ss.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_ss.h</name>
     </file>
   </group>
   <group>

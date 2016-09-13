@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR C/C++ Compiler V9.30.1.3056 for 8051                28/Aug/2016  20:48:55
+# IAR C/C++ Compiler V9.30.1.3056 for 8051                06/Sep/2016  23:45:25
 # Copyright 2004-2015 IAR Systems AB.
 #
 #    Core               =  plain
@@ -33,18 +33,18 @@
 #        0x09, 0x0B, 0x0D, 0x0F, 0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C,
 #        0x0D}" -DMAC_MAX_FRAME_SIZE=116 -DZDNWKMGR_MIN_TRANSMISSIONS=20
 #        "-DCONST=const __code" -DGENERIC=__generic -DRFD_RCVC_ALWAYS_ON=FALSE
-#        -DPOLL_RATE=1000 -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100
+#        -DPOLL_RATE=10000 -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100
 #        -DREJOIN_POLL_RATE=440 -DREJOIN_BACKOFF=900000 -DREJOIN_SCAN=900000)
 #        -f "C:\Texas Instruments\Z-Stack Home
 #        1.2.2a.44539\Projects\zstack\HomeAutomation\Zigbee-HomeAutomatic\CC2530DB\..\..\..\Tools\CC2530DB\f8wZCL.cfg"
 #        "C:\Texas Instruments\Z-Stack Home
 #        1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c" -D SECURE=1 -D
 #        TC_LINKKEY_JOIN -D NV_INIT -D NV_RESTORE -D HOLD_AUTO_START -D
-#        BUILD_ALL_DEVICES -D HAL_UART=TRUE -D xZTOOL_P1 -D xMT_TASK -D
+#        xBUILD_ALL_DEVICES -D HAL_UART=TRUE -D xZTOOL_P1 -D xMT_TASK -D
 #        xMT_APP_FUNC -D xMT_SYS_FUNC -D xMT_ZDO_FUNC -D xLCD_SUPPORTED=DEBUG
 #        -D MULTICAST_ENABLED=FALSE -D ZCL_READ -D ZCL_WRITE -D ZCL_REPORT -D
 #        ZCL_EZMODE -D ZCL_BASIC -D ZCL_IDENTIFY -D ZCL_ON_OFF -D ZCL_SCENES -D
-#        ZCL_GROUPS -D xZCL_LEVEL_CTRL -D ZCL_DIAGNOSTIC -D
+#        ZCL_GROUPS -D ZCL_LEVEL_CTRL -D ZCL_WD -D ZCL_DIAGNOSTIC -D
 #        FEATURE_SYSTEM_STATS -D DEVICE_LOGICAL_TYPE=ZG_DEVICETYPE_COORDINATOR
 #        -lC "C:\Texas Instruments\Z-Stack Home
 #        1.2.2a.44539\Projects\zstack\HomeAutomation\Zigbee-HomeAutomatic\CC2530DB\CoordinatorEB\List"
@@ -435,53 +435,55 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     268            entry.nwkAddr = nwkAddr;
    \   000013   14           DEC     A
    \   000014   12....       LCALL   ?XSTACK_DISP0_8
-   \   000017   12....       LCALL   ?Subroutine20 & 0xFFFF
+   \   000017   12....       LCALL   ?Subroutine23 & 0xFFFF
     269            AddrMgrExtAddrSet( entry.extAddr, extAddr );
-   \                     ??CrossCallReturnLabel_8:
-   \   00001A   12....       LCALL   ?XSTACK_DISP0_8
-   \   00001D   AA82         MOV     R2,DPL
-   \   00001F   AB83         MOV     R3,DPH
-   \   000021   12....       LCALL   `??AddrMgrExtAddrSet::?relay`; Banked call to: AddrMgrExtAddrSet
-   \   000024   7416         MOV     A,#0x16
-   \   000026   12....       LCALL   ?XSTACK_DISP0_8
-   \   000029   12....       LCALL   ?Subroutine28 & 0xFFFF
+   \                     ??CrossCallReturnLabel_15:
+   \   00001A                ; Setup parameters for call to function AddrMgrExtAddrSet
+   \   00001A   7403         MOV     A,#0x3
+   \   00001C   12....       LCALL   ?XSTACK_DISP0_8
+   \   00001F   AA82         MOV     R2,DPL
+   \   000021   AB83         MOV     R3,DPH
+   \   000023   12....       LCALL   `??AddrMgrExtAddrSet::?relay`; Banked call to: AddrMgrExtAddrSet
+   \   000026   7416         MOV     A,#0x16
+   \   000028   12....       LCALL   ?XSTACK_DISP0_8
+   \   00002B   12....       LCALL   ?Subroutine28 & 0xFFFF
     270          
     271            if ( AddrMgrEntryUpdate( &entry ) == TRUE )
-   \                     ??CrossCallReturnLabel_24:
-   \   00002C   12....       LCALL   `??AddrMgrEntryUpdate::?relay`; Banked call to: AddrMgrEntryUpdate
-   \   00002F   E9           MOV     A,R1
-   \   000030   6401         XRL     A,#0x1
-   \   000032   700A         JNZ     ??ZDSecMgrAddrStore_0
+   \                     ??CrossCallReturnLabel_27:
+   \   00002E   12....       LCALL   `??AddrMgrEntryUpdate::?relay`; Banked call to: AddrMgrEntryUpdate
+   \   000031   E9           MOV     A,R1
+   \   000032   6401         XRL     A,#0x1
+   \   000034   700A         JNZ     ??ZDSecMgrAddrStore_0
     272            {
     273              // return successful results
     274              *ami   = entry.index;
-   \   000034   740B         MOV     A,#0xb
-   \   000036   12....       LCALL   ?XSTACK_DISP0_8
-   \   000039   12....       LCALL   ?Subroutine12 & 0xFFFF
+   \   000036   740B         MOV     A,#0xb
+   \   000038   12....       LCALL   ?XSTACK_DISP0_8
+   \   00003B   12....       LCALL   ?Subroutine12 & 0xFFFF
     275              status = ZSuccess;
     276            }
-   \                     ??CrossCallReturnLabel_69:
-   \   00003C   8008         SJMP    ??CrossCallReturnLabel_11
+   \                     ??CrossCallReturnLabel_72:
+   \   00003E   8008         SJMP    ??CrossCallReturnLabel_8
     277            else
     278            {
     279              // return failed results
     280              *ami   = entry.index;
    \                     ??ZDSecMgrAddrStore_0:
-   \   00003E   740B         MOV     A,#0xb
-   \   000040   12....       LCALL   ?XSTACK_DISP0_8
-   \   000043   12....       LCALL   ?Subroutine21 & 0xFFFF
+   \   000040   740B         MOV     A,#0xb
+   \   000042   12....       LCALL   ?XSTACK_DISP0_8
+   \   000045   12....       LCALL   ?Subroutine20 & 0xFFFF
     281              status = ZNwkUnknownDevice;
     282            }
     283          
     284            return status;
-   \                     ??CrossCallReturnLabel_11:
-   \   000046   02....       LJMP    ?Subroutine0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_8:
+   \   000048   02....       LJMP    ?Subroutine0 & 0xFFFF
     285          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine28:
-   \   000000   12....       LCALL   ?Subroutine47 & 0xFFFF
-   \                     ??CrossCallReturnLabel_155:
+   \   000000   12....       LCALL   ?Subroutine46 & 0xFFFF
+   \                     ??CrossCallReturnLabel_158:
    \   000003   FE           MOV     R6,A
    \   000004   E9           MOV     A,R1
    \   000005   FF           MOV     R7,A
@@ -492,9 +494,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00000A   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine21:
-   \   000000   12....       LCALL   ?Subroutine48 & 0xFFFF
-   \                     ??CrossCallReturnLabel_96:
+   \                     ?Subroutine20:
+   \   000000   12....       LCALL   ?Subroutine47 & 0xFFFF
+   \                     ??CrossCallReturnLabel_99:
    \   000003   8E82         MOV     DPL,R6
    \   000005   8F83         MOV     DPH,R7
    \   000007   E8           MOV     A,R0
@@ -506,34 +508,24 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00000E   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine20:
-   \   000000   12....       LCALL   ?Subroutine44 & 0xFFFF
-   \                     ??CrossCallReturnLabel_176:
-   \   000003                ; Setup parameters for call to function AddrMgrExtAddrSet
-   \   000003                ; Setup parameters for call to function AddrMgrExtAddrSet
-   \   000003                ; Setup parameters for call to function AddrMgrExtAddrSet
-   \   000003   7403         MOV     A,#0x3
-   \   000005   22           RET
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine12:
    \   000000   E0           MOVX    A,@DPTR
    \   000001   F8           MOV     R0,A
    \   000002   A3           INC     DPTR
    \   000003   E0           MOVX    A,@DPTR
-   \   000004                REQUIRE ??Subroutine52_0
-   \   000004                ; // Fall through to label ??Subroutine52_0
+   \   000004                REQUIRE ??Subroutine51_0
+   \   000004                ; // Fall through to label ??Subroutine51_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine52_0:
+   \                     ??Subroutine51_0:
    \   000000   F9           MOV     R1,A
    \   000001   8E82         MOV     DPL,R6
    \   000003   8F83         MOV     DPH,R7
-   \   000005                REQUIRE ??Subroutine53_0
-   \   000005                ; // Fall through to label ??Subroutine53_0
+   \   000005                REQUIRE ??Subroutine52_0
+   \   000005                ; // Fall through to label ??Subroutine52_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine53_0:
+   \                     ??Subroutine52_0:
    \   000000   E8           MOV     A,R0
    \   000001   F0           MOVX    @DPTR,A
    \   000002   A3           INC     DPTR
@@ -543,7 +535,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000007   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine47:
+   \                     ?Subroutine46:
    \   000000   E0           MOVX    A,@DPTR
    \   000001   F8           MOV     R0,A
    \   000002   A3           INC     DPTR
@@ -553,7 +545,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000006   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine48:
+   \                     ?Subroutine47:
    \   000000   E0           MOVX    A,@DPTR
    \   000001   F8           MOV     R0,A
    \   000002   A3           INC     DPTR
@@ -562,7 +554,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000005   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine44:
+   \                     ?Subroutine23:
    \   000000   EA           MOV     A,R2
    \   000001   F0           MOVX    @DPTR,A
    \   000002   A3           INC     DPTR
@@ -573,17 +565,17 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine0:
    \   000000   740D         MOV     A,#0xd
-   \   000002                REQUIRE ??Subroutine65_0
-   \   000002                ; // Fall through to label ??Subroutine65_0
+   \   000002                REQUIRE ??Subroutine62_0
+   \   000002                ; // Fall through to label ??Subroutine62_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine65_0:
+   \                     ??Subroutine62_0:
    \   000000   12....       LCALL   ?DEALLOC_XSTACK8
-   \   000003                REQUIRE ??Subroutine66_0
-   \   000003                ; // Fall through to label ??Subroutine66_0
+   \   000003                REQUIRE ??Subroutine63_0
+   \   000003                ; // Fall through to label ??Subroutine63_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine66_0:
+   \                     ??Subroutine63_0:
    \   000000   7F01         MOV     R7,#0x1
    \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
     286          
@@ -621,47 +613,49 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     305            entry.nwkAddr = nwkAddr;
    \   000013   14           DEC     A
    \   000014   12....       LCALL   ?XSTACK_DISP0_8
-   \   000017   12....       LCALL   ?Subroutine20 & 0xFFFF
+   \   000017   12....       LCALL   ?Subroutine23 & 0xFFFF
     306            AddrMgrExtAddrSet( entry.extAddr, extAddr );
-   \                     ??CrossCallReturnLabel_9:
-   \   00001A   12....       LCALL   ?XSTACK_DISP0_8
-   \   00001D   AA82         MOV     R2,DPL
-   \   00001F   AB83         MOV     R3,DPH
-   \   000021   12....       LCALL   `??AddrMgrExtAddrSet::?relay`; Banked call to: AddrMgrExtAddrSet
-   \   000024   7416         MOV     A,#0x16
-   \   000026   12....       LCALL   ?XSTACK_DISP0_8
-   \   000029   12....       LCALL   ?Subroutine28 & 0xFFFF
+   \                     ??CrossCallReturnLabel_16:
+   \   00001A                ; Setup parameters for call to function AddrMgrExtAddrSet
+   \   00001A   7403         MOV     A,#0x3
+   \   00001C   12....       LCALL   ?XSTACK_DISP0_8
+   \   00001F   AA82         MOV     R2,DPL
+   \   000021   AB83         MOV     R3,DPH
+   \   000023   12....       LCALL   `??AddrMgrExtAddrSet::?relay`; Banked call to: AddrMgrExtAddrSet
+   \   000026   7416         MOV     A,#0x16
+   \   000028   12....       LCALL   ?XSTACK_DISP0_8
+   \   00002B   12....       LCALL   ?Subroutine28 & 0xFFFF
     307          
     308            if ( AddrMgrEntryUpdate( &entry ) == TRUE )
-   \                     ??CrossCallReturnLabel_25:
-   \   00002C   12....       LCALL   `??AddrMgrEntryUpdate::?relay`; Banked call to: AddrMgrEntryUpdate
-   \   00002F   E9           MOV     A,R1
-   \   000030   6401         XRL     A,#0x1
-   \   000032   700A         JNZ     ??ZDSecMgrExtAddrStore_0
+   \                     ??CrossCallReturnLabel_28:
+   \   00002E   12....       LCALL   `??AddrMgrEntryUpdate::?relay`; Banked call to: AddrMgrEntryUpdate
+   \   000031   E9           MOV     A,R1
+   \   000032   6401         XRL     A,#0x1
+   \   000034   700A         JNZ     ??ZDSecMgrExtAddrStore_0
     309            {
     310              // return successful results
     311              *ami   = entry.index;
-   \   000034   740B         MOV     A,#0xb
-   \   000036   12....       LCALL   ?XSTACK_DISP0_8
-   \   000039   12....       LCALL   ?Subroutine12 & 0xFFFF
+   \   000036   740B         MOV     A,#0xb
+   \   000038   12....       LCALL   ?XSTACK_DISP0_8
+   \   00003B   12....       LCALL   ?Subroutine12 & 0xFFFF
     312              status = ZSuccess;
     313            }
-   \                     ??CrossCallReturnLabel_70:
-   \   00003C   8008         SJMP    ??CrossCallReturnLabel_12
+   \                     ??CrossCallReturnLabel_73:
+   \   00003E   8008         SJMP    ??CrossCallReturnLabel_9
     314            else
     315            {
     316              // return failed results
     317              *ami   = entry.index;
    \                     ??ZDSecMgrExtAddrStore_0:
-   \   00003E   740B         MOV     A,#0xb
-   \   000040   12....       LCALL   ?XSTACK_DISP0_8
-   \   000043   12....       LCALL   ?Subroutine21 & 0xFFFF
+   \   000040   740B         MOV     A,#0xb
+   \   000042   12....       LCALL   ?XSTACK_DISP0_8
+   \   000045   12....       LCALL   ?Subroutine20 & 0xFFFF
     318              status = ZNwkUnknownDevice;
     319            }
     320          
     321            return status;
-   \                     ??CrossCallReturnLabel_12:
-   \   000046   02....       LJMP    ?Subroutine0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_9:
+   \   000048   02....       LJMP    ?Subroutine0 & 0xFFFF
     322          }
     323          
     324          /******************************************************************************
@@ -727,8 +721,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000038   12....       LCALL   ?Subroutine12 & 0xFFFF
     348              status = ZSuccess;
     349            }
-   \                     ??CrossCallReturnLabel_71:
-   \   00003B   8008         SJMP    ??CrossCallReturnLabel_13
+   \                     ??CrossCallReturnLabel_74:
+   \   00003B   8008         SJMP    ??CrossCallReturnLabel_10
     350            else
     351            {
     352              // return failed results
@@ -736,12 +730,12 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ??ZDSecMgrExtAddrLookup_0:
    \   00003D   740B         MOV     A,#0xb
    \   00003F   12....       LCALL   ?XSTACK_DISP0_8
-   \   000042   12....       LCALL   ?Subroutine21 & 0xFFFF
+   \   000042   12....       LCALL   ?Subroutine20 & 0xFFFF
     354              status = ZNwkUnknownDevice;
     355            }
     356          
     357            return status;
-   \                     ??CrossCallReturnLabel_13:
+   \                     ??CrossCallReturnLabel_10:
    \   000045   02....       LJMP    ?Subroutine0 & 0xFFFF
     358          }
     359          
@@ -791,14 +785,14 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     383              addrEntry.index = entryAmi;
    \   00001D   85..82       MOV     DPL,?XSP + 0
    \   000020   85..83       MOV     DPH,?XSP + 1
-   \   000023   12....       LCALL   ??Subroutine56_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_87:
+   \   000023   12....       LCALL   ??Subroutine55_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_90:
    \   000026   740D         MOV     A,#0xd
    \   000028   12....       LCALL   ?XSTACK_DISP0_8
-   \   00002B   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   00002B   12....       LCALL   ??Subroutine60_0 & 0xFFFF
     384          
     385              if ( AddrMgrEntryRelease( &addrEntry ) != TRUE )
-   \                     ??CrossCallReturnLabel_122:
+   \                     ??CrossCallReturnLabel_125:
    \   00002E                ; Setup parameters for call to function AddrMgrEntryRelease
    \   00002E   7402         MOV     A,#0x2
    \   000030   12....       LCALL   ?XSTACK_DISP101_8
@@ -818,17 +812,17 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00003D   EE           MOV     A,R6
    \   00003E   F9           MOV     R1,A
    \   00003F   740F         MOV     A,#0xf
-   \   000041   02....       LJMP    ??Subroutine65_0 & 0xFFFF
+   \   000041   02....       LJMP    ??Subroutine62_0 & 0xFFFF
     393          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine56_0:
-   \   000000   12....       LCALL   ?Subroutine48 & 0xFFFF
-   \                     ??CrossCallReturnLabel_98:
+   \                     ??Subroutine55_0:
+   \   000000   12....       LCALL   ?Subroutine47 & 0xFFFF
+   \                     ??CrossCallReturnLabel_101:
    \   000003   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine61_0:
+   \                     ??Subroutine60_0:
    \   000000   E8           MOV     A,R0
    \   000001   F0           MOVX    @DPTR,A
    \   000002   A3           INC     DPTR
@@ -858,8 +852,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000006   FE           MOV     R6,A
     406            if (ZDSecMgrEntries == NULL)
    \   000007   90....       MOV     DPTR,#ZDSecMgrEntries
-   \   00000A   12....       LCALL   ??Subroutine62_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_143:
+   \   00000A   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_146:
    \   00000D   7032         JNZ     ??ZDSecMgrEntryInit_0
     407            {
     408              uint16 index;
@@ -874,8 +868,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00001A   F0           MOVX    @DPTR,A
    \   00001B   A3           INC     DPTR
    \   00001C   EB           MOV     A,R3
-   \   00001D   12....       LCALL   ??Subroutine55_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_86:
+   \   00001D   12....       LCALL   ??Subroutine54_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_89:
    \   000020   6025         JZ      ??ZDSecMgrEntryInit_1
     411              {
     412                return;
@@ -891,13 +885,13 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     418          
     419                ZDSecMgrEntries[index].keyNvId = SEC_NO_KEY_NV_ID;
     420              }
-   \                     ??CrossCallReturnLabel_32:
+   \                     ??CrossCallReturnLabel_35:
    \   000029   74FE         MOV     A,#-0x2
    \   00002B   F0           MOVX    @DPTR,A
    \   00002C   A3           INC     DPTR
    \   00002D   04           INC     A
    \   00002E   12....       LCALL   ?Subroutine43 & 0xFFFF
-   \                     ??CrossCallReturnLabel_54:
+   \                     ??CrossCallReturnLabel_57:
    \   000031   A3           INC     DPTR
    \   000032   A3           INC     DPTR
    \   000033   E4           CLR     A
@@ -911,7 +905,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ??ZDSecMgrEntryInit_3:
    \   00003C   12....       LCALL   ?Subroutine38 & 0xFFFF
     421            }
-   \                     ??CrossCallReturnLabel_77:
+   \                     ??CrossCallReturnLabel_80:
    \   00003F   40E5         JC      ??ZDSecMgrEntryInit_2
     422          
     423          #if defined NV_RESTORE
@@ -929,40 +923,40 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     430          #endif
     431          }
    \                     ??ZDSecMgrEntryInit_1:
-   \   000047   02....       LJMP    ??Subroutine66_0 & 0xFFFF
+   \   000047   02....       LJMP    ??Subroutine63_0 & 0xFFFF
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine38:
    \   000000   C3           CLR     C
-   \   000001                REQUIRE ??Subroutine54_0
-   \   000001                ; // Fall through to label ??Subroutine54_0
+   \   000001                REQUIRE ??Subroutine53_0
+   \   000001                ; // Fall through to label ??Subroutine53_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine54_0:
+   \                     ??Subroutine53_0:
    \   000000   9403         SUBB    A,#0x3
    \   000002   E9           MOV     A,R1
    \   000003   9400         SUBB    A,#0x0
    \   000005   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine55_0:
+   \                     ??Subroutine54_0:
    \   000000   F0           MOVX    @DPTR,A
    \   000001   90....       MOV     DPTR,#ZDSecMgrEntries
-   \   000004   12....       LCALL   ?Subroutine47 & 0xFFFF
-   \                     ??CrossCallReturnLabel_156:
+   \   000004   12....       LCALL   ?Subroutine46 & 0xFFFF
+   \                     ??CrossCallReturnLabel_159:
    \   000007   49           ORL     A,R1
    \   000008   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine32:
-   \   000000   12....       LCALL   ?Subroutine50 & 0xFFFF
-   \                     ??CrossCallReturnLabel_66:
+   \   000000   12....       LCALL   ?Subroutine49 & 0xFFFF
+   \                     ??CrossCallReturnLabel_69:
    \   000003   8A82         MOV     DPL,R2
    \   000005   8B83         MOV     DPH,R3
    \   000007   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine50:
+   \                     ?Subroutine49:
    \   000000   E8           MOV     A,R0
    \   000001   FA           MOV     R2,A
    \   000002   E9           MOV     A,R1
@@ -996,9 +990,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000005   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine62_0:
-   \   000000   12....       LCALL   ?Subroutine47 & 0xFFFF
-   \                     ??CrossCallReturnLabel_157:
+   \                     ??Subroutine61_0:
+   \   000000   12....       LCALL   ?Subroutine46 & 0xFFFF
+   \                     ??CrossCallReturnLabel_160:
    \   000003   49           ORL     A,R1
    \   000004   22           RET
     432          
@@ -1039,7 +1033,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     450          
     451            // verify data is available
     452            if ( ZDSecMgrEntries != NULL )
-   \                     ??CrossCallReturnLabel_82:
+   \                     ??CrossCallReturnLabel_85:
    \   000015   6046         JZ      ??ZDSecMgrEntryLookup_0
     453            {
     454              addrMgrEntry.user    = ADDRMGR_USER_SECURITY;
@@ -1053,7 +1047,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000024   12....       LCALL   ?Subroutine13 & 0xFFFF
     456          
     457              if ( AddrMgrEntryLookupNwk( &addrMgrEntry ) == TRUE )
-   \                     ??CrossCallReturnLabel_158:
+   \                     ??CrossCallReturnLabel_161:
    \   000027   12....       LCALL   `??AddrMgrEntryLookupNwk::?relay`; Banked call to: AddrMgrEntryLookupNwk
    \   00002A   E9           MOV     A,R1
    \   00002B   6401         XRL     A,#0x1
@@ -1065,12 +1059,12 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     460                {
     461                  if ( addrMgrEntry.index == ZDSecMgrEntries[index].ami )
    \                     ??ZDSecMgrEntryLookup_1:
-   \   000033   12....       LCALL   ?Subroutine50 & 0xFFFF
-   \                     ??CrossCallReturnLabel_65:
+   \   000033   12....       LCALL   ?Subroutine49 & 0xFFFF
+   \                     ??CrossCallReturnLabel_68:
    \   000036   740B         MOV     A,#0xb
    \   000038   12....       LCALL   ?XSTACK_DISP0_8
    \   00003B   12....       LCALL   ?Subroutine34 & 0xFFFF
-   \                     ??CrossCallReturnLabel_36:
+   \                     ??CrossCallReturnLabel_39:
    \   00003E   8A82         MOV     DPL,R2
    \   000040   8B83         MOV     DPH,R3
    \   000042   E0           MOVX    A,@DPTR
@@ -1087,13 +1081,13 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00004B   EA           MOV     A,R2
    \   00004C   F8           MOV     R0,A
    \   00004D   EB           MOV     A,R3
-   \   00004E   12....       LCALL   ??Subroutine52_0 & 0xFFFF
+   \   00004E   12....       LCALL   ??Subroutine51_0 & 0xFFFF
     465          
     466                    // break from loop
     467                    return ZSuccess;
     468                  }
     469                }
-   \                     ??CrossCallReturnLabel_72:
+   \                     ??CrossCallReturnLabel_75:
    \   000051   800C         SJMP    ??ZDSecMgrEntryLookup_4
    \                     ??ZDSecMgrEntryLookup_3:
    \   000053   08           INC     R0
@@ -1104,7 +1098,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000058   12....       LCALL   ?Subroutine38 & 0xFFFF
     470              }
     471            }
-   \                     ??CrossCallReturnLabel_78:
+   \                     ??CrossCallReturnLabel_81:
    \   00005B   40D6         JC      ??ZDSecMgrEntryLookup_1
     472          
     473            return ZNwkUnknownDevice;
@@ -1119,8 +1113,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000000   E4           CLR     A
    \   000001   F0           MOVX    @DPTR,A
    \   000002   A3           INC     DPTR
-   \   000003                REQUIRE ??Subroutine55_0
-   \   000003                ; // Fall through to label ??Subroutine55_0
+   \   000003                REQUIRE ??Subroutine54_0
+   \   000003                ; // Fall through to label ??Subroutine54_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine34:
@@ -1137,11 +1131,11 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000001   F0           MOVX    @DPTR,A
    \   000002   A3           INC     DPTR
    \   000003   EB           MOV     A,R3
-   \   000004                REQUIRE ??Subroutine63_0
-   \   000004                ; // Fall through to label ??Subroutine63_0
+   \   000004                REQUIRE ??Subroutine64_0
+   \   000004                ; // Fall through to label ??Subroutine64_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine63_0:
+   \                     ??Subroutine64_0:
    \   000000   F0           MOVX    @DPTR,A
    \   000001                ; Setup parameters for call to function AddrMgrEntryLookupNwk
    \   000001                ; Setup parameters for call to function APSME_RequestKeyReq
@@ -1187,7 +1181,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     492          
     493            // verify data is available
     494            if ( ZDSecMgrEntries != NULL )
-   \                     ??CrossCallReturnLabel_83:
+   \                     ??CrossCallReturnLabel_86:
    \   00000C   6030         JZ      ??ZDSecMgrEntryLookupAMI_0
     495            {
     496              for ( index = 0; index < ZDSECMGR_ENTRY_MAX ; index++ )
@@ -1197,7 +1191,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     498                if ( ZDSecMgrEntries[index].ami == ami )
    \                     ??ZDSecMgrEntryLookupAMI_1:
    \   000012   12....       LCALL   ?Subroutine40 & 0xFFFF
-   \                     ??CrossCallReturnLabel_48:
+   \                     ??CrossCallReturnLabel_51:
    \   000015   FE           MOV     R6,A
    \   000016   A3           INC     DPTR
    \   000017   E0           MOVX    A,@DPTR
@@ -1222,13 +1216,13 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00002A   F9           MOV     R1,A
    \   00002B   8C82         MOV     DPL,R4
    \   00002D   8D83         MOV     DPH,R5
-   \   00002F   12....       LCALL   ??Subroutine53_0 & 0xFFFF
+   \   00002F   12....       LCALL   ??Subroutine52_0 & 0xFFFF
     502          
     503                  // break from loop
     504                  return ZSuccess;
     505                }
     506              }
-   \                     ??CrossCallReturnLabel_73:
+   \                     ??CrossCallReturnLabel_76:
    \   000032   800C         SJMP    ??ZDSecMgrEntryLookupAMI_4
    \                     ??ZDSecMgrEntryLookupAMI_3:
    \   000034   08           INC     R0
@@ -1238,14 +1232,14 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ??ZDSecMgrEntryLookupAMI_5:
    \   000039   12....       LCALL   ?Subroutine38 & 0xFFFF
     507            }
-   \                     ??CrossCallReturnLabel_79:
+   \                     ??CrossCallReturnLabel_82:
    \   00003C   40D4         JC      ??ZDSecMgrEntryLookupAMI_1
     508          
     509            return ZNwkUnknownDevice;
    \                     ??ZDSecMgrEntryLookupAMI_0:
    \   00003E   79C8         MOV     R1,#-0x38
    \                     ??ZDSecMgrEntryLookupAMI_4:
-   \   000040   02....       LJMP    ??Subroutine66_0 & 0xFFFF
+   \   000040   02....       LJMP    ??Subroutine63_0 & 0xFFFF
     510          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
@@ -1326,9 +1320,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000026   FD           MOV     R5,A
    \   000027   85..82       MOV     DPL,?XSP + 0
    \   00002A   85..83       MOV     DPH,?XSP + 1
-   \   00002D   12....       LCALL   ??Subroutine58_0 & 0xFFFF
+   \   00002D   12....       LCALL   ??Subroutine57_0 & 0xFFFF
     535            }
-   \                     ??CrossCallReturnLabel_99:
+   \                     ??CrossCallReturnLabel_102:
    \   000030   12....       LCALL   `??ZDSecMgrEntryLookupAMI::?relay`; Banked call to: ZDSecMgrEntryLookupAMI
    \   000033   E9           MOV     A,R1
    \   000034   F5..         MOV     ?V0,A
@@ -1342,10 +1336,10 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine7:
    \   000000   7402         MOV     A,#0x2
-   \   000002   02....       LJMP    ??Subroutine65_0 & 0xFFFF
+   \   000002   02....       LJMP    ??Subroutine62_0 & 0xFFFF
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine58_0:
+   \                     ??Subroutine57_0:
    \   000000   E0           MOVX    A,@DPTR
    \   000001   FA           MOV     R2,A
    \   000002   A3           INC     DPTR
@@ -1393,8 +1387,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     558              // verify data is available
     559              if ( ZDSecMgrEntries != NULL )
    \   000018   90....       MOV     DPTR,#ZDSecMgrEntries
-   \   00001B   12....       LCALL   ??Subroutine62_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_144:
+   \   00001B   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_147:
    \   00001E   6037         JZ      ??ZDSecMgrEntryLookupExtGetIndex_0
     560              {
     561                for ( index = 0; index < ZDSECMGR_ENTRY_MAX ; index++ )
@@ -1404,9 +1398,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     563                  if ( ZDSecMgrEntries[index].ami == ami )
    \                     ??ZDSecMgrEntryLookupExtGetIndex_1:
    \   000024   12....       LCALL   ?Subroutine32 & 0xFFFF
-   \                     ??CrossCallReturnLabel_33:
+   \                     ??CrossCallReturnLabel_36:
    \   000027   12....       LCALL   ?Subroutine34 & 0xFFFF
-   \                     ??CrossCallReturnLabel_37:
+   \                     ??CrossCallReturnLabel_40:
    \   00002A   85..82       MOV     DPL,?XSP + 0
    \   00002D   85..83       MOV     DPH,?XSP + 1
    \   000030   E0           MOVX    A,@DPTR
@@ -1422,9 +1416,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     566                    *entry = &ZDSecMgrEntries[index];
    \   000039   8E82         MOV     DPL,R6
    \   00003B   8F83         MOV     DPH,R7
-   \   00003D   12....       LCALL   ?Subroutine44 & 0xFFFF
+   \   00003D   12....       LCALL   ?Subroutine23 & 0xFFFF
     567                    *entryIndex = index;
-   \                     ??CrossCallReturnLabel_172:
+   \                     ??CrossCallReturnLabel_17:
    \   000040   740B         MOV     A,#0xb
    \   000042   12....       LCALL   ?XSTACK_DISP0_8
    \   000045   12....       LCALL   ?Subroutine35 & 0xFFFF
@@ -1433,9 +1427,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     570                    return ZSuccess;
     571                  }
     572                }
-   \                     ??CrossCallReturnLabel_40:
-   \   000048   12....       LCALL   ??Subroutine53_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_74:
+   \                     ??CrossCallReturnLabel_43:
+   \   000048   12....       LCALL   ??Subroutine52_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_77:
    \   00004B   800C         SJMP    ??ZDSecMgrEntryLookupExtGetIndex_4
    \                     ??ZDSecMgrEntryLookupExtGetIndex_3:
    \   00004D   08           INC     R0
@@ -1446,7 +1440,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000052   12....       LCALL   ?Subroutine38 & 0xFFFF
     573              }
     574            }
-   \                     ??CrossCallReturnLabel_80:
+   \                     ??CrossCallReturnLabel_83:
    \   000055   40CD         JC      ??ZDSecMgrEntryLookupExtGetIndex_1
     575          
     576            return ZNwkUnknownDevice;
@@ -1458,12 +1452,12 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine35:
-   \   000000   12....       LCALL   ?Subroutine49 & 0xFFFF
-   \                     ??CrossCallReturnLabel_64:
+   \   000000   12....       LCALL   ?Subroutine48 & 0xFFFF
+   \                     ??CrossCallReturnLabel_67:
    \   000003   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine49:
+   \                     ?Subroutine48:
    \   000000   E0           MOVX    A,@DPTR
    \   000001   FA           MOV     R2,A
    \   000002   A3           INC     DPTR
@@ -1497,8 +1491,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     593            // verify data is available
     594            if ( ZDSecMgrEntries != NULL )
    \   000005   90....       MOV     DPTR,#ZDSecMgrEntries
-   \   000008   12....       LCALL   ??Subroutine62_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_145:
+   \   000008   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_148:
    \   00000B   602D         JZ      ??ZDSecMgrEntryLookupAMIGetIndex_0
     595            {
     596              for ( index = 0; index < ZDSECMGR_ENTRY_MAX ; index++ )
@@ -1508,7 +1502,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     598                if ( ZDSecMgrEntries[index].ami == ami )
    \                     ??ZDSecMgrEntryLookupAMIGetIndex_1:
    \   000011   12....       LCALL   ?Subroutine40 & 0xFFFF
-   \                     ??CrossCallReturnLabel_49:
+   \                     ??CrossCallReturnLabel_52:
    \   000014   F5..         MOV     ?V0,A
    \   000016   A3           INC     DPTR
    \   000017   E0           MOVX    A,@DPTR
@@ -1528,13 +1522,13 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     601                  *entryIndex = index;
    \   000027   8C82         MOV     DPL,R4
    \   000029   8D83         MOV     DPH,R5
-   \   00002B   12....       LCALL   ??Subroutine53_0 & 0xFFFF
+   \   00002B   12....       LCALL   ??Subroutine52_0 & 0xFFFF
     602          
     603                  // break from loop
     604                  return ZSuccess;
     605                }
     606              }
-   \                     ??CrossCallReturnLabel_75:
+   \                     ??CrossCallReturnLabel_78:
    \   00002E   800C         SJMP    ??ZDSecMgrEntryLookupAMIGetIndex_4
    \                     ??ZDSecMgrEntryLookupAMIGetIndex_3:
    \   000030   08           INC     R0
@@ -1544,14 +1538,14 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ??ZDSecMgrEntryLookupAMIGetIndex_5:
    \   000035   12....       LCALL   ?Subroutine38 & 0xFFFF
     607            }
-   \                     ??CrossCallReturnLabel_81:
+   \                     ??CrossCallReturnLabel_84:
    \   000038   40D7         JC      ??ZDSecMgrEntryLookupAMIGetIndex_1
     608          
     609            return ZNwkUnknownDevice;
    \                     ??ZDSecMgrEntryLookupAMIGetIndex_0:
    \   00003A   79C8         MOV     R1,#-0x38
    \                     ??ZDSecMgrEntryLookupAMIGetIndex_4:
-   \   00003C   02....       LJMP    ??Subroutine66_0 & 0xFFFF
+   \   00003C   02....       LJMP    ??Subroutine63_0 & 0xFFFF
     610          }
     611          
     612          /******************************************************************************
@@ -1597,8 +1591,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000010   12....       LCALL   ?XSTACK_DISP102_8
    \   000013   8E82         MOV     DPL,R6
    \   000015   8F83         MOV     DPH,R7
-   \   000017   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_100:
+   \   000017   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_103:
    \   00001A   12....       LCALL   `??ZDSecMgrEntryLookupAMIGetIndex::?relay`; Banked call to: ZDSecMgrEntryLookupAMIGetIndex
    \   00001D   E9           MOV     A,R1
    \   00001E   F5..         MOV     ?V2,A
@@ -1628,7 +1622,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     639              osal_nv_write( entry->keyNvId, 0,
     640                                  sizeof(APSME_LinkKeyData_t), pApsLinkKey);
    \   000039   12....       LCALL   ?Subroutine39 & 0xFFFF
-   \                     ??CrossCallReturnLabel_46:
+   \                     ??CrossCallReturnLabel_49:
    \   00003C                ; Setup parameters for call to function osal_nv_write
    \   00003C   78..         MOV     R0,#?V4
    \   00003E   12....       LCALL   ?PUSH_XSTACK_I_TWO
@@ -1640,8 +1634,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00004E   7D00         MOV     R5,#0x0
    \   000050   85..82       MOV     DPL,?V0
    \   000053   8983         MOV     DPH,R1
-   \   000055   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_101:
+   \   000055   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_104:
    \   000058   12....       LCALL   `??osal_nv_write::?relay`; Banked call to: osal_nv_write
    \   00005B   7404         MOV     A,#0x4
    \   00005D   12....       LCALL   ?DEALLOC_XSTACK8
@@ -1671,11 +1665,11 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000077   F0           MOVX    @DPTR,A
    \   000078   A3           INC     DPTR
    \   000079   04           INC     A
-   \   00007A   12....       LCALL   ?Subroutine23 & 0xFFFF
+   \   00007A   12....       LCALL   ?Subroutine22 & 0xFFFF
     650          
     651            // set to default value
     652            entry->authenticateOption = ZDSecMgr_Not_Authenticated;
-   \                     ??CrossCallReturnLabel_14:
+   \                     ??CrossCallReturnLabel_11:
    \   00007D   A3           INC     DPTR
    \   00007E   A3           INC     DPTR
    \   00007F   A3           INC     DPTR
@@ -1692,9 +1686,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     657              ZDSecMgrUpdateNV(entryIndex);
    \   00008A   7402         MOV     A,#0x2
    \   00008C   12....       LCALL   ?XSTACK_DISP0_8
-   \   00008F   12....       LCALL   ??Subroutine58_0 & 0xFFFF
+   \   00008F   12....       LCALL   ??Subroutine57_0 & 0xFFFF
     658            }
-   \                     ??CrossCallReturnLabel_102:
+   \                     ??CrossCallReturnLabel_105:
    \   000092   EA           MOV     A,R2
    \   000093   FE           MOV     R6,A
    \   000094   EB           MOV     A,R3
@@ -1710,8 +1704,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000A3   28           ADD     A,R0
    \   0000A4   FF           MOV     R7,A
    \   0000A5   90....       MOV     DPTR,#ZDSecMgrEntries
-   \   0000A8   12....       LCALL   ??Subroutine62_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_146:
+   \   0000A8   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_149:
    \   0000AB   603E         JZ      ??ZDSecMgrEntryFree_2
    \   0000AD                ; Setup parameters for call to function osal_nv_write
    \   0000AD   90....       MOV     DPTR,#ZDSecMgrEntries
@@ -1771,7 +1765,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000113   E9           MOV     A,R1
    \   000114   7054         JNZ     ??ZDSecMgrEntryFree_1
    \   000116   12....       LCALL   ?Subroutine33 & 0xFFFF
-   \                     ??CrossCallReturnLabel_34:
+   \                     ??CrossCallReturnLabel_37:
    \   000119   E0           MOVX    A,@DPTR
    \   00011A   64FE         XRL     A,#0xfe
    \   00011C   7003         JNZ     ??ZDSecMgrEntryFree_3
@@ -1782,8 +1776,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000121   85..82       MOV     DPL,?XSP + 0
    \   000124   85..83       MOV     DPH,?XSP + 1
    \   000127   7015         JNZ     ??ZDSecMgrEntryFree_4
-   \   000129   12....       LCALL   ??Subroutine62_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_147:
+   \   000129   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_150:
    \   00012C   6014         JZ      ??ZDSecMgrEntryFree_5
    \   00012E   85..82       MOV     DPL,?XSP + 0
    \   000131   85..83       MOV     DPH,?XSP + 1
@@ -1793,10 +1787,10 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000138   A3           INC     DPTR
    \   000139   E0           MOVX    A,@DPTR
    \   00013A   34FF         ADDC    A,#-0x1
-   \   00013C   8003         SJMP    ??CrossCallReturnLabel_42
+   \   00013C   8003         SJMP    ??CrossCallReturnLabel_45
    \                     ??ZDSecMgrEntryFree_4:
    \   00013E   12....       LCALL   ?Subroutine36 & 0xFFFF
-   \                     ??CrossCallReturnLabel_42:
+   \                     ??CrossCallReturnLabel_45:
    \   000141   F0           MOVX    @DPTR,A
    \                     ??ZDSecMgrEntryFree_5:
    \   000142                ; Setup parameters for call to function osal_nv_write
@@ -1824,7 +1818,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00016C   02....       LJMP    ?Subroutine1 & 0xFFFF
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine23:
+   \                     ?Subroutine22:
    \   000000   F0           MOVX    @DPTR,A
    \   000001   8E82         MOV     DPL,R6
    \   000003   8F83         MOV     DPH,R7
@@ -1900,7 +1894,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     677          
     678            // verify data is available
     679            if ( ZDSecMgrEntries != NULL )
-   \                     ??CrossCallReturnLabel_84:
+   \                     ??CrossCallReturnLabel_87:
    \   00000C   605F         JZ      ??ZDSecMgrEntryNew_0
     680            {
     681              // find available entry
@@ -1998,7 +1992,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ??ZDSecMgrEntryNew_0:
    \   00006D   79C8         MOV     R1,#-0x38
    \                     ??ZDSecMgrEntryNew_4:
-   \   00006F   02....       LJMP    ??Subroutine66_0 & 0xFFFF
+   \   00006F   02....       LJMP    ??Subroutine63_0 & 0xFFFF
     699          }
     700          
     701          /******************************************************************************
@@ -2056,9 +2050,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000004   7404         MOV     A,#0x4
    \   000006   12....       LCALL   ?XSTACK_DISP0_8
    \   000009   12....       LCALL   ?Subroutine31 & 0xFFFF
-   \                     ??CrossCallReturnLabel_28:
-   \   00000C   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_103:
+   \                     ??CrossCallReturnLabel_31:
+   \   00000C   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_106:
    \   00000F   7910         MOV     R1,#0x10
    \   000011   12....       LCALL   `??SSP_GetTrueRand::?relay`; Banked call to: SSP_GetTrueRand
     739          
@@ -2069,7 +2063,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00001A   7406         MOV     A,#0x6
    \   00001C   12....       LCALL   ?XSTACK_DISP0_8
    \   00001F   12....       LCALL   ?Subroutine31 & 0xFFFF
-   \                     ??CrossCallReturnLabel_29:
+   \                     ??CrossCallReturnLabel_32:
    \   000022   D0E0         POP     A
    \   000024                REQUIRE ?Subroutine9
    \   000024                ; // Fall through to label ?Subroutine9
@@ -2081,16 +2075,16 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ?Subroutine9:
    \   000000   F0           MOVX    @DPTR,A
    \   000001   7900         MOV     R1,#0x0
-   \   000003   02....       LJMP    ??Subroutine60_0 & 0xFFFF
+   \   000003   02....       LJMP    ??Subroutine59_0 & 0xFFFF
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine31:
-   \   000000   12....       LCALL   ?Subroutine45 & 0xFFFF
-   \                     ??CrossCallReturnLabel_60:
+   \   000000   12....       LCALL   ?Subroutine44 & 0xFFFF
+   \                     ??CrossCallReturnLabel_63:
    \   000003   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine45:
+   \                     ?Subroutine44:
    \   000000   E0           MOVX    A,@DPTR
    \   000001   F8           MOV     R0,A
    \   000002   A3           INC     DPTR
@@ -2100,7 +2094,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000008   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine60_0:
+   \                     ??Subroutine59_0:
    \   000000   D083         POP     DPH
    \   000002   D082         POP     DPL
    \   000004   02....       LJMP    ?BRET
@@ -2170,8 +2164,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000033   12....       LCALL   ?XSTACK_DISP102_8
    \   000036   8E82         MOV     DPL,R6
    \   000038   8F83         MOV     DPH,R7
-   \   00003A   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_104:
+   \   00003A   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_107:
    \   00003D   12....       LCALL   `??APSME_LookupExtAddr::?relay`; Banked call to: APSME_LookupExtAddr
    \   000040   E9           MOV     A,R1
    \   000041   6401         XRL     A,#0x1
@@ -2184,7 +2178,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00004A   12....       LCALL   ?XSTACK_DISP100_8
    \   00004D   7406         MOV     A,#0x6
    \   00004F   12....       LCALL   ?XSTACK_DISP0_8
-   \   000052   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   000052   12....       LCALL   ??Subroutine60_0 & 0xFFFF
     768          
     769              // get an APP key - option APP (MASTER or LINK) key
     770              if ( ZDSecMgrAppKeyGet( ind->srcAddr,
@@ -2193,7 +2187,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     773                                      ind->partExtAddr,
     774                                      &req.key,
     775                                      &req.keyType ) == ZSuccess )
-   \                     ??CrossCallReturnLabel_123:
+   \                     ??CrossCallReturnLabel_126:
    \   000055                ; Setup parameters for call to function ZDSecMgrAppKeyGet
    \   000055   7404         MOV     A,#0x4
    \   000057   12....       LCALL   ?XSTACK_DISP0_8
@@ -2216,8 +2210,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000084   12....       LCALL   ?XSTACK_DISP102_8
    \   000087   8E82         MOV     DPL,R6
    \   000089   8F83         MOV     DPH,R7
-   \   00008B   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_105:
+   \   00008B   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_108:
    \   00008E   12....       LCALL   `??ZDSecMgrAppKeyGet::?relay`; Banked call to: ZDSecMgrAppKeyGet
    \   000091   7408         MOV     A,#0x8
    \   000093   12....       LCALL   ?DEALLOC_XSTACK8
@@ -2241,17 +2235,17 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000AE   E4           CLR     A
    \   0000AF   F0           MOVX    @DPTR,A
    \   0000B0   A3           INC     DPTR
-   \   0000B1   12....       LCALL   ?Subroutine23 & 0xFFFF
+   \   0000B1   12....       LCALL   ?Subroutine22 & 0xFFFF
     781          
     782                // send key to initiator device
     783                req.dstAddr   = ind->srcAddr;
-   \                     ??CrossCallReturnLabel_15:
+   \                     ??CrossCallReturnLabel_12:
    \   0000B4   12....       LCALL   ?Subroutine27 & 0xFFFF
-   \                     ??CrossCallReturnLabel_20:
+   \                     ??CrossCallReturnLabel_23:
    \   0000B7   12....       LCALL   ?XSTACK_DISP0_8
-   \   0000BA   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   0000BA   12....       LCALL   ??Subroutine60_0 & 0xFFFF
     784                req.extAddr   = ind->partExtAddr;
-   \                     ??CrossCallReturnLabel_124:
+   \                     ??CrossCallReturnLabel_127:
    \   0000BD   7408         MOV     A,#0x8
    \   0000BF   12....       LCALL   ?XSTACK_DISP0_8
    \   0000C2   E5..         MOV     A,?V0
@@ -2275,18 +2269,18 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000D8   85..82       MOV     DPL,?XSP + 0
    \   0000DB   85..83       MOV     DPH,?XSP + 1
    \   0000DE   12....       LCALL   ?Subroutine27 & 0xFFFF
-   \                     ??CrossCallReturnLabel_21:
+   \                     ??CrossCallReturnLabel_24:
    \   0000E1   12....       LCALL   ?XSTACK_DISP0_8
-   \   0000E4   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   0000E4   12....       LCALL   ??Subroutine60_0 & 0xFFFF
     790                req.extAddr   = initExtAddr;
-   \                     ??CrossCallReturnLabel_125:
+   \                     ??CrossCallReturnLabel_128:
    \   0000E7   740F         MOV     A,#0xf
    \   0000E9   12....       LCALL   ?XSTACK_DISP100_8
    \   0000EC   7408         MOV     A,#0x8
    \   0000EE   12....       LCALL   ?XSTACK_DISP0_8
-   \   0000F1   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   0000F1   12....       LCALL   ??Subroutine60_0 & 0xFFFF
     791                req.initiator = FALSE;
-   \                     ??CrossCallReturnLabel_126:
+   \                     ??CrossCallReturnLabel_129:
    \   0000F4   740A         MOV     A,#0xa
    \   0000F6   12....       LCALL   ?XSTACK_DISP0_8
    \   0000F9   E4           CLR     A
@@ -2317,19 +2311,19 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine27:
-   \   000000   12....       LCALL   ?Subroutine48 & 0xFFFF
-   \                     ??CrossCallReturnLabel_97:
+   \   000000   12....       LCALL   ?Subroutine47 & 0xFFFF
+   \                     ??CrossCallReturnLabel_100:
    \   000003   7402         MOV     A,#0x2
    \   000005   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine3:
    \   000000   12....       LCALL   ?DEALLOC_XSTACK8
-   \   000003                REQUIRE ??Subroutine67_0
-   \   000003                ; // Fall through to label ??Subroutine67_0
+   \   000003                REQUIRE ??Subroutine68_0
+   \   000003                ; // Fall through to label ??Subroutine68_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine67_0:
+   \                     ??Subroutine68_0:
    \   000000   7F04         MOV     R7,#0x4
    \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
     801          
@@ -2369,25 +2363,25 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     818            req.dstAddr   = device->nwkAddr;
    \   00000E   8E82         MOV     DPL,R6
    \   000010   8F83         MOV     DPH,R7
-   \   000012   12....       LCALL   ??Subroutine56_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_88:
+   \   000012   12....       LCALL   ??Subroutine55_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_91:
    \   000015   7404         MOV     A,#0x4
    \   000017   12....       LCALL   ?XSTACK_DISP0_8
-   \   00001A   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   00001A   12....       LCALL   ??Subroutine60_0 & 0xFFFF
     819            req.extAddr   = device->extAddr;
-   \                     ??CrossCallReturnLabel_127:
+   \                     ??CrossCallReturnLabel_130:
    \   00001D   12....       LCALL   ?Subroutine39 & 0xFFFF
-   \                     ??CrossCallReturnLabel_47:
+   \                     ??CrossCallReturnLabel_50:
    \   000020   8882         MOV     DPL,R0
    \   000022   F583         MOV     DPH,A
-   \   000024   12....       LCALL   ??Subroutine56_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_89:
+   \   000024   12....       LCALL   ??Subroutine55_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_92:
    \   000027   740A         MOV     A,#0xa
    \   000029   12....       LCALL   ?XSTACK_DISP0_8
-   \   00002C   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   00002C   12....       LCALL   ??Subroutine60_0 & 0xFFFF
     820          
     821            req.keyType   = KEY_TYPE_NWK;
-   \                     ??CrossCallReturnLabel_128:
+   \                     ??CrossCallReturnLabel_131:
    \   00002F   7406         MOV     A,#0x6
    \   000031   12....       LCALL   ?XSTACK_DISP0_8
    \   000034   7401         MOV     A,#0x1
@@ -2448,13 +2442,13 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000087   A983         MOV     R1,DPH
    \   000089   7408         MOV     A,#0x8
    \   00008B   12....       LCALL   ?XSTACK_DISP0_8
-   \   00008E   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   00008E   12....       LCALL   ??Subroutine60_0 & 0xFFFF
     836          
     837              //devtag.pro.security.todo - make sure that if there is no link key the NWK
     838              //key isn't used to secure the frame at the APS layer -- since the receiving
     839              //device may not have a NWK key yet
     840              req.apsSecure = TRUE;
-   \                     ??CrossCallReturnLabel_129:
+   \                     ??CrossCallReturnLabel_132:
    \   000091   740D         MOV     A,#0xd
    \   000093   12....       LCALL   ?XSTACK_DISP0_8
    \   000096   7401         MOV     A,#0x1
@@ -2594,8 +2588,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000000   F0           MOVX    @DPTR,A
    \   000001   8882         MOV     DPL,R0
    \   000003   8983         MOV     DPH,R1
-   \   000005   12....       LCALL   ?Subroutine48 & 0xFFFF
-   \                     ??CrossCallReturnLabel_95:
+   \   000005   12....       LCALL   ?Subroutine47 & 0xFFFF
+   \                     ??CrossCallReturnLabel_98:
    \   000008   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
@@ -2650,9 +2644,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000015                ; Setup parameters for call to function ZDSecMgrEntryFree
    \   000015   85..82       MOV     DPL,?XSP + 0
    \   000018   85..83       MOV     DPH,?XSP + 1
-   \   00001B   12....       LCALL   ??Subroutine58_0 & 0xFFFF
+   \   00001B   12....       LCALL   ??Subroutine57_0 & 0xFFFF
     917            }
-   \                     ??CrossCallReturnLabel_106:
+   \                     ??CrossCallReturnLabel_109:
    \   00001E   12....       LCALL   `??ZDSecMgrEntryFree::?relay`; Banked call to: ZDSecMgrEntryFree
     918          
     919            return retValue;
@@ -2703,8 +2697,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000017   8F83         MOV     DPH,R7
    \   000019   A3           INC     DPTR
    \   00001A   A3           INC     DPTR
-   \   00001B   12....       LCALL   ??Subroutine57_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_116:
+   \   00001B   12....       LCALL   ??Subroutine56_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_119:
    \   00001E   EE           MOV     A,R6
    \   00001F   2402         ADD     A,#0x2
    \   000021   F8           MOV     R0,A
@@ -2724,11 +2718,11 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     941              leaveReq.extAddr        = device->extAddr;
    \   000032   8882         MOV     DPL,R0
    \   000034   8983         MOV     DPH,R1
-   \   000036   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_107:
+   \   000036   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_110:
    \   000039   12....       LCALL   ?Subroutine17 & 0xFFFF
     942              leaveReq.removeChildren = FALSE;
-   \                     ??CrossCallReturnLabel_168:
+   \                     ??CrossCallReturnLabel_171:
    \   00003C   12....       LCALL   ?XSTACK_DISP0_8
    \   00003F   E4           CLR     A
    \   000040   F0           MOVX    @DPTR,A
@@ -2743,8 +2737,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000048                ; Setup parameters for call to function AssocGetWithExt
    \   000048   8882         MOV     DPL,R0
    \   00004A   8983         MOV     DPH,R1
-   \   00004C   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_108:
+   \   00004C   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_111:
    \   00004F   12....       LCALL   `??AssocGetWithExt::?relay`; Banked call to: AssocGetWithExt
    \   000052   8A..         MOV     ?V0,R2
    \   000054   8B..         MOV     ?V1,R3
@@ -2833,8 +2827,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     971              }
     972            }
    \                     ??ZDSecMgrDeviceRemove_4:
-   \   0000AD   12....       LCALL   ??Subroutine63_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_160:
+   \   0000AD   12....       LCALL   ??Subroutine64_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_163:
    \   0000B0   12....       LCALL   `??NLME_LeaveReq::?relay`; Banked call to: NLME_LeaveReq
    \   0000B3   803B         SJMP    ??ZDSecMgrDeviceRemove_6
     973            else
@@ -2853,7 +2847,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ??CrossCallReturnLabel_7:
    \   0000C1   7407         MOV     A,#0x7
    \   0000C3   12....       LCALL   ?XSTACK_DISP0_8
-   \   0000C6   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   0000C6   12....       LCALL   ??Subroutine60_0 & 0xFFFF
     978          
     979          #if defined ( APP_TP2_TEST_MODE )
     980              if ( guTxApsSecON == TRUE )
@@ -2874,7 +2868,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
     995                // APS un-encrypted and one APS encrypted, to make sure that it can interoperate
     996                // with legacy Coordinator devices which can only handle one or the other.
     997                if ( zgApsLinkKeyType == ZG_GLOBAL_LINK_KEY )
-   \                     ??CrossCallReturnLabel_130:
+   \                     ??CrossCallReturnLabel_133:
    \   0000C9   90....       MOV     DPTR,#zgApsLinkKeyType
    \   0000CC   E0           MOVX    A,@DPTR
    \   0000CD   6401         XRL     A,#0x1
@@ -2917,37 +2911,40 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1016          }
    \                     ??ZDSecMgrDeviceRemove_6:
    \   0000F0   740A         MOV     A,#0xa
-   \   0000F2   02....       LJMP    ??Subroutine70_0 & 0xFFFF
+   \   0000F2   02....       LJMP    ??Subroutine69_0 & 0xFFFF
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine57_0:
+   \                     ??Subroutine56_0:
    \   000000   A3           INC     DPTR
    \   000001   A3           INC     DPTR
-   \   000002                REQUIRE ??Subroutine58_0
-   \   000002                ; // Fall through to label ??Subroutine58_0
+   \   000002                REQUIRE ??Subroutine57_0
+   \   000002                ; // Fall through to label ??Subroutine57_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine17:
    \   000000   85..82       MOV     DPL,?XSP + 0
    \   000003   85..83       MOV     DPH,?XSP + 1
-   \   000006                REQUIRE ??Subroutine64_0
-   \   000006                ; // Fall through to label ??Subroutine64_0
+   \   000006                REQUIRE ??Subroutine65_0
+   \   000006                ; // Fall through to label ??Subroutine65_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine64_0:
-   \   000000   12....       LCALL   ?Subroutine44 & 0xFFFF
-   \                     ??CrossCallReturnLabel_177:
-   \   000003   7402         MOV     A,#0x2
-   \   000005   22           RET
+   \                     ??Subroutine65_0:
+   \   000000   EA           MOV     A,R2
+   \   000001   F0           MOVX    @DPTR,A
+   \   000002   A3           INC     DPTR
+   \   000003   EB           MOV     A,R3
+   \   000004   F0           MOVX    @DPTR,A
+   \   000005   7402         MOV     A,#0x2
+   \   000007   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ??Subroutine69_0:
+   \   000000   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000003                REQUIRE ??Subroutine70_0
+   \   000003                ; // Fall through to label ??Subroutine70_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ??Subroutine70_0:
-   \   000000   12....       LCALL   ?DEALLOC_XSTACK8
-   \   000003                REQUIRE ??Subroutine71_0
-   \   000003                ; // Fall through to label ??Subroutine71_0
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine71_0:
    \   000000   7F02         MOV     R7,#0x2
    \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
    1017          
@@ -3022,7 +3019,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1074          
    1075            return status;
    \                     ??ZDSecMgrDeviceValidateRM_0:
-   \   00000E   02....       LJMP    ??Subroutine60_0 & 0xFFFF
+   \   00000E   02....       LJMP    ??Subroutine59_0 & 0xFFFF
    1076          }
    1077          
    1078          /******************************************************************************
@@ -3067,7 +3064,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1099          
    1100            return status;
    \                     ??ZDSecMgrDeviceValidate_1:
-   \   000015   02....       LJMP    ??Subroutine60_0 & 0xFFFF
+   \   000015   02....       LJMP    ??Subroutine59_0 & 0xFFFF
    1101          }
    1102          
    1103          /******************************************************************************
@@ -3149,11 +3146,11 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000041   85..82       MOV     DPL,?V0
    \   000044   85..83       MOV     DPH,?V1
    \   000047   12....       LCALL   ?Subroutine34 & 0xFFFF
-   \                     ??CrossCallReturnLabel_38:
+   \                     ??CrossCallReturnLabel_41:
    \   00004A   8E82         MOV     DPL,R6
    \   00004C   8F83         MOV     DPH,R7
-   \   00004E   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_109:
+   \   00004E   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_112:
    \   000051   12....       LCALL   `??ZDSecMgrAddrStore::?relay`; Banked call to: ZDSecMgrAddrStore
    \   000054   7402         MOV     A,#0x2
    \   000056   12....       LCALL   ?DEALLOC_XSTACK8
@@ -3197,10 +3194,10 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00007E                ; Setup parameters for call to function ZDSecMgrAddrClear
    \   00007E   85..82       MOV     DPL,?V0
    \   000081   85..83       MOV     DPH,?V1
-   \   000084   12....       LCALL   ??Subroutine58_0 & 0xFFFF
+   \   000084   12....       LCALL   ??Subroutine57_0 & 0xFFFF
    1139              }
    1140            }
-   \                     ??CrossCallReturnLabel_110:
+   \                     ??CrossCallReturnLabel_113:
    \   000087   12....       LCALL   `??ZDSecMgrAddrClear::?relay`; Banked call to: ZDSecMgrAddrClear
    \   00008A   8004         SJMP    ??ZDSecMgrDeviceJoin_3
    1141          
@@ -3226,8 +3223,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1150              if (zdoCBFunc[ZDO_TC_DEVICE_CBID] != NULL )
    \                     ??ZDSecMgrDeviceJoin_2:
    \   000099   90....       MOV     DPTR,#zdoCBFunc + 16
-   \   00009C   12....       LCALL   ??Subroutine62_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_148:
+   \   00009C   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_151:
    \   00009F   604F         JZ      ??ZDSecMgrDeviceJoin_4
    1151              {
    1152                ZDO_TC_Device_t dev;
@@ -3236,7 +3233,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000A1   8E82         MOV     DPL,R6
    \   0000A3   8F83         MOV     DPH,R7
    \   0000A5   12....       LCALL   ?Subroutine27 & 0xFFFF
-   \                     ??CrossCallReturnLabel_22:
+   \                     ??CrossCallReturnLabel_25:
    \   0000A8   12....       LCALL   ?XSTACK_DISP0_8
    \   0000AB   12....       LCALL   ?Subroutine18 & 0xFFFF
    1155                osal_memcpy( dev.extAddr, device->extAddr, Z_EXTADDR_LEN );
@@ -3263,13 +3260,13 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000D5   A3           INC     DPTR
    \   0000D6   A3           INC     DPTR
    \   0000D7   12....       LCALL   ?Subroutine29 & 0xFFFF
-   \                     ??CrossCallReturnLabel_91:
+   \                     ??CrossCallReturnLabel_94:
    \   0000DA   740C         MOV     A,#0xc
    \   0000DC   12....       LCALL   ?XSTACK_DISP0_8
-   \   0000DF   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   0000DF   12....       LCALL   ??Subroutine60_0 & 0xFFFF
    1157          
    1158                zdoCBFunc[ZDO_TC_DEVICE_CBID]( (void*)&dev );
-   \                     ??CrossCallReturnLabel_131:
+   \                     ??CrossCallReturnLabel_134:
    \   0000E2                ; Setup parameters for indirect call
    \   0000E2   7402         MOV     A,#0x2
    \   0000E4   12....       LCALL   ?XSTACK_DISP101_8
@@ -3277,7 +3274,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000EA   12....       LCALL   ?Subroutine31 & 0xFFFF
    1159              }
    1160            }
-   \                     ??CrossCallReturnLabel_30:
+   \                     ??CrossCallReturnLabel_33:
    \   0000ED   12....       LCALL   ?CALL_IND
    1161          
    1162            return status;
@@ -3291,8 +3288,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ?Subroutine29:
    \   000000   A3           INC     DPTR
    \   000001   A3           INC     DPTR
-   \   000002                REQUIRE ??Subroutine56_0
-   \   000002                ; // Fall through to label ??Subroutine56_0
+   \   000002                REQUIRE ??Subroutine55_0
+   \   000002                ; // Fall through to label ??Subroutine55_0
    1164          
    1165          /******************************************************************************
    1166           * @fn          ZDSecMgrDeviceJoinDirect
@@ -3334,16 +3331,16 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000011                ; Setup parameters for call to function AssocGetWithShort
    \   000011   8E82         MOV     DPL,R6
    \   000013   8F83         MOV     DPH,R7
-   \   000015   12....       LCALL   ??Subroutine58_0 & 0xFFFF
+   \   000015   12....       LCALL   ??Subroutine57_0 & 0xFFFF
    1184            }
-   \                     ??CrossCallReturnLabel_111:
+   \                     ??CrossCallReturnLabel_114:
    \   000018   12....       LCALL   `??AssocGetWithShort::?relay`; Banked call to: AssocGetWithShort
    \   00001B   12....       LCALL   `??ZDSecMgrAssocDeviceAuth::?relay`; Banked call to: ZDSecMgrAssocDeviceAuth
    1185          
    1186            return status;
    \                     ??ZDSecMgrDeviceJoinDirect_0:
    \   00001E   A9..         MOV     R1,?V0
-   \   000020   02....       LJMP    ??Subroutine66_0 & 0xFFFF
+   \   000020   02....       LJMP    ??Subroutine63_0 & 0xFFFF
    1187          }
    1188          
    1189          /******************************************************************************
@@ -3384,19 +3381,19 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000012   A3           INC     DPTR
    \   000013   12....       LCALL   ?Subroutine43 & 0xFFFF
    1209            req.devAddr    = device->nwkAddr;
-   \                     ??CrossCallReturnLabel_55:
+   \                     ??CrossCallReturnLabel_58:
    \   000016   12....       LCALL   ?Subroutine27 & 0xFFFF
-   \                     ??CrossCallReturnLabel_23:
+   \                     ??CrossCallReturnLabel_26:
    \   000019   12....       LCALL   ?XSTACK_DISP0_8
    \   00001C   12....       LCALL   ?Subroutine15 & 0xFFFF
    1210            req.devExtAddr = device->extAddr;
    \                     ??CrossCallReturnLabel_0:
    \   00001F   12....       LCALL   ?XSTACK_DISP0_8
-   \   000022   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   000022   12....       LCALL   ??Subroutine60_0 & 0xFFFF
    1211          
    1212            // set security status, option for router to reject if policy set
    1213            if ( (device->devStatus & DEV_HIGH_SEC_STATUS) )
-   \                     ??CrossCallReturnLabel_132:
+   \                     ??CrossCallReturnLabel_135:
    \   000025   EA           MOV     A,R2
    \   000026   2407         ADD     A,#0x7
    \   000028   F582         MOV     DPL,A
@@ -3500,9 +3497,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1249          
    1250            // set association status to authenticated
    1251            ZDSecMgrAssocDeviceAuth( AssocGetWithShort( device->nwkAddr ) );
-   \                     ??CrossCallReturnLabel_56:
-   \   00008F   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_112:
+   \                     ??CrossCallReturnLabel_59:
+   \   00008F   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_115:
    \   000092   12....       LCALL   `??AssocGetWithShort::?relay`; Banked call to: AssocGetWithShort
    \   000095                ; Setup parameters for call to function ZDSecMgrAssocDeviceAuth
    \   000095   12....       LCALL   `??ZDSecMgrAssocDeviceAuth::?relay`; Banked call to: ZDSecMgrAssocDeviceAuth
@@ -3536,12 +3533,12 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000A0   7407         MOV     A,#0x7
    \   0000A2   12....       LCALL   ?XSTACK_DISP0_8
    \   0000A5   E4           CLR     A
-   \   0000A6   12....       LCALL   ??Subroutine63_0 & 0xFFFF
+   \   0000A6   12....       LCALL   ??Subroutine64_0 & 0xFFFF
    1275          
    1276                // send and APSME_UPDATE_DEVICE request to the trust center
    1277                status = APSME_UpdateDeviceReq( &req );
    1278              }
-   \                     ??CrossCallReturnLabel_161:
+   \                     ??CrossCallReturnLabel_164:
    \   0000A9   12....       LCALL   `??APSME_UpdateDeviceReq::?relay`; Banked call to: APSME_UpdateDeviceReq
    1279          
    1280              // send the message APS encrypted
@@ -3550,7 +3547,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000AC   7407         MOV     A,#0x7
    \   0000AE   12....       LCALL   ?XSTACK_DISP0_8
    \   0000B1   7401         MOV     A,#0x1
-   \   0000B3   12....       LCALL   ??Subroutine63_0 & 0xFFFF
+   \   0000B3   12....       LCALL   ??Subroutine64_0 & 0xFFFF
    1282          
    1283              // send and APSME_UPDATE_DEVICE request to the trust center
    1284              status = APSME_UpdateDeviceReq( &req );
@@ -3565,7 +3562,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1293          #endif
    1294          
    1295            return status;
-   \                     ??CrossCallReturnLabel_162:
+   \                     ??CrossCallReturnLabel_165:
    \   0000B6   12....       LCALL   `??APSME_UpdateDeviceReq::?relay`; Banked call to: APSME_UpdateDeviceReq
    \   0000B9   02....       LJMP    ?Subroutine4 & 0xFFFF
    1296          }
@@ -3577,19 +3574,19 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000002   A3           INC     DPTR
    \   000003   E9           MOV     A,R1
    \   000004   12....       LCALL   ?Subroutine43 & 0xFFFF
-   \                     ??CrossCallReturnLabel_57:
+   \                     ??CrossCallReturnLabel_60:
    \   000007   A3           INC     DPTR
    \   000008   A3           INC     DPTR
-   \   000009   12....       LCALL   ?Subroutine48 & 0xFFFF
-   \                     ??CrossCallReturnLabel_94:
+   \   000009   12....       LCALL   ?Subroutine47 & 0xFFFF
+   \                     ??CrossCallReturnLabel_97:
    \   00000C   7404         MOV     A,#0x4
    \   00000E   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine4:
    \   000000   7408         MOV     A,#0x8
-   \   000002                REQUIRE ??Subroutine70_0
-   \   000002                ; // Fall through to label ??Subroutine70_0
+   \   000002                REQUIRE ??Subroutine69_0
+   \   000002                ; // Fall through to label ??Subroutine69_0
    1297          
    1298          /******************************************************************************
    1299           * @fn          ZDSecMgrDeviceNew
@@ -3605,54 +3602,27 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1307          ZStatus_t ZDSecMgrDeviceNew( ZDSecMgrDevice_t* joiner )
    \                     ZDSecMgrDeviceNew:
    1308          {
-   \   000000   74F7         MOV     A,#-0x9
-   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
-   \   000005                ; Saved register size: 9
-   \   000005                ; Auto size: 0
-   \   000005   EA           MOV     A,R2
-   \   000006   FE           MOV     R6,A
-   \   000007   EB           MOV     A,R3
-   \   000008   FF           MOV     R7,A
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
    1309            ZStatus_t status;
    1310          
    1311            if ( ( ( ZG_BUILD_COORDINATOR_TYPE ) && ( ZG_DEVICE_COORDINATOR_TYPE ) )
    1312                || ( ( ZG_BUILD_RTR_TYPE ) && APSME_IsDistributedSecurity() ) )
-   \   000009   90....       MOV     DPTR,#zgDeviceLogicalType
-   \   00000C   E0           MOVX    A,@DPTR
-   \   00000D   6006         JZ      ??ZDSecMgrDeviceNew_0
-   \   00000F                ; Setup parameters for call to function APSME_IsDistributedSecurity
-   \   00000F   12....       LCALL   `??APSME_IsDistributedSecurity::?relay`; Banked call to: APSME_IsDistributedSecurity
-   \   000012   E9           MOV     A,R1
-   \   000013   6009         JZ      ??ZDSecMgrDeviceNew_1
    1313            {
    1314              // try to join this device
    1315              status = ZDSecMgrDeviceJoinDirect( joiner );
-   \                     ??ZDSecMgrDeviceNew_0:
-   \   000015                ; Setup parameters for call to function ZDSecMgrDeviceJoinDirect
-   \   000015   EE           MOV     A,R6
-   \   000016   FA           MOV     R2,A
-   \   000017   EF           MOV     A,R7
-   \   000018   FB           MOV     R3,A
-   \   000019   12....       LCALL   `??ZDSecMgrDeviceJoinDirect::?relay`; Banked call to: ZDSecMgrDeviceJoinDirect
-   \   00001C   8007         SJMP    ??ZDSecMgrDeviceNew_2
    1316            }
    1317            else
    1318            {
    1319              status = ZDSecMgrDeviceJoinFwd( joiner );
-   \                     ??ZDSecMgrDeviceNew_1:
-   \   00001E                ; Setup parameters for call to function ZDSecMgrDeviceJoinFwd
-   \   00001E   EE           MOV     A,R6
-   \   00001F   FA           MOV     R2,A
-   \   000020   EF           MOV     A,R7
-   \   000021   FB           MOV     R3,A
-   \   000022   12....       LCALL   `??ZDSecMgrDeviceJoinFwd::?relay`; Banked call to: ZDSecMgrDeviceJoinFwd
-   \                     ??ZDSecMgrDeviceNew_2:
-   \   000025   E9           MOV     A,R1
-   \   000026   F9           MOV     R1,A
    1320            }
    1321          
    1322            return status;
-   \   000027   02....       LJMP    ??Subroutine66_0 & 0xFFFF
+   \   000004                ; Setup parameters for call to function ZDSecMgrDeviceJoinDirect
+   \   000004   12....       LCALL   `??ZDSecMgrDeviceJoinDirect::?relay`; Banked call to: ZDSecMgrDeviceJoinDirect
+   \   000007   80..         SJMP    ??Subroutine59_0
    1323          }
    1324          
    1325          /******************************************************************************
@@ -3692,7 +3662,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1339            }
    1340          }
    \                     ??ZDSecMgrAssocDeviceAuth_0:
-   \   000015   80..         SJMP    ??Subroutine60_0
+   \   000015   80..         SJMP    ??Subroutine59_0
    1341          
    1342          /******************************************************************************
    1343           * @fn          ZDSecMgrAuthNwkKey
@@ -3730,7 +3700,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1357            }
    1358          }
    \                     ??ZDSecMgrAuthNwkKey_0:
-   \   000018   80..         SJMP    ??Subroutine60_0
+   \   000018   80..         SJMP    ??Subroutine59_0
    1359          
    1360          /******************************************************************************
    1361           * PUBLIC FUNCTIONS
@@ -3775,22 +3745,19 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000005   12....       LCALL   `??ZDSecMgrEntryInit::?relay`; Banked call to: ZDSecMgrEntryInit
    1390          
    1391              if ( ( ZG_BUILD_COORDINATOR_TYPE ) && ( ZG_DEVICE_COORDINATOR_TYPE ) )
-   \   000008   90....       MOV     DPTR,#zgDeviceLogicalType
-   \   00000B   E0           MOVX    A,@DPTR
-   \   00000C   7014         JNZ     ??ZDSecMgrInit_0
    1392              {
    1393                APSME_SetRequest( apsTrustCenterAddress, 0, NLME_GetExtAddr() );
-   \   00000E                ; Setup parameters for call to function NLME_GetExtAddr
-   \   00000E   12....       LCALL   `??NLME_GetExtAddr::?relay`; Banked call to: NLME_GetExtAddr
-   \   000011   8A..         MOV     ?V0,R2
-   \   000013   8B..         MOV     ?V1,R3
-   \   000015   AC..         MOV     R4,?V0
-   \   000017   AD..         MOV     R5,?V1
-   \   000019                ; Setup parameters for call to function APSME_SetRequest
-   \   000019   7A00         MOV     R2,#0x0
-   \   00001B   7B00         MOV     R3,#0x0
-   \   00001D   79AB         MOV     R1,#-0x55
-   \   00001F   12....       LCALL   `??APSME_SetRequest::?relay`; Banked call to: APSME_SetRequest
+   \   000008                ; Setup parameters for call to function NLME_GetExtAddr
+   \   000008   12....       LCALL   `??NLME_GetExtAddr::?relay`; Banked call to: NLME_GetExtAddr
+   \   00000B   8A..         MOV     ?V0,R2
+   \   00000D   8B..         MOV     ?V1,R3
+   \   00000F   AC..         MOV     R4,?V0
+   \   000011   AD..         MOV     R5,?V1
+   \   000013                ; Setup parameters for call to function APSME_SetRequest
+   \   000013   7A00         MOV     R2,#0x0
+   \   000015   7B00         MOV     R3,#0x0
+   \   000017   79AB         MOV     R1,#-0x55
+   \   000019   12....       LCALL   `??APSME_SetRequest::?relay`; Banked call to: APSME_SetRequest
    1394              }
    1395          
    1396              // register with Address Manager
@@ -3803,35 +3770,27 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1403            {
    1404              if ( ( ( ZG_BUILD_COORDINATOR_TYPE ) && ( ZG_DEVICE_COORDINATOR_TYPE ) )
    1405                   || ( ( ZG_BUILD_RTR_TYPE ) && APSME_IsDistributedSecurity() ) )
-   \                     ??ZDSecMgrInit_0:
-   \   000022   90....       MOV     DPTR,#zgDeviceLogicalType
-   \   000025   E0           MOVX    A,@DPTR
-   \   000026   6006         JZ      ??ZDSecMgrInit_1
-   \   000028                ; Setup parameters for call to function APSME_IsDistributedSecurity
-   \   000028   12....       LCALL   `??APSME_IsDistributedSecurity::?relay`; Banked call to: APSME_IsDistributedSecurity
-   \   00002B   E9           MOV     A,R1
-   \   00002C   600B         JZ      ??ZDSecMgrInit_2
    1406              {
    1407                // setup joining permissions
    1408                ZDSecMgrPermitJoiningEnabled = TRUE;
-   \                     ??ZDSecMgrInit_1:
-   \   00002E   90....       MOV     DPTR,#ZDSecMgrPermitJoiningEnabled
-   \   000031   7401         MOV     A,#0x1
-   \   000033   F0           MOVX    @DPTR,A
+   \   00001C   90....       MOV     DPTR,#ZDSecMgrPermitJoiningEnabled
+   \   00001F   7401         MOV     A,#0x1
+   \   000021   F0           MOVX    @DPTR,A
    1409                ZDSecMgrPermitJoiningTimed   = FALSE;
-   \   000034   90....       MOV     DPTR,#ZDSecMgrPermitJoiningTimed
-   \   000037   E4           CLR     A
-   \   000038   F0           MOVX    @DPTR,A
+   \   000022   90....       MOV     DPTR,#ZDSecMgrPermitJoiningTimed
+   \   000025   E4           CLR     A
+   \   000026   F0           MOVX    @DPTR,A
    1410              }
    1411            }
    1412          
    1413            // configure security based on security mode and type of device
    1414            ZDSecMgrConfig();
-   \                     ??ZDSecMgrInit_2:
-   \   000039                ; Setup parameters for call to function ZDSecMgrConfig
-   \   000039   12....       LCALL   `??ZDSecMgrConfig::?relay`; Banked call to: ZDSecMgrConfig
+   \   000027                ; Setup parameters for call to function SSP_Init
+   \   000027   12....       LCALL   `??SSP_Init::?relay` ; Banked call to: SSP_Init
+   \   00002A                ; Setup parameters for call to function APSME_SecurityCM_CD
+   \   00002A   12....       LCALL   `??APSME_SecurityCM_CD::?relay`; Banked call to: APSME_SecurityCM_CD
    1415          }
-   \   00003C   02....       LJMP    ??Subroutine71_0 & 0xFFFF
+   \   00002D   02....       LJMP    ??Subroutine70_0 & 0xFFFF
    1416          
    1417          /******************************************************************************
    1418           * @fn          ZDSecMgrConfig
@@ -3860,34 +3819,21 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1432              if ( ZG_CHECK_SECURITY_MODE == ZG_SECURITY_SE_STANDARD )
    1433              {
    1434                if ( ( ZG_BUILD_COORDINATOR_TYPE ) && ( ZG_DEVICE_COORDINATOR_TYPE ) )
-   \   000007   90....       MOV     DPTR,#zgDeviceLogicalType
-   \   00000A   E0           MOVX    A,@DPTR
-   \   00000B   7005         JNZ     ??ZDSecMgrConfig_0
    1435                {
    1436                  // COMMERCIAL MODE - COORDINATOR DEVICE
    1437                  APSME_SecurityCM_CD();
-   \   00000D                ; Setup parameters for call to function APSME_SecurityCM_CD
-   \   00000D   12....       LCALL   `??APSME_SecurityCM_CD::?relay`; Banked call to: APSME_SecurityCM_CD
-   \   000010   800C         SJMP    ??ZDSecMgrConfig_1
+   \   000007                ; Setup parameters for call to function APSME_SecurityCM_CD
+   \   000007   12....       LCALL   `??APSME_SecurityCM_CD::?relay`; Banked call to: APSME_SecurityCM_CD
    1438                }
    1439                else if ( ZSTACK_ROUTER_BUILD )
-   \                     ??ZDSecMgrConfig_0:
-   \   000012   6401         XRL     A,#0x1
-   \   000014   7005         JNZ     ??ZDSecMgrConfig_2
    1440                {
    1441                  // COMMERCIAL MODE - ROUTER DEVICE
    1442                  APSME_SecurityCM_RD();
-   \   000016                ; Setup parameters for call to function APSME_SecurityCM_RD
-   \   000016   12....       LCALL   `??APSME_SecurityCM_RD::?relay`; Banked call to: APSME_SecurityCM_RD
-   \   000019   8003         SJMP    ??ZDSecMgrConfig_1
    1443                }
    1444                else
    1445                {
    1446                  // COMMERCIAL MODE - END DEVICE
    1447                  APSME_SecurityCM_ED();
-   \                     ??ZDSecMgrConfig_2:
-   \   00001B                ; Setup parameters for call to function APSME_SecurityCM_ED
-   \   00001B   12....       LCALL   `??APSME_SecurityCM_ED::?relay`; Banked call to: APSME_SecurityCM_ED
    1448                }
    1449              }
    1450              else // ( ZG_CHECK_SECURITY_MODE == ZG_SECURITY_RESIDENTIAL )
@@ -3915,8 +3861,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1472              APSME_SecurityNM();
    1473            }
    1474          }
-   \                     ??ZDSecMgrConfig_1:
-   \   00001E   80..         SJMP    ??Subroutine60_0
+   \   00000A   80..         SJMP    ??Subroutine59_0
    1475          
    1476          /******************************************************************************
    1477           * @fn          ZDSecMgrPermitJoining
@@ -3981,7 +3926,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1509            return accept;
    \                     ??ZDSecMgrPermitJoining_1:
    \   000022   7901         MOV     R1,#0x1
-   \   000024   02....       LJMP    ??Subroutine60_0 & 0xFFFF
+   \   000024   80..         SJMP    ??Subroutine59_0
    1510          }
    1511          
    1512          /******************************************************************************
@@ -4018,7 +3963,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1527            }
    1528          }
    \                     ??ZDSecMgrPermitJoiningTimeout_0:
-   \   000015   02....       LJMP    ??Subroutine60_0 & 0xFFFF
+   \   000015   80..         SJMP    ??Subroutine59_0
    1529          
    1530          /******************************************************************************
    1531           * @fn          ZDSecMgrNewDeviceEvent
@@ -4091,16 +4036,16 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00002D   7408         MOV     A,#0x8
    \   00002F   12....       LCALL   ?XSTACK_DISP0_8
    \   000032   E4           CLR     A
-   \   000033   12....       LCALL   ?Subroutine23 & 0xFFFF
+   \   000033   12....       LCALL   ?Subroutine22 & 0xFFFF
    1567              addrEntry.index = assoc->addrIdx;
-   \                     ??CrossCallReturnLabel_16:
+   \                     ??CrossCallReturnLabel_13:
    \   000036   12....       LCALL   ?Subroutine29 & 0xFFFF
-   \                     ??CrossCallReturnLabel_92:
+   \                     ??CrossCallReturnLabel_95:
    \   000039   7413         MOV     A,#0x13
    \   00003B   12....       LCALL   ?XSTACK_DISP0_8
-   \   00003E   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   00003E   12....       LCALL   ??Subroutine60_0 & 0xFFFF
    1568              AddrMgrEntryGet( &addrEntry );
-   \                     ??CrossCallReturnLabel_133:
+   \                     ??CrossCallReturnLabel_136:
    \   000041                ; Setup parameters for call to function AddrMgrEntryGet
    \   000041   7408         MOV     A,#0x8
    \   000043   12....       LCALL   ?XSTACK_DISP101_8
@@ -4109,28 +4054,28 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1570              device.nwkAddr    = assoc->shortAddr;
    \   000049   8E82         MOV     DPL,R6
    \   00004B   8F83         MOV     DPH,R7
-   \   00004D   12....       LCALL   ?Subroutine22 & 0xFFFF
+   \   00004D   12....       LCALL   ?Subroutine21 & 0xFFFF
    1571              device.extAddr    = addrEntry.extAddr;
-   \                     ??CrossCallReturnLabel_140:
+   \                     ??CrossCallReturnLabel_143:
    \   000050   740B         MOV     A,#0xb
    \   000052   12....       LCALL   ?XSTACK_DISP0_8
    \   000055   A882         MOV     R0,DPL
    \   000057   A983         MOV     R1,DPH
    \   000059   7402         MOV     A,#0x2
    \   00005B   12....       LCALL   ?XSTACK_DISP0_8
-   \   00005E   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   00005E   12....       LCALL   ??Subroutine60_0 & 0xFFFF
    1572              device.parentAddr = NLME_GetShortAddr();
-   \                     ??CrossCallReturnLabel_134:
+   \                     ??CrossCallReturnLabel_137:
    \   000061                ; Setup parameters for call to function NLME_GetShortAddr
    \   000061   12....       LCALL   `??NLME_GetShortAddr::?relay`; Banked call to: NLME_GetShortAddr
    \   000064   7404         MOV     A,#0x4
    \   000066   12....       LCALL   ?XSTACK_DISP0_8
-   \   000069   12....       LCALL   ?Subroutine44 & 0xFFFF
+   \   000069   12....       LCALL   ?Subroutine23 & 0xFFFF
    1573          
    1574              // the new device performed Secured Rejoin
    1575              if ( ( assoc->devStatus & DEV_SECURED_JOIN ) &&
    1576                   ( assoc->devStatus & DEV_REJOIN_STATUS ) )
-   \                     ??CrossCallReturnLabel_173:
+   \                     ??CrossCallReturnLabel_18:
    \   00006C   EE           MOV     A,R6
    \   00006D   2405         ADD     A,#0x5
    \   00006F   F8           MOV     R0,A
@@ -4163,21 +4108,21 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000090   E4           CLR     A
    1583              }
    \                     ??ZDSecMgrNewDeviceEvent_3:
-   \   000091   12....       LCALL   ?Subroutine23 & 0xFFFF
+   \   000091   12....       LCALL   ?Subroutine22 & 0xFFFF
    1584              device.devStatus  = assoc->devStatus;
-   \                     ??CrossCallReturnLabel_17:
+   \                     ??CrossCallReturnLabel_14:
    \   000094   E0           MOVX    A,@DPTR
    \   000095   C0E0         PUSH    A
    \   000097   7407         MOV     A,#0x7
    \   000099   12....       LCALL   ?XSTACK_DISP0_8
    \   00009C   D0E0         POP     A
-   \   00009E   12....       LCALL   ??Subroutine63_0 & 0xFFFF
+   \   00009E   12....       LCALL   ??Subroutine64_0 & 0xFFFF
    1585          
    1586              // process new device
    1587              status = ZDSecMgrDeviceNew( &device );
    1588          
    1589              if ( status == ZSuccess )
-   \                     ??CrossCallReturnLabel_163:
+   \                     ??CrossCallReturnLabel_166:
    \   0000A1   12....       LCALL   `??ZDSecMgrDeviceNew::?relay`; Banked call to: ZDSecMgrDeviceNew
    \   0000A4   E9           MOV     A,R1
    \   0000A5   700A         JNZ     ??ZDSecMgrNewDeviceEvent_4
@@ -4221,14 +4166,14 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1604          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine22:
-   \   000000   12....       LCALL   ?Subroutine46 & 0xFFFF
-   \                     ??CrossCallReturnLabel_61:
-   \   000003                REQUIRE ??Subroutine61_0
-   \   000003                ; // Fall through to label ??Subroutine61_0
+   \                     ?Subroutine21:
+   \   000000   12....       LCALL   ?Subroutine45 & 0xFFFF
+   \                     ??CrossCallReturnLabel_64:
+   \   000003                REQUIRE ??Subroutine60_0
+   \   000003                ; // Fall through to label ??Subroutine60_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine46:
+   \                     ?Subroutine45:
    \   000000   E0           MOVX    A,@DPTR
    \   000001   F8           MOV     R0,A
    \   000002   A3           INC     DPTR
@@ -4288,7 +4233,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine8:
    \   000000   7408         MOV     A,#0x8
-   \   000002   02....       LJMP    ??Subroutine65_0 & 0xFFFF
+   \   000002   02....       LJMP    ??Subroutine62_0 & 0xFFFF
    1622          
    1623          /******************************************************************************
    1624           * @fn          ZDSecMgrTCDataLoad
@@ -4372,7 +4317,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1646          }
    \                     ??ZDSecMgrTCDataLoad_0:
    \   000055   740F         MOV     A,#0xf
-   \   000057   02....       LJMP    ??Subroutine70_0 & 0xFFFF
+   \   000057   02....       LJMP    ??Subroutine69_0 & 0xFFFF
    1647          
    1648          /******************************************************************************
    1649           * @fn          ZDSecMgrTransportKeyInd
@@ -4652,14 +4597,14 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000124   AD..         MOV     R5,?XSP + 1
    \   000126   7402         MOV     A,#0x2
    \   000128   12....       LCALL   ?XSTACK_DISP0_8
-   \   00012B   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_113:
+   \   00012B   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_116:
    \   00012E   12....       LCALL   `??ZDSecMgrEntryLookupAMI::?relay`; Banked call to: ZDSecMgrEntryLookupAMI
    1725          
    1726                if ( entry == NULL )
    \   000131   12....       LCALL   ?Subroutine24 & 0xFFFF
-   \                     ??CrossCallReturnLabel_151:
-   \   000134   7015         JNZ     ??CrossCallReturnLabel_135
+   \                     ??CrossCallReturnLabel_154:
+   \   000134   7015         JNZ     ??CrossCallReturnLabel_138
    1727                {
    1728                  // get new entry
    1729                  if ( ZDSecMgrEntryNew( &entry ) == ZSuccess )
@@ -4668,7 +4613,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000138   AB..         MOV     R3,?XSP + 1
    \   00013A   12....       LCALL   `??ZDSecMgrEntryNew::?relay`; Banked call to: ZDSecMgrEntryNew
    \   00013D   E9           MOV     A,R1
-   \   00013E   700B         JNZ     ??CrossCallReturnLabel_135
+   \   00013E   700B         JNZ     ??CrossCallReturnLabel_138
    1730                  {
    1731                    // finish setting up entry
    1732                    entry->ami = ami;
@@ -4677,11 +4622,11 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000145   12....       LCALL   ?Subroutine26 & 0xFFFF
    1733                  }
    1734                }
-   \                     ??CrossCallReturnLabel_18:
-   \   000148   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_21:
+   \   000148   12....       LCALL   ??Subroutine60_0 & 0xFFFF
    1735          
    1736                ZDSecMgrLinkKeySet( ind->srcExtAddr, ind->key );
-   \                     ??CrossCallReturnLabel_135:
+   \                     ??CrossCallReturnLabel_138:
    \   00014B                ; Setup parameters for call to function APSME_LinkKeySet
    \   00014B   AC..         MOV     R4,?V0
    \   00014D   AD..         MOV     R5,?V1
@@ -4707,15 +4652,15 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ?Subroutine24:
    \   000000   85..82       MOV     DPL,?XSP + 0
    \   000003   85..83       MOV     DPH,?XSP + 1
-   \   000006                REQUIRE ??Subroutine62_0
-   \   000006                ; // Fall through to label ??Subroutine62_0
+   \   000006                REQUIRE ??Subroutine61_0
+   \   000006                ; // Fall through to label ??Subroutine61_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine26:
-   \   000000   12....       LCALL   ?Subroutine46 & 0xFFFF
-   \                     ??CrossCallReturnLabel_62:
-   \   000003   12....       LCALL   ?Subroutine49 & 0xFFFF
-   \                     ??CrossCallReturnLabel_63:
+   \   000000   12....       LCALL   ?Subroutine45 & 0xFFFF
+   \                     ??CrossCallReturnLabel_65:
+   \   000003   12....       LCALL   ?Subroutine48 & 0xFFFF
+   \                     ??CrossCallReturnLabel_66:
    \   000006   22           RET
    1744          
    1745          /******************************************************************************
@@ -4731,14 +4676,14 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine2:
    \   000000   7408         MOV     A,#0x8
-   \   000002                REQUIRE ??Subroutine59_0
-   \   000002                ; // Fall through to label ??Subroutine59_0
+   \   000002                REQUIRE ??Subroutine58_0
+   \   000002                ; // Fall through to label ??Subroutine58_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine59_0:
+   \                     ??Subroutine58_0:
    \   000000   12....       LCALL   ?DEALLOC_XSTACK8
-   \   000003                REQUIRE ??Subroutine60_0
-   \   000003                ; // Fall through to label ??Subroutine60_0
+   \   000003                REQUIRE ??Subroutine59_0
+   \   000003                ; // Fall through to label ??Subroutine59_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    1754          void ZDSecMgrUpdateDeviceInd( ZDO_UpdateDeviceInd_t* ind )
@@ -4759,9 +4704,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00000E   E4           CLR     A
    \   00000F   3B           ADDC    A,R3
    \   000010   F583         MOV     DPH,A
-   \   000012   12....       LCALL   ?Subroutine22 & 0xFFFF
+   \   000012   12....       LCALL   ?Subroutine21 & 0xFFFF
    1759            device.extAddr    = ind->devExtAddr;
-   \                     ??CrossCallReturnLabel_141:
+   \                     ??CrossCallReturnLabel_144:
    \   000015   EA           MOV     A,R2
    \   000016   2404         ADD     A,#0x4
    \   000018   F8           MOV     R0,A
@@ -4774,9 +4719,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1760            device.parentAddr = ind->srcAddr;
    \                     ??CrossCallReturnLabel_1:
    \   000024   12....       LCALL   ?XSTACK_DISP0_8
-   \   000027   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   000027   12....       LCALL   ??Subroutine60_0 & 0xFFFF
    1761            device.devStatus  = DEV_SEC_INIT_STATUS;
-   \                     ??CrossCallReturnLabel_136:
+   \                     ??CrossCallReturnLabel_139:
    \   00002A   7407         MOV     A,#0x7
    \   00002C   12....       LCALL   ?XSTACK_DISP0_8
    \   00002F   7404         MOV     A,#0x4
@@ -4860,8 +4805,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00000C   8B83         MOV     DPH,R3
    \   00000E   A3           INC     DPTR
    \   00000F   A3           INC     DPTR
-   \   000010   12....       LCALL   ??Subroutine62_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_149:
+   \   000010   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_152:
    \   000013   702F         JNZ     ??ZDSecMgrRemoveDeviceInd_0
    1796            {
    1797              // look up NWK address
@@ -4889,21 +4834,21 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00002C   12....       LCALL   `??NLME_GetShortAddr::?relay`; Banked call to: NLME_GetShortAddr
    \   00002F   7404         MOV     A,#0x4
    \   000031   12....       LCALL   ?XSTACK_DISP0_8
-   \   000034   12....       LCALL   ??Subroutine64_0 & 0xFFFF
+   \   000034   12....       LCALL   ??Subroutine65_0 & 0xFFFF
    1801                device.extAddr    = ind->childExtAddr;
    1802          
    1803                // remove device
    1804                ZDSecMgrDeviceRemove( &device );
    1805              }
    1806            }
-   \                     ??CrossCallReturnLabel_171:
+   \                     ??CrossCallReturnLabel_174:
    \   000037   12....       LCALL   ?XSTACK_DISP0_8
    \   00003A   EE           MOV     A,R6
    \   00003B   F0           MOVX    @DPTR,A
    \   00003C   A3           INC     DPTR
    \   00003D   EF           MOV     A,R7
-   \   00003E   12....       LCALL   ??Subroutine63_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_164:
+   \   00003E   12....       LCALL   ??Subroutine64_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_167:
    \   000041   12....       LCALL   `??ZDSecMgrDeviceRemove::?relay`; Banked call to: ZDSecMgrDeviceRemove
    1807          }
    \                     ??ZDSecMgrRemoveDeviceInd_0:
@@ -4956,7 +4901,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1830            //else ignore
    1831          }
    \                     ??ZDSecMgrRequestKeyInd_0:
-   \   00001B   02....       LJMP    ??Subroutine60_0 & 0xFFFF
+   \   00001B   02....       LJMP    ??Subroutine59_0 & 0xFFFF
    1832          
    1833          /******************************************************************************
    1834           * @fn          ZDSecMgrSwitchKeyInd
@@ -4993,7 +4938,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000011                ; Setup parameters for call to function ZDApp_NVUpdate
    \   000011   12....       LCALL   `??ZDApp_NVUpdate::?relay`; Banked call to: ZDApp_NVUpdate
    1848          }
-   \   000014   02....       LJMP    ??Subroutine60_0 & 0xFFFF
+   \   000014   02....       LJMP    ??Subroutine59_0 & 0xFFFF
    1849          
    1850          #if ( ZG_BUILD_COORDINATOR_TYPE )
    1851          /******************************************************************************
@@ -5149,9 +5094,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00009D   A983         MOV     R1,DPH
    \   00009F   7406         MOV     A,#0x6
    \   0000A1   12....       LCALL   ?XSTACK_DISP0_8
-   \   0000A4   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   0000A4   12....       LCALL   ??Subroutine60_0 & 0xFFFF
    1898                  req.apsSecure = TRUE;
-   \                     ??CrossCallReturnLabel_137:
+   \                     ??CrossCallReturnLabel_140:
    \   0000A7   7409         MOV     A,#0x9
    \   0000A9   12....       LCALL   ?XSTACK_DISP0_8
    \   0000AC   7401         MOV     A,#0x1
@@ -5160,8 +5105,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1901              }
    1902            }
    \                     ??ZDSecMgrUpdateNwkKey_5:
-   \   0000AE   12....       LCALL   ??Subroutine63_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_165:
+   \   0000AE   12....       LCALL   ??Subroutine64_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_168:
    \   0000B1   12....       LCALL   `??APSME_TransportKeyReq::?relay`; Banked call to: APSME_TransportKeyReq
    \   0000B4   E9           MOV     A,R1
    \   0000B5   F5..         MOV     ?V0,A
@@ -5189,7 +5134,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1914            return status;
    \   0000C3   A9..         MOV     R1,?V0
    \   0000C5   741A         MOV     A,#0x1a
-   \   0000C7   02....       LJMP    ??Subroutine70_0 & 0xFFFF
+   \   0000C7   02....       LJMP    ??Subroutine69_0 & 0xFFFF
    1915          }
    1916          #endif // ( ZG_BUILD_COORDINATOR_TYPE )
    1917          
@@ -5223,7 +5168,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1934            req.dstAddr = dstAddr;
    \   00000C   12....       LCALL   ?Subroutine17 & 0xFFFF
    1935            req.keySeqNum = keySeqNum;
-   \                     ??CrossCallReturnLabel_169:
+   \                     ??CrossCallReturnLabel_172:
    \   00000F   12....       LCALL   ?XSTACK_DISP0_8
    \   000012   E9           MOV     A,R1
    \   000013   F0           MOVX    @DPTR,A
@@ -5277,10 +5222,10 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1952                addrEntry.nwkAddr = dstAddr;
    \   000042   7405         MOV     A,#0x5
    \   000044   12....       LCALL   ?XSTACK_DISP0_8
-   \   000047   12....       LCALL   ?Subroutine44 & 0xFFFF
+   \   000047   12....       LCALL   ?Subroutine23 & 0xFFFF
    1953          
    1954                status = ZFailure;
-   \                     ??CrossCallReturnLabel_174:
+   \                     ??CrossCallReturnLabel_19:
    \   00004A   7E01         MOV     R6,#0x1
    1955          
    1956                if ( AddrMgrEntryLookupNwk( &addrEntry ) == TRUE )
@@ -5295,9 +5240,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1958                  req.dstAddr = addrEntry.nwkAddr;
    \   000059   7405         MOV     A,#0x5
    \   00005B   12....       LCALL   ?XSTACK_DISP0_8
-   \   00005E   12....       LCALL   ?Subroutine22 & 0xFFFF
+   \   00005E   12....       LCALL   ?Subroutine21 & 0xFFFF
    1959                  req.apsSecure = TRUE;
-   \                     ??CrossCallReturnLabel_142:
+   \                     ??CrossCallReturnLabel_145:
    \   000061   7403         MOV     A,#0x3
    \   000063   12....       LCALL   ?XSTACK_DISP0_8
    \   000066   EE           MOV     A,R6
@@ -5306,8 +5251,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1962              }
    1963            }
    \                     ??ZDSecMgrSwitchNwkKey_5:
-   \   000067   12....       LCALL   ??Subroutine63_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_166:
+   \   000067   12....       LCALL   ??Subroutine64_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_169:
    \   00006A   12....       LCALL   `??APSME_SwitchKeyReq::?relay`; Banked call to: APSME_SwitchKeyReq
    \   00006D   E9           MOV     A,R1
    \   00006E   FE           MOV     R6,A
@@ -5333,7 +5278,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000077   EE           MOV     A,R6
    \   000078   F9           MOV     R1,A
    \   000079   7411         MOV     A,#0x11
-   \   00007B   80..         SJMP    ??Subroutine65_0
+   \   00007B   02....       LJMP    ??Subroutine62_0 & 0xFFFF
    1976          }
    1977          #endif // ( ZG_BUILD_COORDINATOR_TYPE )
    1978          
@@ -5377,10 +5322,10 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    1997            status = APSME_RequestKeyReq( &req );
    1998          
    1999            return status;
-   \                     ??CrossCallReturnLabel_159:
+   \                     ??CrossCallReturnLabel_162:
    \   00001E   12....       LCALL   `??APSME_RequestKeyReq::?relay`; Banked call to: APSME_RequestKeyReq
    \   000021   7404         MOV     A,#0x4
-   \   000023   02....       LJMP    ??Subroutine59_0 & 0xFFFF
+   \   000023   02....       LJMP    ??Subroutine58_0 & 0xFFFF
    2000          }
    2001          
    2002          #if ( ZG_BUILD_JOINING_TYPE )
@@ -5393,114 +5338,34 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2009           *
    2010           * @return      ZStatus_t
    2011           */
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
    2012          ZStatus_t ZDSecMgrSetupPartner( uint16 partNwkAddr, uint8* partExtAddr )
-   \                     ZDSecMgrSetupPartner:
    2013          {
-   \   000000                REQUIRE ?V0
-   \   000000                REQUIRE ?V2
-   \   000000                REQUIRE ?V3
-   \   000000   74F4         MOV     A,#-0xc
-   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
-   \   000005                ; Saved register size: 12
-   \   000005                ; Auto size: 13
-   \   000005   74F3         MOV     A,#-0xd
-   \   000007   12....       LCALL   ?ALLOC_XSTACK8
-   \   00000A   8A..         MOV     ?V2,R2
-   \   00000C   8B..         MOV     ?V3,R3
-   \   00000E   EC           MOV     A,R4
-   \   00000F   FE           MOV     R6,A
-   \   000010   ED           MOV     A,R5
-   \   000011   FF           MOV     R7,A
    2014            AddrMgrEntry_t entry;
    2015            ZStatus_t      status;
    2016          
    2017            status = ZFailure;
-   \   000012   75..01       MOV     ?V0,#0x1
    2018          
    2019            // update the address manager
    2020            entry.user    = ADDRMGR_USER_SECURITY;
-   \   000015   85..82       MOV     DPL,?XSP + 0
-   \   000018   85..83       MOV     DPH,?XSP + 1
-   \   00001B   7402         MOV     A,#0x2
-   \   00001D   F0           MOVX    @DPTR,A
    2021            entry.nwkAddr = partNwkAddr;
-   \   00001E   14           DEC     A
-   \   00001F   12....       LCALL   ?XSTACK_DISP0_8
-   \   000022   12....       LCALL   ?Subroutine20 & 0xFFFF
    2022            AddrMgrExtAddrSet( entry.extAddr, partExtAddr );
-   \                     ??CrossCallReturnLabel_10:
-   \   000025   12....       LCALL   ?XSTACK_DISP0_8
-   \   000028   AA82         MOV     R2,DPL
-   \   00002A   AB83         MOV     R3,DPH
-   \   00002C   12....       LCALL   `??AddrMgrExtAddrSet::?relay`; Banked call to: AddrMgrExtAddrSet
    2023          
    2024            if ( AddrMgrEntryUpdate( &entry ) == TRUE )
-   \   00002F                ; Setup parameters for call to function AddrMgrEntryUpdate
-   \   00002F   AA..         MOV     R2,?XSP + 0
-   \   000031   AB..         MOV     R3,?XSP + 1
-   \   000033   12....       LCALL   `??AddrMgrEntryUpdate::?relay`; Banked call to: AddrMgrEntryUpdate
-   \   000036   E9           MOV     A,R1
-   \   000037   6401         XRL     A,#0x1
-   \   000039   7038         JNZ     ??ZDSecMgrSetupPartner_0
    2025            {
    2026              status = ZSuccess;
-   \   00003B   75..00       MOV     ?V0,#0x0
    2027          
    2028              // check for address discovery
    2029              if ( partNwkAddr == INVALID_NODE_ADDR )
-   \   00003E   74FE         MOV     A,#-0x2
-   \   000040   65..         XRL     A,?V2
-   \   000042   7004         JNZ     ??ZDSecMgrSetupPartner_1
-   \   000044   74FF         MOV     A,#-0x1
-   \   000046   65..         XRL     A,?V3
-   \                     ??ZDSecMgrSetupPartner_1:
-   \   000048   700F         JNZ     ??ZDSecMgrSetupPartner_2
    2030              {
    2031                status = ZDP_NwkAddrReq( partExtAddr, ZDP_ADDR_REQTYPE_SINGLE, 0, 0 );
-   \   00004A                ; Setup parameters for call to function ZDP_NwkAddrReq
-   \   00004A   7D00         MOV     R5,#0x0
-   \   00004C   7C00         MOV     R4,#0x0
-   \   00004E   7900         MOV     R1,#0x0
-   \   000050   EE           MOV     A,R6
-   \   000051   FA           MOV     R2,A
-   \   000052   EF           MOV     A,R7
-   \   000053   FB           MOV     R3,A
-   \   000054   12....       LCALL   `??ZDP_NwkAddrReq::?relay`; Banked call to: ZDP_NwkAddrReq
-   \   000057   8017         SJMP    ??ZDSecMgrSetupPartner_3
    2032              }
    2033              else if ( !AddrMgrExtAddrValid( partExtAddr ) )
-   \                     ??ZDSecMgrSetupPartner_2:
-   \   000059                ; Setup parameters for call to function AddrMgrExtAddrValid
-   \   000059   EE           MOV     A,R6
-   \   00005A   FA           MOV     R2,A
-   \   00005B   EF           MOV     A,R7
-   \   00005C   FB           MOV     R3,A
-   \   00005D   12....       LCALL   `??AddrMgrExtAddrValid::?relay`; Banked call to: AddrMgrExtAddrValid
-   \   000060   E9           MOV     A,R1
-   \   000061   7010         JNZ     ??ZDSecMgrSetupPartner_0
    2034              {
    2035                status = ZDP_IEEEAddrReq( partNwkAddr, ZDP_ADDR_REQTYPE_SINGLE, 0, 0 );
-   \   000063                ; Setup parameters for call to function ZDP_IEEEAddrReq
-   \   000063   7D00         MOV     R5,#0x0
-   \   000065   7C00         MOV     R4,#0x0
-   \   000067   7900         MOV     R1,#0x0
-   \   000069   AA..         MOV     R2,?V2
-   \   00006B   AB..         MOV     R3,?V3
-   \   00006D   12....       LCALL   `??ZDP_IEEEAddrReq::?relay`; Banked call to: ZDP_IEEEAddrReq
-   \                     ??ZDSecMgrSetupPartner_3:
-   \   000070   E9           MOV     A,R1
-   \   000071   F5..         MOV     ?V0,A
    2036              }
    2037            }
    2038          
    2039            return status;
-   \                     ??ZDSecMgrSetupPartner_0:
-   \   000073   A9..         MOV     R1,?V0
-   \   000075   740D         MOV     A,#0xd
-   \   000077                REQUIRE ?Subroutine3
-   \   000077                ; // Fall through to label ?Subroutine3
    2040          }
    2041          #endif // ( ZG_BUILD_JOINING_TYPE )
    2042          
@@ -5567,10 +5432,10 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine25:
-   \   000000   12....       LCALL   ?Subroutine45 & 0xFFFF
-   \                     ??CrossCallReturnLabel_58:
-   \   000003                REQUIRE ??Subroutine57_0
-   \   000003                ; // Fall through to label ??Subroutine57_0
+   \   000000   12....       LCALL   ?Subroutine44 & 0xFFFF
+   \                     ??CrossCallReturnLabel_61:
+   \   000003                REQUIRE ??Subroutine56_0
+   \   000003                ; // Fall through to label ??Subroutine56_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    2084          ZStatus_t ZDSecMgrLinkKeySet( uint8* extAddr, uint8* key )
@@ -5617,7 +5482,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2093          
    2094            if ( status == ZSuccess )
    \   00002C   6003         JZ      $+5
-   \   00002E   02....       LJMP    ??CrossCallReturnLabel_180 & 0xFFFF
+   \   00002E   02....       LJMP    ??CrossCallReturnLabel_177 & 0xFFFF
    2095            {
    2096              // point to NV item
    2097              entry->keyNvId = ZCD_NV_APS_LINK_KEY_DATA_START + Index;
@@ -5633,13 +5498,13 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00003F   85..82       MOV     DPL,?XSP + 0
    \   000042   85..83       MOV     DPH,?XSP + 1
    \   000045   12....       LCALL   ?Subroutine35 & 0xFFFF
-   \                     ??CrossCallReturnLabel_41:
+   \                     ??CrossCallReturnLabel_44:
    \   000048   A3           INC     DPTR
    \   000049   A3           INC     DPTR
-   \   00004A   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \   00004A   12....       LCALL   ??Subroutine60_0 & 0xFFFF
    2098          
    2099              pApsLinkKey = (APSME_LinkKeyData_t *)osal_mem_alloc(sizeof(APSME_LinkKeyData_t));
-   \                     ??CrossCallReturnLabel_138:
+   \                     ??CrossCallReturnLabel_141:
    \   00004D                ; Setup parameters for call to function osal_mem_alloc
    \   00004D   7A18         MOV     R2,#0x18
    \   00004F   7B00         MOV     R3,#0x0
@@ -5651,7 +5516,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000058   EA           MOV     A,R2
    \   000059   45..         ORL     A,?V3
    \   00005B   7003         JNZ     $+5
-   \   00005D   02....       LJMP    ??CrossCallReturnLabel_180 & 0xFFFF
+   \   00005D   02....       LJMP    ??CrossCallReturnLabel_177 & 0xFFFF
    2102              {
    2103                // read the key form NV, keyNvId must be ZCD_NV_APS_LINK_KEY_DATA_START based
    2104                osal_nv_read( entry->keyNvId, 0,
@@ -5668,7 +5533,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000074   7404         MOV     A,#0x4
    \   000076   12....       LCALL   ?XSTACK_DISP0_8
    \   000079   12....       LCALL   ?Subroutine25 & 0xFFFF
-   \                     ??CrossCallReturnLabel_119:
+   \                     ??CrossCallReturnLabel_122:
    \   00007C   12....       LCALL   `??osal_nv_read::?relay`; Banked call to: osal_nv_read
    \   00007F   7404         MOV     A,#0x4
    \   000081   12....       LCALL   ?DEALLOC_XSTACK8
@@ -5693,14 +5558,14 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000A2   2414         ADD     A,#0x14
    \   0000A4   12....       LCALL   ?Subroutine14 & 0xFFFF
    2110                pApsLinkKey->txFrmCntr = 0;
-   \                     ??CrossCallReturnLabel_181:
+   \                     ??CrossCallReturnLabel_178:
    \   0000A7   E5..         MOV     A,?V2
    \   0000A9   2410         ADD     A,#0x10
    \   0000AB   12....       LCALL   ?Subroutine14 & 0xFFFF
    2111          
    2112                osal_nv_write( entry->keyNvId, 0,
    2113                              sizeof(APSME_LinkKeyData_t), pApsLinkKey );
-   \                     ??CrossCallReturnLabel_182:
+   \                     ??CrossCallReturnLabel_179:
    \   0000AE                ; Setup parameters for call to function osal_nv_write
    \   0000AE   78..         MOV     R0,#?V2
    \   0000B0   12....       LCALL   ?PUSH_XSTACK_I_TWO
@@ -5713,7 +5578,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000C2   7404         MOV     A,#0x4
    \   0000C4   12....       LCALL   ?XSTACK_DISP0_8
    \   0000C7   12....       LCALL   ?Subroutine25 & 0xFFFF
-   \                     ??CrossCallReturnLabel_120:
+   \                     ??CrossCallReturnLabel_123:
    \   0000CA   12....       LCALL   `??osal_nv_write::?relay`; Banked call to: osal_nv_write
    \   0000CD   7404         MOV     A,#0x4
    \   0000CF   12....       LCALL   ?DEALLOC_XSTACK8
@@ -5736,9 +5601,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000E6   85..82       MOV     DPL,?XSP + 0
    \   0000E9   85..83       MOV     DPH,?XSP + 1
    \   0000EC   12....       LCALL   ?Subroutine31 & 0xFFFF
-   \                     ??CrossCallReturnLabel_31:
+   \                     ??CrossCallReturnLabel_34:
    \   0000EF   12....       LCALL   ?Subroutine29 & 0xFFFF
-   \                     ??CrossCallReturnLabel_93:
+   \                     ??CrossCallReturnLabel_96:
    \   0000F2   E8           MOV     A,R0
    \   0000F3   75F009       MOV     B,#0x9
    \   0000F6   A4           MUL     AB
@@ -5760,23 +5625,23 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00010C   F582         MOV     DPL,A
    \   00010E   EB           MOV     A,R3
    \   00010F   34ED         ADDC    A,#-0x13
-   \   000111   12....       LCALL   ??Subroutine68_0 & 0xFFFF
+   \   000111   12....       LCALL   ??Subroutine66_0 & 0xFFFF
    2119          
    2120                // set initial values for counters in RAM
    2121                ApsLinkKeyFrmCntr[entry->keyNvId - ZCD_NV_APS_LINK_KEY_DATA_START].txFrmCntr = 0;
    2122                ApsLinkKeyFrmCntr[entry->keyNvId - ZCD_NV_APS_LINK_KEY_DATA_START].rxFrmCntr = 0;
-   \                     ??CrossCallReturnLabel_179:
+   \                     ??CrossCallReturnLabel_176:
    \   000114   EA           MOV     A,R2
    \   000115   24FB         ADD     A,#-0x5
    \   000117   F582         MOV     DPL,A
    \   000119   EB           MOV     A,R3
    \   00011A   34ED         ADDC    A,#-0x13
-   \   00011C   12....       LCALL   ??Subroutine68_0 & 0xFFFF
+   \   00011C   12....       LCALL   ??Subroutine66_0 & 0xFFFF
    2123              }
    2124            }
    2125          
    2126            return status;
-   \                     ??CrossCallReturnLabel_180:
+   \                     ??CrossCallReturnLabel_177:
    \   00011F   A9..         MOV     R1,?V0
    \   000121   7404         MOV     A,#0x4
    \   000123                REQUIRE ?Subroutine5
@@ -5794,17 +5659,17 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000000   F582         MOV     DPL,A
    \   000002   E4           CLR     A
    \   000003   35..         ADDC    A,?V3
-   \   000005                REQUIRE ??Subroutine68_0
-   \   000005                ; // Fall through to label ??Subroutine68_0
+   \   000005                REQUIRE ??Subroutine66_0
+   \   000005                ; // Fall through to label ??Subroutine66_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine68_0:
+   \                     ??Subroutine66_0:
    \   000000   F583         MOV     DPH,A
-   \   000002                REQUIRE ??Subroutine69_0
-   \   000002                ; // Fall through to label ??Subroutine69_0
+   \   000002                REQUIRE ??Subroutine67_0
+   \   000002                ; // Fall through to label ??Subroutine67_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine69_0:
+   \                     ??Subroutine67_0:
    \   000000   E4           CLR     A
    \   000001   F0           MOVX    @DPTR,A
    \   000002   A3           INC     DPTR
@@ -5857,7 +5722,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2150              entry->authenticateOption = option;
    \   000017   12....       LCALL   ?Subroutine30 & 0xFFFF
    2151            }
-   \                     ??CrossCallReturnLabel_26:
+   \                     ??CrossCallReturnLabel_29:
    \   00001A   EE           MOV     A,R6
    \   00001B   F0           MOVX    @DPTR,A
    2152          
@@ -5870,8 +5735,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ?Subroutine30:
    \   000000   85..82       MOV     DPL,?XSP + 0
    \   000003   85..83       MOV     DPH,?XSP + 1
-   \   000006   12....       LCALL   ?Subroutine45 & 0xFFFF
-   \                     ??CrossCallReturnLabel_59:
+   \   000006   12....       LCALL   ?Subroutine44 & 0xFFFF
+   \                     ??CrossCallReturnLabel_62:
    \   000009   A3           INC     DPTR
    \   00000A   A3           INC     DPTR
    \   00000B   A3           INC     DPTR
@@ -5971,7 +5836,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2193                  return FALSE;
    2194                }
    2195              }
-   \                     ??CrossCallReturnLabel_27:
+   \                     ??CrossCallReturnLabel_30:
    \   000053   E0           MOVX    A,@DPTR
    \   000054   7017         JNZ     ??ZDSecMgrAuthenticationCheck_0
    2196              else
@@ -5991,7 +5856,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000056   7900         MOV     R1,#0x0
    \                     ??ZDSecMgrAuthenticationCheck_3:
    \   000058   740C         MOV     A,#0xc
-   \   00005A   02....       LJMP    ??Subroutine70_0 & 0xFFFF
+   \   00005A   02....       LJMP    ??Subroutine69_0 & 0xFFFF
    \                     ??ZDSecMgrAuthenticationCheck_2:
    \   00005D                ; Setup parameters for call to function ZDSecMgrExtAddrLookup
    \   00005D   7402         MOV     A,#0x2
@@ -6060,7 +5925,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00001C   85..83       MOV     DPH,?XSP + 1
    \   00001F   12....       LCALL   ?Subroutine25 & 0xFFFF
    2241            }
-   \                     ??CrossCallReturnLabel_121:
+   \                     ??CrossCallReturnLabel_124:
    \   000022   8E82         MOV     DPL,R6
    \   000024   8F83         MOV     DPH,R7
    \   000026   EA           MOV     A,R2
@@ -6145,7 +6010,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2272          
    2273            if (apsLinkKeyNvId != SEC_NO_KEY_NV_ID )
    \   00002A   12....       LCALL   ?Subroutine24 & 0xFFFF
-   \                     ??CrossCallReturnLabel_152:
+   \                     ??CrossCallReturnLabel_155:
    \   00002D   607A         JZ      ??APSME_IsLinkKeyValid_0
    2274            {
    2275              pKeyData = (APSME_LinkKeyData_t *)osal_mem_alloc(sizeof(APSME_LinkKeyData_t));
@@ -6175,8 +6040,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000051   7D00         MOV     R5,#0x0
    \   000053   7404         MOV     A,#0x4
    \   000055   12....       LCALL   ?XSTACK_DISP0_8
-   \   000058   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_114:
+   \   000058   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_117:
    \   00005B   12....       LCALL   `??osal_nv_read::?relay`; Banked call to: osal_nv_read
    \   00005E   7404         MOV     A,#0x4
    \   000060   12....       LCALL   ?DEALLOC_XSTACK8
@@ -6261,8 +6126,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2312            if ( ind->srcAddr == APSME_TRUSTCENTER_NWKADDR )
    \   000005   8A82         MOV     DPL,R2
    \   000007   8B83         MOV     DPH,R3
-   \   000009   12....       LCALL   ??Subroutine62_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_150:
+   \   000009   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_153:
    \   00000C   7027         JNZ     ??APSME_KeyFwdToChild_0
    2313            {
    2314              // check for initial NWK key
@@ -6291,9 +6156,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000025   A3           INC     DPTR
    \   000026   A3           INC     DPTR
    \   000027   A3           INC     DPTR
-   \   000028   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \   000028   12....       LCALL   ??Subroutine56_0 & 0xFFFF
    2320              }
-   \                     ??CrossCallReturnLabel_117:
+   \                     ??CrossCallReturnLabel_120:
    \   00002B   12....       LCALL   `??AssocGetWithExt::?relay`; Banked call to: AssocGetWithExt
    \   00002E                ; Setup parameters for call to function ZDSecMgrAssocDeviceAuth
    \   00002E   12....       LCALL   `??ZDSecMgrAssocDeviceAuth::?relay`; Banked call to: ZDSecMgrAssocDeviceAuth
@@ -6308,7 +6173,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ??APSME_KeyFwdToChild_0:
    \   000035   7900         MOV     R1,#0x0
    \                     ??APSME_KeyFwdToChild_3:
-   \   000037   02....       LJMP    ??Subroutine71_0 & 0xFFFF
+   \   000037   02....       LJMP    ??Subroutine70_0 & 0xFFFF
    2326          }
    2327          
    2328          /******************************************************************************
@@ -6373,15 +6238,15 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00002D   AD..         MOV     R5,?XSP + 1
    \   00002F   7402         MOV     A,#0x2
    \   000031   12....       LCALL   ?XSTACK_DISP0_8
-   \   000034   12....       LCALL   ??Subroutine58_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_115:
+   \   000034   12....       LCALL   ??Subroutine57_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_118:
    \   000037   12....       LCALL   `??ZDSecMgrEntryLookupAMI::?relay`; Banked call to: ZDSecMgrEntryLookupAMI
    2355          
    2356            // If no existing entry, create one
    2357            if ( entry == NULL )
    \   00003A   12....       LCALL   ?Subroutine24 & 0xFFFF
-   \                     ??CrossCallReturnLabel_153:
-   \   00003D   7015         JNZ     ??CrossCallReturnLabel_139
+   \                     ??CrossCallReturnLabel_156:
+   \   00003D   7015         JNZ     ??CrossCallReturnLabel_142
    2358            {
    2359              if ( ZDSecMgrEntryNew( &entry ) == ZSuccess )
    \   00003F                ; Setup parameters for call to function ZDSecMgrEntryNew
@@ -6396,8 +6261,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00004B   12....       LCALL   ?XSTACK_DISP0_8
    \   00004E   12....       LCALL   ?Subroutine26 & 0xFFFF
    2362              }
-   \                     ??CrossCallReturnLabel_19:
-   \   000051   12....       LCALL   ??Subroutine61_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_22:
+   \   000051   12....       LCALL   ??Subroutine60_0 & 0xFFFF
    2363              else
    2364              {
    2365                /* Security Manager full */
@@ -6406,12 +6271,12 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2368            }
    2369            // Write the link key
    2370            APSME_LinkKeySet( extAddr, key );
-   \                     ??CrossCallReturnLabel_139:
+   \                     ??CrossCallReturnLabel_142:
    \   000054                ; Setup parameters for call to function APSME_LinkKeySet
    \   000054   740E         MOV     A,#0xe
    \   000056   12....       LCALL   ?XSTACK_DISP0_8
    \   000059   12....       LCALL   ?Subroutine34 & 0xFFFF
-   \                     ??CrossCallReturnLabel_39:
+   \                     ??CrossCallReturnLabel_42:
    \   00005C   EE           MOV     A,R6
    \   00005D   FA           MOV     R2,A
    \   00005E   EF           MOV     A,R7
@@ -6440,7 +6305,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00006F   7900         MOV     R1,#0x0
    \                     ??ZDSecMgrAddLinkKey_1:
    \   000071   7404         MOV     A,#0x4
-   \   000073   02....       LJMP    ??Subroutine70_0 & 0xFFFF
+   \   000073   02....       LJMP    ??Subroutine69_0 & 0xFFFF
    \                     ??ZDSecMgrAddLinkKey_2:
    \   000076   7911         MOV     R1,#0x11
    \   000078   80F7         SJMP    ??ZDSecMgrAddLinkKey_1
@@ -6531,7 +6396,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000065   4E           ORL     A,R6
    \   000066   F9           MOV     R1,A
    \   000067   7402         MOV     A,#0x2
-   \   000069   02....       LJMP    ??Subroutine70_0 & 0xFFFF
+   \   000069   02....       LJMP    ??Subroutine69_0 & 0xFFFF
    2411          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
@@ -6585,7 +6450,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000010   12....       LCALL   ?Subroutine11 & 0xFFFF
    2429          
    2430            if (ZDSecMgrEntries != NULL)
-   \                     ??CrossCallReturnLabel_85:
+   \                     ??CrossCallReturnLabel_88:
    \   000013   6074         JZ      ??ZDSecMgrWriteNV_0
    2431            {
    2432              for ( i = 0; i < ZDSECMGR_ENTRY_MAX; i++ )
@@ -6625,7 +6490,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000049   78..         MOV     R0,#?V2
    \   00004B   12....       LCALL   ?PUSH_XSTACK_I_TWO
    \   00004E   12....       LCALL   ?Subroutine37 & 0xFFFF
-   \                     ??CrossCallReturnLabel_44:
+   \                     ??CrossCallReturnLabel_47:
    \   000051   12....       LCALL   `??osal_nv_write::?relay`; Banked call to: osal_nv_write
    \   000054   7404         MOV     A,#0x4
    \   000056   12....       LCALL   ?DEALLOC_XSTACK8
@@ -6655,7 +6520,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000078   12....       LCALL   ?Subroutine36 & 0xFFFF
    2442                }
    2443              }
-   \                     ??CrossCallReturnLabel_43:
+   \                     ??CrossCallReturnLabel_46:
    \   00007B   F0           MOVX    @DPTR,A
    \                     ??ZDSecMgrWriteNV_3:
    \   00007C   0E           INC     R6
@@ -6693,7 +6558,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000AE   12....       LCALL   ?DEALLOC_XSTACK8
    2448          }
    \   0000B1   7402         MOV     A,#0x2
-   \   0000B3   02....       LJMP    ?Subroutine3 & 0xFFFF
+   \   0000B3                REQUIRE ?Subroutine3
+   \   0000B3                ; // Fall through to label ?Subroutine3
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine37:
@@ -6710,12 +6576,12 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00000F   E9           MOV     A,R1
    \   000010   A4           MUL     AB
    \   000011   2A           ADD     A,R2
-   \   000012   12....       LCALL   ?Subroutine51 & 0xFFFF
-   \                     ??CrossCallReturnLabel_68:
+   \   000012   12....       LCALL   ?Subroutine50 & 0xFFFF
+   \                     ??CrossCallReturnLabel_71:
    \   000015   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine51:
+   \                     ?Subroutine50:
    \   000000   F9           MOV     R1,A
    \   000001   E8           MOV     A,R0
    \   000002   2402         ADD     A,#0x2
@@ -6789,7 +6655,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000033   6003         JZ      $+5
    \   000035   02....       LJMP    ??ZDSecMgrRestoreFromNV_0 & 0xFFFF
    \   000038   12....       LCALL   ?Subroutine24 & 0xFFFF
-   \                     ??CrossCallReturnLabel_154:
+   \                     ??CrossCallReturnLabel_157:
    \   00003B   7003         JNZ     $+5
    \   00003D   02....       LJMP    ??ZDSecMgrRestoreFromNV_0 & 0xFFFF
    \   000040   85..82       MOV     DPL,?XSP + 0
@@ -6851,8 +6717,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000095   A4           MUL     AB
    \   000096   F8           MOV     R0,A
    \   000097   EF           MOV     A,R7
-   \   000098   12....       LCALL   ?Subroutine51 & 0xFFFF
-   \                     ??CrossCallReturnLabel_67:
+   \   000098   12....       LCALL   ?Subroutine50 & 0xFFFF
+   \                     ??CrossCallReturnLabel_70:
    \   00009B   12....       LCALL   `??osal_nv_read::?relay`; Banked call to: osal_nv_read
    \   00009E   7404         MOV     A,#0x4
    \   0000A0   12....       LCALL   ?DEALLOC_XSTACK8
@@ -6905,8 +6771,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000E0   7D00         MOV     R5,#0x0
    \   0000E2   8A82         MOV     DPL,R2
    \   0000E4   8B83         MOV     DPH,R3
-   \   0000E6   12....       LCALL   ??Subroutine57_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_118:
+   \   0000E6   12....       LCALL   ??Subroutine56_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_121:
    \   0000E9   12....       LCALL   `??osal_nv_read::?relay`; Banked call to: osal_nv_read
    \   0000EC   7404         MOV     A,#0x4
    \   0000EE   12....       LCALL   ?DEALLOC_XSTACK8
@@ -6921,7 +6787,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   0000FF   78..         MOV     R0,#?V4
    \   000101   12....       LCALL   ?L_ADD_TO_X
    \   000104   12....       LCALL   ?Subroutine33 & 0xFFFF
-   \                     ??CrossCallReturnLabel_35:
+   \                     ??CrossCallReturnLabel_38:
    \   000107   A3           INC     DPTR
    \   000108   A3           INC     DPTR
    \   000109   E0           MOVX    A,@DPTR
@@ -7144,7 +7010,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000053   12....       LCALL   ?PUSH_XSTACK_I_TWO
    \   000056   12....       LCALL   ?Subroutine37 & 0xFFFF
    2551            }
-   \                     ??CrossCallReturnLabel_45:
+   \                     ??CrossCallReturnLabel_48:
    \   000059   12....       LCALL   `??osal_nv_write::?relay`; Banked call to: osal_nv_write
    \   00005C   7404         MOV     A,#0x4
    \   00005E   12....       LCALL   ?DEALLOC_XSTACK8
@@ -7309,8 +7175,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000015   6012         JZ      ??ZDSecMgrAPSRemove_1
    \   000017   7408         MOV     A,#0x8
    \   000019   12....       LCALL   ?XSTACK_DISP0_8
-   \   00001C   12....       LCALL   ??Subroutine56_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_90:
+   \   00001C   12....       LCALL   ??Subroutine55_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_93:
    \   00001F   74FE         MOV     A,#-0x2
    \   000021   68           XRL     A,R0
    \   000022   7003         JNZ     ??ZDSecMgrAPSRemove_2
@@ -7329,7 +7195,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ??ZDSecMgrAPSRemove_3:
    \   00002D   12....       LCALL   ?Subroutine17 & 0xFFFF
    2635            device.extAddr = extAddr;
-   \                     ??CrossCallReturnLabel_170:
+   \                     ??CrossCallReturnLabel_173:
    \   000030   12....       LCALL   ?XSTACK_DISP0_8
    \   000033   EC           MOV     A,R4
    \   000034   F0           MOVX    @DPTR,A
@@ -7343,11 +7209,11 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00003E   F0           MOVX    @DPTR,A
    \   00003F   A3           INC     DPTR
    \   000040   E9           MOV     A,R1
-   \   000041   12....       LCALL   ??Subroutine63_0 & 0xFFFF
+   \   000041   12....       LCALL   ??Subroutine64_0 & 0xFFFF
    2637          
    2638            // remove device
    2639            ZDSecMgrDeviceRemove( &device );
-   \                     ??CrossCallReturnLabel_167:
+   \                     ??CrossCallReturnLabel_170:
    \   000044   12....       LCALL   `??ZDSecMgrDeviceRemove::?relay`; Banked call to: ZDSecMgrDeviceRemove
    2640          
    2641            return ( ZSuccess );
@@ -7489,9 +7355,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2691                  tcLinkKey.txFrmCntr = 0;
    \   000099   7418         MOV     A,#0x18
    \   00009B   12....       LCALL   ?XSTACK_DISP0_8
-   \   00009E   12....       LCALL   ??Subroutine69_0 & 0xFFFF
+   \   00009E   12....       LCALL   ??Subroutine67_0 & 0xFFFF
    2692                }
-   \                     ??CrossCallReturnLabel_178:
+   \                     ??CrossCallReturnLabel_175:
    \   0000A1   8012         SJMP    ??APSME_TCLinkKeyInit_3
    2693                else
    2694                {
@@ -7728,7 +7594,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2775                }
    2776              }
    2777            }
-   \                     ??CrossCallReturnLabel_50:
+   \                     ??CrossCallReturnLabel_53:
    \   00009B   E0           MOVX    A,@DPTR
    \   00009C   6402         XRL     A,#0x2
    \   00009E   7008         JNZ     ??APSME_TCLinkKeySync_2
@@ -7760,7 +7626,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2785          
    2786                if ( si->frmCntr >= *tclkRxFrmCntr )
    \   0000BB   12....       LCALL   ?Subroutine42 & 0xFFFF
-   \                     ??CrossCallReturnLabel_52:
+   \                     ??CrossCallReturnLabel_55:
    \   0000BE   78..         MOV     R0,#?V0
    \   0000C0   12....       LCALL   ?L_MOV_X
    \   0000C3   90....       MOV     DPTR,#TCLinkKeyFrmCntr + 4
@@ -7902,10 +7768,10 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2838            addrEntry.nwkAddr = dstAddr;
    \   000018   04           INC     A
    \   000019   12....       LCALL   ?XSTACK_DISP0_8
-   \   00001C   12....       LCALL   ?Subroutine44 & 0xFFFF
+   \   00001C   12....       LCALL   ?Subroutine23 & 0xFFFF
    2839          
    2840            extAddrFound = AddrMgrExtAddrValid( si->extAddr );
-   \                     ??CrossCallReturnLabel_175:
+   \                     ??CrossCallReturnLabel_20:
    \   00001F   EC           MOV     A,R4
    \   000020   2406         ADD     A,#0x6
    \   000022   F5..         MOV     ?V2,A
@@ -8017,14 +7883,14 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    2885              // update link key related fields
    2886              si->keyID   = SEC_KEYID_LINK;
    \   000090   12....       LCALL   ?Subroutine41 & 0xFFFF
-   \                     ??CrossCallReturnLabel_51:
+   \                     ??CrossCallReturnLabel_54:
    \   000093   E4           CLR     A
    \   000094   F0           MOVX    @DPTR,A
    2887              si->frmCntr = *tclkTxFrmCntr;
    \   000095   90....       MOV     DPTR,#TCLinkKeyFrmCntr
    \   000098   12....       LCALL   ?XLOAD_R0123
    \   00009B   12....       LCALL   ?Subroutine42 & 0xFFFF
-   \                     ??CrossCallReturnLabel_53:
+   \                     ??CrossCallReturnLabel_56:
    \   00009E   12....       LCALL   ?XSTORE_R0123
    2888          
    2889              // update outgoing frame counter
@@ -8135,7 +8001,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000004   7C08         MOV     R4,#0x8
    \   000006   79FF         MOV     R1,#-0x1
    \   000008   12....       LCALL   `??osal_isbufset::?relay`; Banked call to: osal_isbufset
-   \   00000B   02....       LJMP    ??Subroutine60_0 & 0xFFFF
+   \   00000B   02....       LJMP    ??Subroutine59_0 & 0xFFFF
    2931          }
    2932          
    2933          /******************************************************************************
@@ -8354,7 +8220,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine10:
    \   000000   7426         MOV     A,#0x26
-   \   000002   80..         SJMP    ??Subroutine70_0
+   \   000002   80..         SJMP    ??Subroutine69_0
    3014          
    3015          /*********************************************************************
    3016           * @fn          ZDSecMgrReadKeyFromNv
@@ -8453,8 +8319,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00004F   19           DEC     R1
    \   000050   C3           CLR     C
    \   000051   E8           MOV     A,R0
-   \   000052   12....       LCALL   ??Subroutine54_0 & 0xFFFF
-   \                     ??CrossCallReturnLabel_76:
+   \   000052   12....       LCALL   ??Subroutine53_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_79:
    \   000055   501A         JNC     ??ZDSecMgrReadKeyFromNv_5
    3056            {
    3057              // Read entry keyNvId of the APS link key table from NV. keyNvId should be
@@ -8513,7 +8379,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \                     ??ZDSecMgrReadKeyFromNv_7:
    \   00009D   790A         MOV     R1,#0xa
    \                     ??ZDSecMgrReadKeyFromNv_8:
-   \   00009F   02....       LJMP    ??Subroutine71_0 & 0xFFFF
+   \   00009F   02....       LJMP    ??Subroutine70_0 & 0xFFFF
    3074          }
    3075          
    3076          /******************************************************************************
@@ -8596,7 +8462,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00003F   40D8         JC      ??ZDSecMgrApsLinkKeyInit_0
    3111          }
    \   000041   7418         MOV     A,#0x18
-   \   000043   02....       LJMP    ??Subroutine70_0 & 0xFFFF
+   \   000043   02....       LJMP    ??Subroutine69_0 & 0xFFFF
    3112          
    3113          /******************************************************************************
    3114           * @fn          ZDSecMgrInitNVKeyTables
@@ -8630,7 +8496,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   00000E   F9           MOV     R1,A
    \   00000F   12....       LCALL   `??APSME_TCLinkKeyInit::?relay`; Banked call to: APSME_TCLinkKeyInit
    3127          }
-   \   000012   02....       LJMP    ??Subroutine66_0 & 0xFFFF
+   \   000012   02....       LJMP    ??Subroutine63_0 & 0xFFFF
    3128          
    3129          /******************************************************************************
    3130           * @fn          ZDSecMgrSaveApsLinkKey
@@ -8965,7 +8831,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    3219            }
    3220          }
    \                     ??ZDSecMgrSaveTCLinkKey_0:
-   \   00009E   02....       LJMP    ??Subroutine67_0 & 0xFFFF
+   \   00009E   02....       LJMP    ??Subroutine68_0 & 0xFFFF
    3221          
    3222          /******************************************************************************
    3223           * @fn          ZDSecMgrUpdateTCAddress
@@ -9380,11 +9246,6 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    \   000003   ......       DC24    ZDSecMgrRequestAppKey
 
    \                                 In  segment BANK_RELAYS, align 1
-   \                     `??ZDSecMgrSetupPartner::?relay`:
-   \   000000   12....       LCALL   ?BDISPATCH
-   \   000003   ......       DC24    ZDSecMgrSetupPartner
-
-   \                                 In  segment BANK_RELAYS, align 1
    \                     `??ZDSecMgrAppKeyTypeSet::?relay`:
    \   000000   12....       LCALL   ?BDISPATCH
    \   000003   ......       DC24    ZDSecMgrAppKeyTypeSet
@@ -9632,10 +9493,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
       0     52   ZDSecMgrClearNVKeyValues
         0     48   -> osal_memset
         0     52   -> osal_nv_write
-      2     10   ZDSecMgrConfig
+      2      0   ZDSecMgrConfig
         2      0   -> APSME_SecurityCM_CD
-        2      0   -> APSME_SecurityCM_ED
-        2      0   -> APSME_SecurityCM_RD
         2      0   -> SSP_Init
       0     42   ZDSecMgrDeviceJoin
         0     30   -> ZDSecMgrAddrClear
@@ -9644,18 +9503,16 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
         0     30   -> ZDSecMgrDeviceValidate
         0     30   -> ZDSecMgrSendNwkKey
         0     33   -> osal_memcpy
-      0     18   ZDSecMgrDeviceJoinDirect
+      0      9   ZDSecMgrDeviceJoinDirect
         0      9   -> AssocGetWithShort
         0      9   -> ZDSecMgrAssocDeviceAuth
         0      9   -> ZDSecMgrDeviceJoin
-      0     27   ZDSecMgrDeviceJoinFwd
+      0     18   ZDSecMgrDeviceJoinFwd
         0     18   -> APSME_UpdateDeviceReq
         0     18   -> AssocGetWithShort
         0     18   -> ZDSecMgrAssocDeviceAuth
-      0     42   ZDSecMgrDeviceNew
-        0      9   -> APSME_IsDistributedSecurity
-        0      9   -> ZDSecMgrDeviceJoinDirect
-        0      9   -> ZDSecMgrDeviceJoinFwd
+      2     33   ZDSecMgrDeviceNew
+        2      0   -> ZDSecMgrDeviceJoinDirect
       0     50   ZDSecMgrDeviceRemove
         0     20   -> APSME_RemoveDeviceReq
         0     20   -> AssocGetWithExt
@@ -9694,10 +9551,10 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
         0     22   -> AddrMgrEntryUpdate
         0     22   -> AddrMgrExtAddrSet
       0     10   ZDSecMgrInit
-        0     10   -> APSME_IsDistributedSecurity
+        0     10   -> APSME_SecurityCM_CD
         0     10   -> APSME_SetRequest
         0     10   -> NLME_GetExtAddr
-        0     10   -> ZDSecMgrConfig
+        0     10   -> SSP_Init
         0     10   -> ZDSecMgrEntryInit
       0     16   ZDSecMgrInitNV
         0     14   -> osal_nv_item_init
@@ -9758,12 +9615,6 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
         0     19   -> osal_mem_free
         0     19   -> osal_memset
         0     23   -> osal_nv_write
-      0     25   ZDSecMgrSetupPartner
-        0     25   -> AddrMgrEntryUpdate
-        0     25   -> AddrMgrExtAddrSet
-        0     25   -> AddrMgrExtAddrValid
-        0     25   -> ZDP_IEEEAddrReq
-        0     25   -> ZDP_NwkAddrReq
       2      0   ZDSecMgrSwitchKeyInd
         2      0   -> SSP_SwitchNwkKey
         2      0   -> ZDApp_NVUpdate
@@ -9816,26 +9667,26 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
    -----  --------------
        8  ?<Constant {255, 255, 255, 255, 255, 255, 255,
        1  ?<Initializer for ZDSecMgrAppKeyType>
-       5  ??Subroutine52_0
-       8  ??Subroutine53_0
-       6  ??Subroutine54_0
-       9  ??Subroutine55_0
-       4  ??Subroutine56_0
-       2  ??Subroutine57_0
-       6  ??Subroutine58_0
-       3  ??Subroutine59_0
-       7  ??Subroutine60_0
-       6  ??Subroutine61_0
-       5  ??Subroutine62_0
-       6  ??Subroutine63_0
+       5  ??Subroutine51_0
+       8  ??Subroutine52_0
+       6  ??Subroutine53_0
+       9  ??Subroutine54_0
+       4  ??Subroutine55_0
+       2  ??Subroutine56_0
+       6  ??Subroutine57_0
+       3  ??Subroutine58_0
+       7  ??Subroutine59_0
+       6  ??Subroutine60_0
+       5  ??Subroutine61_0
+       3  ??Subroutine62_0
+       5  ??Subroutine63_0
        6  ??Subroutine64_0
-       3  ??Subroutine65_0
-       5  ??Subroutine66_0
-       5  ??Subroutine67_0
-       2  ??Subroutine68_0
-       9  ??Subroutine69_0
-       3  ??Subroutine70_0
-       5  ??Subroutine71_0
+       8  ??Subroutine65_0
+       2  ??Subroutine66_0
+       9  ??Subroutine67_0
+       5  ??Subroutine68_0
+       3  ??Subroutine69_0
+       5  ??Subroutine70_0
        2  ?Subroutine0
        8  ?Subroutine1
        4  ?Subroutine10
@@ -9849,9 +9700,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
       13  ?Subroutine18
        9  ?Subroutine19
        2  ?Subroutine2
-       6  ?Subroutine20
-      15  ?Subroutine21
-       3  ?Subroutine22
+      15  ?Subroutine20
+       3  ?Subroutine21
+       6  ?Subroutine22
        6  ?Subroutine23
        6  ?Subroutine24
        3  ?Subroutine25
@@ -9875,15 +9726,14 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
       12  ?Subroutine41
       12  ?Subroutine42
        6  ?Subroutine43
-       6  ?Subroutine44
-       9  ?Subroutine45
-      12  ?Subroutine46
-       7  ?Subroutine47
-       6  ?Subroutine48
-       9  ?Subroutine49
+       9  ?Subroutine44
+      12  ?Subroutine45
+       7  ?Subroutine46
+       6  ?Subroutine47
+       9  ?Subroutine48
+      30  ?Subroutine49
        8  ?Subroutine5
-      30  ?Subroutine50
-      13  ?Subroutine51
+      13  ?Subroutine50
        5  ?Subroutine6
        5  ?Subroutine7
        5  ?Subroutine8
@@ -9913,7 +9763,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
        6  ZDSecMgrAddLinkKey::?relay
       68  ZDSecMgrAddrClear
        6  ZDSecMgrAddrClear::?relay
-      73  ZDSecMgrAddrStore
+      75  ZDSecMgrAddrStore
        6  ZDSecMgrAddrStore::?relay
       36  ZDSecMgrAppKeyGet
        6  ZDSecMgrAppKeyGet::?relay
@@ -9934,7 +9784,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
        6  ZDSecMgrAuthenticationSet::?relay
      161  ZDSecMgrClearNVKeyValues
        6  ZDSecMgrClearNVKeyValues::?relay
-      32  ZDSecMgrConfig
+      12  ZDSecMgrConfig
        6  ZDSecMgrConfig::?relay
      247  ZDSecMgrDeviceJoin
        6  ZDSecMgrDeviceJoin::?relay
@@ -9942,7 +9792,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
        6  ZDSecMgrDeviceJoinDirect::?relay
      188  ZDSecMgrDeviceJoinFwd
        6  ZDSecMgrDeviceJoinFwd::?relay
-      42  ZDSecMgrDeviceNew
+       9  ZDSecMgrDeviceNew
        6  ZDSecMgrDeviceNew::?relay
      245  ZDSecMgrDeviceRemove
        6  ZDSecMgrDeviceRemove::?relay
@@ -9971,9 +9821,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
        6  ZDSecMgrEntryNew::?relay
       72  ZDSecMgrExtAddrLookup
        6  ZDSecMgrExtAddrLookup::?relay
-      73  ZDSecMgrExtAddrStore
+      75  ZDSecMgrExtAddrStore
        6  ZDSecMgrExtAddrStore::?relay
-      63  ZDSecMgrInit
+      48  ZDSecMgrInit
        6  ZDSecMgrInit::?relay
      108  ZDSecMgrInitNV
        6  ZDSecMgrInitNV::?relay
@@ -9983,11 +9833,11 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
        6  ZDSecMgrNewDeviceEvent::?relay
      247  ZDSecMgrNwkKeyInit
        6  ZDSecMgrNwkKeyInit::?relay
-      39  ZDSecMgrPermitJoining
+      38  ZDSecMgrPermitJoining
        6  ZDSecMgrPermitJoining::?relay
        1  ZDSecMgrPermitJoiningEnabled
        1  ZDSecMgrPermitJoiningTimed
-      24  ZDSecMgrPermitJoiningTimeout
+      23  ZDSecMgrPermitJoiningTimeout
        6  ZDSecMgrPermitJoiningTimeout::?relay
      162  ZDSecMgrReadKeyFromNv
        6  ZDSecMgrReadKeyFromNv::?relay
@@ -10007,11 +9857,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
        6  ZDSecMgrSendNwkKey::?relay
      200  ZDSecMgrSetDefaultNV
        6  ZDSecMgrSetDefaultNV::?relay
-     119  ZDSecMgrSetupPartner
-       6  ZDSecMgrSetupPartner::?relay
       23  ZDSecMgrSwitchKeyInd
        6  ZDSecMgrSwitchKeyInd::?relay
-     125  ZDSecMgrSwitchNwkKey
+     126  ZDSecMgrSwitchNwkKey
        6  ZDSecMgrSwitchNwkKey::?relay
        1  ZDSecMgrTCAuthenticated
       90  ZDSecMgrTCDataLoad
@@ -10027,7 +9875,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
        6  ZDSecMgrUpdateNwkKey::?relay
       92  ZDSecMgrUpdateTCAddress
        6  ZDSecMgrUpdateTCAddress::?relay
-     182  ZDSecMgrWriteNV
+     179  ZDSecMgrWriteNV
        6  ZDSecMgrWriteNV::?relay
        4  __Constant_1
        4  __Constant_3e9
@@ -10035,14 +9883,14 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\zdo\ZDSecMgr.c
        4  __Constant_b
 
  
- 8 670 bytes in segment BANKED_CODE
-   396 bytes in segment BANK_RELAYS
+ 8 479 bytes in segment BANKED_CODE
+   390 bytes in segment BANK_RELAYS
      1 byte  in segment XDATA_I
      1 byte  in segment XDATA_ID
     24 bytes in segment XDATA_ROM_C
     81 bytes in segment XDATA_Z
  
- 9 067 bytes of CODE  memory
+ 8 870 bytes of CODE  memory
      8 bytes of CONST memory (+ 16 bytes shared)
     82 bytes of XDATA memory
 

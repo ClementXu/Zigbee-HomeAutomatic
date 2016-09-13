@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR C/C++ Compiler V9.30.1.3056 for 8051                28/Aug/2016  20:48:10
+# IAR C/C++ Compiler V9.30.1.3056 for 8051                07/Sep/2016  21:43:49
 # Copyright 2004-2015 IAR Systems AB.
 #
 #    Core               =  plain
@@ -33,18 +33,18 @@
 #        0x09, 0x0B, 0x0D, 0x0F, 0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C,
 #        0x0D}" -DMAC_MAX_FRAME_SIZE=116 -DZDNWKMGR_MIN_TRANSMISSIONS=20
 #        "-DCONST=const __code" -DGENERIC=__generic -DRFD_RCVC_ALWAYS_ON=FALSE
-#        -DPOLL_RATE=1000 -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100
+#        -DPOLL_RATE=10000 -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100
 #        -DREJOIN_POLL_RATE=440 -DREJOIN_BACKOFF=900000 -DREJOIN_SCAN=900000)
 #        -f "C:\Texas Instruments\Z-Stack Home
 #        1.2.2a.44539\Projects\zstack\HomeAutomation\Zigbee-HomeAutomatic\CC2530DB\..\..\..\Tools\CC2530DB\f8wZCL.cfg"
 #        "C:\Texas Instruments\Z-Stack Home
 #        1.2.2a.44539\Components\stack\nwk\nwk_globals.c" -D SECURE=1 -D
 #        TC_LINKKEY_JOIN -D NV_INIT -D NV_RESTORE -D HOLD_AUTO_START -D
-#        BUILD_ALL_DEVICES -D HAL_UART=TRUE -D xZTOOL_P1 -D xMT_TASK -D
+#        xBUILD_ALL_DEVICES -D HAL_UART=TRUE -D xZTOOL_P1 -D xMT_TASK -D
 #        xMT_APP_FUNC -D xMT_SYS_FUNC -D xMT_ZDO_FUNC -D xLCD_SUPPORTED=DEBUG
 #        -D MULTICAST_ENABLED=FALSE -D ZCL_READ -D ZCL_WRITE -D ZCL_REPORT -D
 #        ZCL_EZMODE -D ZCL_BASIC -D ZCL_IDENTIFY -D ZCL_ON_OFF -D ZCL_SCENES -D
-#        ZCL_GROUPS -D xZCL_LEVEL_CTRL -D ZCL_DIAGNOSTIC -D
+#        ZCL_GROUPS -D ZCL_LEVEL_CTRL -D ZCL_WD -D ZCL_DIAGNOSTIC -D
 #        FEATURE_SYSTEM_STATS -D DEVICE_LOGICAL_TYPE=ZG_DEVICETYPE_COORDINATOR
 #        -lC "C:\Texas Instruments\Z-Stack Home
 #        1.2.2a.44539\Projects\zstack\HomeAutomation\Zigbee-HomeAutomatic\CC2530DB\CoordinatorEB\List"
@@ -630,19 +630,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\nwk\nwk_globals.
     282          
     283          // APS End Device Broadcast Table
     284          #if ( ZG_BUILD_ENDDEVICE_TYPE )
-
-   \                                 In  segment XDATA_Z, align 1, keep-with-next
     285            apsEndDeviceBroadcast_t apsEndDeviceBroadcastTable[APS_MAX_ENDDEVICE_BROADCAST_ENTRIES];
-   \                     apsEndDeviceBroadcastTable:
-   \   000000                DS 90
-   \   00005A                REQUIRE __INIT_XDATA_Z
-
-   \                                 In  segment XDATA_I, align 1, keep-with-next
     286            uint8 gAPS_MAX_ENDDEVICE_BROADCAST_ENTRIES = APS_MAX_ENDDEVICE_BROADCAST_ENTRIES;
-   \                     gAPS_MAX_ENDDEVICE_BROADCAST_ENTRIES:
-   \   000000                DS 1
-   \   000001                REQUIRE `?<Initializer for gAPS_MAX_ENDDEVICE_BROADCAST`
-   \   000001                REQUIRE __INIT_XDATA_I
     287          #endif
     288          
     289          /*********************************************************************
@@ -778,27 +767,21 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\nwk\nwk_globals.
     368          #endif
     369          
     370            if ( ( ZSTACK_ROUTER_BUILD ) && ( zgChildAgingEnable == TRUE ) )
-   \   00000E   90....       MOV     DPTR,#zgDeviceLogicalType
+   \   00000E   90....       MOV     DPTR,#zgChildAgingEnable
    \   000011   E0           MOVX    A,@DPTR
-   \   000012   6004         JZ      ??nwk_globals_init_0
-   \   000014   6401         XRL     A,#0x1
-   \   000016   700B         JNZ     ??nwk_globals_init_1
-   \                     ??nwk_globals_init_0:
-   \   000018   90....       MOV     DPTR,#zgChildAgingEnable
-   \   00001B   E0           MOVX    A,@DPTR
-   \   00001C   6401         XRL     A,#0x1
-   \   00001E   7003         JNZ     ??nwk_globals_init_1
+   \   000012   6401         XRL     A,#0x1
+   \   000014   7003         JNZ     ??nwk_globals_init_0
     371            {
     372              // Set the function pointers for the Child Aging feature
     373              NwkInitChildAging();
-   \   000020                ; Setup parameters for call to function NwkInitChildAging
-   \   000020   12....       LCALL   `??NwkInitChildAging::?relay`; Banked call to: NwkInitChildAging
+   \   000016                ; Setup parameters for call to function NwkInitChildAging
+   \   000016   12....       LCALL   `??NwkInitChildAging::?relay`; Banked call to: NwkInitChildAging
     374            }
     375          }
-   \                     ??nwk_globals_init_1:
-   \   000023   D083         POP     DPH
-   \   000025   D082         POP     DPL
-   \   000027   02....       LJMP    ?BRET
+   \                     ??nwk_globals_init_0:
+   \   000019   D083         POP     DPH
+   \   00001B   D082         POP     DPL
+   \   00001D   02....       LJMP    ?BRET
     376          
     377          /*********************************************************************
     378           * @fn       NIB_init()
@@ -1239,10 +1222,6 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\nwk\nwk_globals.
    \                     `?<Initializer for gMIN_TREE_LQI>`:
    \   000000   06           DB 6
 
-   \                                 In  segment XDATA_ID, align 1, keep-with-next
-   \                     `?<Initializer for gAPS_MAX_ENDDEVICE_BROADCAST`:
-   \   000000   12           DB 18
-
    \                                 In  segment BANK_RELAYS, align 1
    \                     `??nwk_globals_init::?relay`:
    \   000000   12....       LCALL   ?BDISPATCH
@@ -1288,7 +1267,6 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\nwk\nwk_globals.
 
    Bytes  Function/Label
    -----  --------------
-       1  ?<Initializer for gAPS_MAX_ENDDEVICE_BROADCAST
        1  ?<Initializer for gMIN_TREE_LQI>
        5  ?Subroutine0
        9  ?Subroutine1
@@ -1299,13 +1277,11 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\nwk\nwk_globals.
        1  CskipRtrs
      261  NIB_init
        6  NIB_init::?relay
-      90  apsEndDeviceBroadcastTable
       36  bcastHoldAckMask
        9  bcastHoldHandle
       72  bcastTable
       16  defaultKey
       16  defaultTCLinkKey
-       1  gAPS_MAX_ENDDEVICE_BROADCAST_ENTRIES
        1  gAPS_MAX_GROUPS
        2  gBIND_REC_SIZE
        1  gDEFAULT_ROUTE_REQUEST_RADIUS
@@ -1348,7 +1324,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\nwk\nwk_globals.
        6  nwk_Status::?relay
       45  nwk_adjustDelay
        6  nwk_adjustDelay::?relay
-      42  nwk_globals_init
+      32  nwk_globals_init
        6  nwk_globals_init::?relay
       64  rtDiscTable
       24  rtgSrcRelayList
@@ -1357,15 +1333,15 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\stack\nwk\nwk_globals.
       60  timeoutValue
 
  
-   365 bytes in segment BANKED_CODE
+   355 bytes in segment BANKED_CODE
     24 bytes in segment BANK_RELAYS
    135 bytes in segment CODE_C
-     2 bytes in segment XDATA_I
-     2 bytes in segment XDATA_ID
- 1 683 bytes in segment XDATA_Z
+     1 byte  in segment XDATA_I
+     1 byte  in segment XDATA_ID
+ 1 593 bytes in segment XDATA_Z
  
-   526 bytes of CODE  memory
- 1 685 bytes of XDATA memory
+   515 bytes of CODE  memory
+ 1 594 bytes of XDATA memory
 
 Errors: none
 Warnings: none

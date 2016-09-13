@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR C/C++ Compiler V9.30.1.3056 for 8051                28/Aug/2016  20:48:13
+# IAR C/C++ Compiler V9.30.1.3056 for 8051                03/Sep/2016  23:17:00
 # Copyright 2004-2015 IAR Systems AB.
 #
 #    Core               =  plain
@@ -33,18 +33,18 @@
 #        0x09, 0x0B, 0x0D, 0x0F, 0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C,
 #        0x0D}" -DMAC_MAX_FRAME_SIZE=116 -DZDNWKMGR_MIN_TRANSMISSIONS=20
 #        "-DCONST=const __code" -DGENERIC=__generic -DRFD_RCVC_ALWAYS_ON=FALSE
-#        -DPOLL_RATE=1000 -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100
+#        -DPOLL_RATE=10000 -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100
 #        -DREJOIN_POLL_RATE=440 -DREJOIN_BACKOFF=900000 -DREJOIN_SCAN=900000)
 #        -f "C:\Texas Instruments\Z-Stack Home
 #        1.2.2a.44539\Projects\zstack\HomeAutomation\Zigbee-HomeAutomatic\CC2530DB\..\..\..\Tools\CC2530DB\f8wZCL.cfg"
 #        "C:\Texas Instruments\Z-Stack Home
 #        1.2.2a.44539\Components\osal\common\OSAL_Memory.c" -D SECURE=1 -D
 #        TC_LINKKEY_JOIN -D NV_INIT -D NV_RESTORE -D HOLD_AUTO_START -D
-#        BUILD_ALL_DEVICES -D HAL_UART=TRUE -D xZTOOL_P1 -D xMT_TASK -D
+#        xBUILD_ALL_DEVICES -D HAL_UART=TRUE -D xZTOOL_P1 -D xMT_TASK -D
 #        xMT_APP_FUNC -D xMT_SYS_FUNC -D xMT_ZDO_FUNC -D xLCD_SUPPORTED=DEBUG
 #        -D MULTICAST_ENABLED=FALSE -D ZCL_READ -D ZCL_WRITE -D ZCL_REPORT -D
 #        ZCL_EZMODE -D ZCL_BASIC -D ZCL_IDENTIFY -D ZCL_ON_OFF -D ZCL_SCENES -D
-#        ZCL_GROUPS -D xZCL_LEVEL_CTRL -D ZCL_DIAGNOSTIC -D
+#        ZCL_GROUPS -D ZCL_LEVEL_CTRL -D ZCL_WD -D ZCL_DIAGNOSTIC -D
 #        FEATURE_SYSTEM_STATS -D DEVICE_LOGICAL_TYPE=ZG_DEVICETYPE_COORDINATOR
 #        -lC "C:\Texas Instruments\Z-Stack Home
 #        1.2.2a.44539\Projects\zstack\HomeAutomation\Zigbee-HomeAutomatic\CC2530DB\CoordinatorEB\List"
@@ -302,8 +302,8 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\osal\common\OSAL_Memor
    \                                 In  segment XDATA_Z, align 1, keep-with-next
     182          static osalMemHdr_t theHeap[MAXMEMHEAP / OSALMEM_HDRSZ];
    \                     theHeap:
-   \   000000                DS 2048
-   \   000800                REQUIRE __INIT_XDATA_Z
+   \   000000                DS 2100
+   \   000834                REQUIRE __INIT_XDATA_Z
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
     183          static osalMemHdr_t *ff1;  // First free block in the small-block bucket.
@@ -384,7 +384,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\osal\common\OSAL_Memor
     243          
     244            // Setup a NULL block at the end of the heap for fast comparisons with zero.
     245            theHeap[OSALMEM_LASTBLK_IDX].val = 0;
-   \   000004   90....       MOV     DPTR,#theHeap + 2046
+   \   000004   90....       MOV     DPTR,#theHeap + 2098
    \   000007   E4           CLR     A
    \   000008   F0           MOVX    @DPTR,A
    \   000009   A3           INC     DPTR
@@ -417,7 +417,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\osal\common\OSAL_Memor
     254            // Setup the wilderness.
     255            theHeap[OSALMEM_BIGBLK_IDX].val = OSALMEM_BIGBLK_SZ;  // Set 'len' & clear 'inUse' field.
    \   000027   A3           INC     DPTR
-   \   000028   748C         MOV     A,#-0x74
+   \   000028   74C0         MOV     A,#-0x40
    \   00002A   F0           MOVX    @DPTR,A
    \   00002B   A3           INC     DPTR
    \   00002C   7405         MOV     A,#0x5
@@ -1028,9 +1028,9 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\osal\common\OSAL_Memor
    \   000018   4009         JC      ??osal_mem_free_0
    \   00001A   C3           CLR     C
    \   00001B   E8           MOV     A,R0
-   \   00001C   94..         SUBB    A,#theHeap & 0xff
+   \   00001C   94..         SUBB    A,#(theHeap + 52) & 0xff
    \   00001E   E9           MOV     A,R1
-   \   00001F   94..         SUBB    A,#((theHeap + 2048) >> 8) & 0xff
+   \   00001F   94..         SUBB    A,#((theHeap + 2100) >> 8) & 0xff
    \   000021   4003         JC      ??osal_mem_free_1
    \                     ??osal_mem_free_0:
    \   000023                ; Setup parameters for call to function halAssertHandler
@@ -1252,17 +1252,17 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\osal\common\OSAL_Memor
        6  osal_mem_init::?relay
       79  osal_mem_kick
        6  osal_mem_kick::?relay
-    2048  theHeap
+    2100  theHeap
 
  
    581 bytes in segment BANKED_CODE
     24 bytes in segment BANK_RELAYS
      1 byte  in segment SFR_AN
- 2 051 bytes in segment XDATA_Z
+ 2 103 bytes in segment XDATA_Z
  
    605 bytes of CODE  memory
      0 bytes of DATA  memory (+ 1 byte shared)
- 2 051 bytes of XDATA memory
+ 2 103 bytes of XDATA memory
 
 Errors: none
 Warnings: none

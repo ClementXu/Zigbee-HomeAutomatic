@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR C/C++ Compiler V9.30.1.3056 for 8051               28/Aug/2016  20:48:58
+// IAR C/C++ Compiler V9.30.1.3056 for 8051               06/Sep/2016  23:45:27
 // Copyright 2004-2015 IAR Systems AB.
 //
 //    Core               =  plain
@@ -33,18 +33,18 @@
 //        0x09, 0x0B, 0x0D, 0x0F, 0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C,
 //        0x0D}" -DMAC_MAX_FRAME_SIZE=116 -DZDNWKMGR_MIN_TRANSMISSIONS=20
 //        "-DCONST=const __code" -DGENERIC=__generic -DRFD_RCVC_ALWAYS_ON=FALSE
-//        -DPOLL_RATE=1000 -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100
+//        -DPOLL_RATE=10000 -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100
 //        -DREJOIN_POLL_RATE=440 -DREJOIN_BACKOFF=900000 -DREJOIN_SCAN=900000)
 //        -f "C:\Texas Instruments\Z-Stack Home
 //        1.2.2a.44539\Projects\zstack\HomeAutomation\Zigbee-HomeAutomatic\CC2530DB\..\..\..\Tools\CC2530DB\f8wZCL.cfg"
 //        "C:\Texas Instruments\Z-Stack Home
 //        1.2.2a.44539\Components\zmac\f8w\zmac_cb.c" -D SECURE=1 -D
 //        TC_LINKKEY_JOIN -D NV_INIT -D NV_RESTORE -D HOLD_AUTO_START -D
-//        BUILD_ALL_DEVICES -D HAL_UART=TRUE -D xZTOOL_P1 -D xMT_TASK -D
+//        xBUILD_ALL_DEVICES -D HAL_UART=TRUE -D xZTOOL_P1 -D xMT_TASK -D
 //        xMT_APP_FUNC -D xMT_SYS_FUNC -D xMT_ZDO_FUNC -D xLCD_SUPPORTED=DEBUG
 //        -D MULTICAST_ENABLED=FALSE -D ZCL_READ -D ZCL_WRITE -D ZCL_REPORT -D
 //        ZCL_EZMODE -D ZCL_BASIC -D ZCL_IDENTIFY -D ZCL_ON_OFF -D ZCL_SCENES
-//        -D ZCL_GROUPS -D xZCL_LEVEL_CTRL -D ZCL_DIAGNOSTIC -D
+//        -D ZCL_GROUPS -D ZCL_LEVEL_CTRL -D ZCL_WD -D ZCL_DIAGNOSTIC -D
 //        FEATURE_SYSTEM_STATS -D DEVICE_LOGICAL_TYPE=ZG_DEVICETYPE_COORDINATOR
 //        -lC "C:\Texas Instruments\Z-Stack Home
 //        1.2.2a.44539\Projects\zstack\HomeAutomation\Zigbee-HomeAutomatic\CC2530DB\CoordinatorEB\List"
@@ -444,7 +444,6 @@ ZMacLqiAdjustMode   SYMBOL "ZMacLqiAdjustMode"
         ARGFRAME XSTACK, 26, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        EXTERN zgDeviceLogicalType
 
 // C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\zmac\f8w\zmac_cb.c
 //    1 /**************************************************************************************************
@@ -3052,28 +3051,18 @@ MAC_CbackCheckPending:
         ; Auto size: 0
 //  567 #if !defined (NONWK)
 //  568   if ( ZSTACK_ROUTER_BUILD )
-        MOV     DPTR,#zgDeviceLogicalType
-        MOVX    A,@DPTR
-        JZ      ??MAC_CbackCheckPending_0
-        XRL     A,#0x1
-        JNZ     ??MAC_CbackCheckPending_1
 //  569   {
 //  570     return (nwkDB_ReturnIndirectHoldingCnt());
-??MAC_CbackCheckPending_0:
         ; Setup parameters for call to function nwkDB_ReturnIndirectHoldingCnt
         LCALL   `??nwkDB_ReturnIndirectHoldingCnt::?relay`; Banked call to: nwkDB_ReturnIndirectHoldingCnt
-        SJMP    ??MAC_CbackCheckPending_2
+          CFI EndBlock cfiBlock48
+        REQUIRE ?Subroutine0
+        ; // Fall through to label ?Subroutine0
 //  571   }
 //  572   else
 //  573   {
 //  574     return (0);
-??MAC_CbackCheckPending_1:
-        MOV     R1,#0x0
 //  575   }
-??MAC_CbackCheckPending_2:
-          CFI EndBlock cfiBlock48
-        REQUIRE ?Subroutine0
-        ; // Fall through to label ?Subroutine0
 //  576 #else
 //  577   return (0);
 //  578 #endif
@@ -3373,13 +3362,13 @@ ZMacLqiAdjust:
         END
 //  691 #endif
 // 
-// 1 171 bytes in segment BANKED_CODE
+// 1 157 bytes in segment BANKED_CODE
 //    30 bytes in segment BANK_RELAYS
 //    17 bytes in segment CODE_C
 //     1 byte  in segment SFR_AN
 //     3 bytes in segment XDATA_Z
 // 
-// 1 218 bytes of CODE  memory
+// 1 204 bytes of CODE  memory
 //     0 bytes of DATA  memory (+ 1 byte shared)
 //     3 bytes of XDATA memory
 //

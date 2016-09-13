@@ -49,6 +49,10 @@
 #include "zcl.h"
 #include "zcl_general.h"
 #include "zcl_ha.h"
+#include "zcl_ss.h"
+#include "zcl_se.h"
+#include "zcl_ms.h"
+#include "zcl_lighting.h"
 #include "zcl_ezmode.h"
 #include "zcl_poll_control.h"
 #include "zcl_electrical_measurement.h"
@@ -67,8 +71,8 @@
  * CONSTANTS
  */
 
-#define SAMPLELIGHT_DEVICE_VERSION     0
-#define SAMPLELIGHT_FLAGS              0
+#define zha_project_DEVICE_VERSION     0
+#define zha_project_FLAGS              0
 
 #define SAMPLELIGHT_HWVERSION          1
 #define SAMPLELIGHT_ZCLVERSION         1
@@ -102,9 +106,37 @@ uint16 zha_project_IdentifyTime = 0;
 #ifdef ZCL_EZMODE
 uint8  zha_project_IdentifyCommissionState;
 #endif
+uint8 zha_project_BatteryVoltage=5;
+uint8 zha_project_BatteryPercent=30;
+
 
 // On/Off Cluster
 uint8  zha_project_OnOff = LIGHT_OFF;
+
+uint8  zha_project_Level_to_Level = 0;
+
+uint16 zha_project_Alarm_Status=0;
+
+uint16 zha_project_Alarm_Type=0x00;
+
+uint16 zha_project_Smoke_Type=0x00;
+
+uint16 zha_project_Light_Color_Status=0x0000;
+
+int16 zha_project_Temperature_Value=0x0000;
+
+uint16 zha_project_Humidity_Value=0x00;
+
+uint16 zha_project_Illumiance_Value=0x0000;
+
+uint8 zha_project_Saturation=0x00;
+
+uint16 zha_project_HUE_Status;
+
+uint8 zha_project_WD_Duration;
+uint8 zha_project_Warning;
+uint8 zha_project_WD_SQUAWK;
+
 
 // Level Control Cluster
 #ifdef ZCL_LEVEL_CTRL
@@ -274,7 +306,25 @@ CONST zclAttrRec_t zha_project_Attrs[] =
       (void *)&zha_project_DeviceEnable
     }
   },
-
+  // ***Power Configuration Cluster Attributes***
+   {
+    ZCL_CLUSTER_ID_GEN_POWER_CFG,
+    { // Attribute record
+      ATTRID_POWER_CFG_BATTERY_VOLTAGE,
+      ZCL_DATATYPE_UINT8,
+      ACCESS_CONTROL_READ,
+      (void *)&zha_project_BatteryPercent
+    }
+  },
+   {
+    ZCL_CLUSTER_ID_GEN_POWER_CFG,
+    { // Attribute record
+      0x0021,
+      ZCL_DATATYPE_UINT8,
+      ACCESS_CONTROL_READ,
+      (void *)&zha_project_BatteryVoltage
+    }
+  },
 #ifdef ZCL_IDENTIFY
   // *** Identify Cluster Attribute ***
   {
@@ -300,6 +350,8 @@ CONST zclAttrRec_t zha_project_Attrs[] =
  #endif // ZCL_EZMODE
 #endif
 
+  
+#if ZG_BUILD_ENDDEVICE_TYPE  
   // *** On/Off Cluster Attributes ***
   {
     ZCL_CLUSTER_ID_GEN_ON_OFF,
@@ -309,75 +361,338 @@ CONST zclAttrRec_t zha_project_Attrs[] =
       ACCESS_CONTROL_READ,
       (void *)&zha_project_OnOff
     }
-  }
-
-#ifdef ZCL_LEVEL_CTRL
-  , {
+  },
+    // *** Level Cluster Attributes ***
+  {
     ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
     { // Attribute record
       ATTRID_LEVEL_CURRENT_LEVEL,
+      ZCL_DATATYPE_UINT16,
+      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE),
+      (void *)&zha_project_Level_to_Level
+    }
+  },
+  
+      // *** Level Cluster Attributes ***
+  {
+    ZCL_CLUSTER_ID_SS_IAS_ZONE,
+    { // Attribute record
+      ATTRID_SS_IAS_ZONE_STATUS,
+      ZCL_DATATYPE_BITMAP16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Alarm_Status
+    }
+  },
+  
+
+  {
+    ZCL_CLUSTER_ID_SS_IAS_ZONE,
+    { // Attribute record
+      ATTRID_SS_IAS_ZONE_TYPE,
+      ZCL_DATATYPE_ENUM16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Smoke_Type
+    }
+  },
+    {
+    ZCL_CLUSTER_ID_SS_IAS_WD,
+    { // Attribute record
+      COMMAND_SS_IAS_WD_START_WARNING,
       ZCL_DATATYPE_UINT8,
-      ACCESS_CONTROL_READ,
-      (void *)&zha_project_LevelCurrentLevel
+      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE),
+      (void *)&zha_project_Warning
     }
   },
-  {
-    ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
+    {
+    ZCL_CLUSTER_ID_SS_IAS_WD,
     { // Attribute record
-      ATTRID_LEVEL_REMAINING_TIME,
-      ZCL_DATATYPE_UINT16,
-      ACCESS_CONTROL_READ,
-      (void *)&zha_project_LevelRemainingTime
-    }
-  },
-  {
-    ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
-    { // Attribute record
-      ATTRID_LEVEL_ON_OFF_TRANSITION_TIME,
-      ZCL_DATATYPE_UINT16,
-      ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE,
-      (void *)&zha_project_LevelOnOffTransitionTime
-    }
-  },
-  {
-    ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
-    { // Attribute record
-      ATTRID_LEVEL_ON_LEVEL,
+      ATTRID_SS_IAS_WD_MAXIMUM_DURATION,
       ZCL_DATATYPE_UINT8,
-      ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE,
-      (void *)&zha_project_LevelOnLevel
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_WD_Duration
     }
   },
-  {
-    ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
+    {
+    ZCL_CLUSTER_ID_SS_IAS_WD,
     { // Attribute record
-      ATTRID_LEVEL_ON_TRANSITION_TIME,
-      ZCL_DATATYPE_UINT16,
-      ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE,
-      (void *)&zha_project_LevelOnTransitionTime
-    }
-  },
-  {
-    ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
-    { // Attribute record
-      ATTRID_LEVEL_OFF_TRANSITION_TIME,
-      ZCL_DATATYPE_UINT16,
-      ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE,
-      (void *)&zha_project_LevelOffTransitionTime
-    }
-  },
-  {
-    ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
-    { // Attribute record
-      ATTRID_LEVEL_DEFAULT_MOVE_RATE,
+      COMMAND_SS_IAS_WD_SQUAWK,
       ZCL_DATATYPE_UINT8,
-      ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE,
-      (void *)&zha_project_LevelDefaultMoveRate
+      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE),
+      (void *)&zha_project_WD_SQUAWK
     }
-  }
+  },  
+    {
+    ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL,
+    { // Attribute record
+      ATTRID_LIGHTING_COLOR_CONTROL_COLOR_TEMPERATURE,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Light_Color_Status
+    }
+  },
+  {
+    ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL,
+    { // Attribute record
+      ATTRID_LIGHTING_COLOR_CONTROL_CURRENT_HUE,
+      ZCL_DATATYPE_UINT16,
+      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE),
+      (void *)&zha_project_HUE_Status
+    }
+  },
+  {
+    ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL,
+    { // Attribute record
+      ATTRID_LIGHTING_COLOR_CONTROL_CURRENT_SATURATION,
+      ZCL_DATATYPE_UINT8,
+      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE),
+      (void *)&zha_project_Saturation
+    }
+  },
+  {
+    ZCL_CLUSTER_ID_MS_TEMPERATURE_MEASUREMENT,
+    { // Attribute record
+      ATTRID_MS_TEMPERATURE_MEASURED_VALUE,
+      ZCL_DATATYPE_INT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Temperature_Value
+    }
+  },
+    {
+    ZCL_CLUSTER_ID_MS_RELATIVE_HUMIDITY,
+    { // Attribute record
+      ATTRID_MS_RELATIVE_HUMIDITY_MEASURED_VALUE,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Humidity_Value
+    }
+  },
+  {
+    ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT,
+    { // Attribute record
+      ATTRID_MS_ILLUMINANCE_MEASURED_VALUE,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },
+#endif 
+#if 0 
+//Outlet Attributes
+  {
+    ZCL_CLUSTER_ID_SE_SIMPLE_METERING,
+    { 
+      ATTRID_SE_CURRENT_SUMMATION_DELIVERED,
+      ZCL_DATATYPE_UINT32,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },
+
+  {
+    ZCL_CLUSTER_ID_SE_SIMPLE_METERING,
+    { 
+      ATTRID_MASK_SE_METER_STATUS,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },
+  
+   {
+    ZCL_CLUSTER_ID_SE_SIMPLE_METERING,
+    { 
+      ATTRID_MASK_SE_FORMATTING,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },
+   {
+    ZCL_CLUSTER_ID_SE_SIMPLE_METERING,
+    { 
+      ATTRID_MASK_SE_FORMATTING,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },
+   {
+    ZCL_CLUSTER_ID_SE_SIMPLE_METERING,
+    { 
+      ATTRID_SE_MULTIPLIER,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },
+   {
+    ZCL_CLUSTER_ID_SE_SIMPLE_METERING,
+    { 
+      ATTRID_SE_DIVISOR,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },
+   {
+    ZCL_CLUSTER_ID_SE_SIMPLE_METERING,
+    { 
+      ATTRID_SE_SUMMATION_FORMATTING,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },  
+   {
+    ZCL_CLUSTER_ID_SE_SIMPLE_METERING,
+    { 
+      ATTRID_SE_METERING_DEVICE_TYPE,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },    
+  
+  
+  {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_MEASUREMENT_TYPE,
+      ZCL_DATATYPE_BITMAP32,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },
+  {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_RMS_VOLTAGE,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },
+  {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_RMS_CURRENT,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+  },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_ACTIVE_POWER,
+      ZCL_DATATYPE_INT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_POWER_FACTOR,
+      ZCL_DATATYPE_INT8,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_AC_VOLTAGE_MULTIPLIER,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_AC_VOLTAGE_DIVISOR,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_AC_CURRENT_MULTIPLIER,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_AC_CURRENT_DIVISOR,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_AC_POWER_MULTIPLIER,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_AC_POWER_DIVISOR,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_AC_ALARMS_MASK,
+      ZCL_DATATYPE_BITMAP16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_AC_VOLTAGE_OVERLOAD,
+      ZCL_DATATYPE_INT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_AC_CURRENT_OVERLOAD,
+      ZCL_DATATYPE_INT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+    {
+    ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+    { 
+      ATTRID_ELECTRICAL_MEASUREMENT_AC_ACTIVE_POWER_OVERLOAD,
+      ZCL_DATATYPE_INT16,
+      ACCESS_CONTROL_READ ,
+      (void *)&zha_project_Illumiance_Value
+    }
+    },
+
 #endif
- #ifdef ZCL_DIAGNOSTIC
-  , {
+#ifdef ZCL_DIAGNOSTIC
+   {
     ZCL_CLUSTER_ID_HA_DIAGNOSTIC,
     {  // Attribute record
       ATTRID_DIAGNOSTIC_NUMBER_OF_RESETS,
@@ -675,6 +990,7 @@ uint8 CONST zha_project_NumAttributes = ( sizeof(zha_project_Attrs) / sizeof(zha
  */
 // This is the Cluster ID List and should be filled with Application
 // specific cluster IDs.
+#if ZG_BUILD_COORDINATOR_TYPE 
 const cId_t zha_project_InClusterList[] =
 {
   ZCL_CLUSTER_ID_GEN_BASIC,
@@ -690,7 +1006,7 @@ const cId_t zha_project_InClusterList[] =
   ZCL_CLUSTER_ID_GEN_IDENTIFY,
   ZCL_CLUSTER_ID_GEN_GROUPS,
 #ifdef ZCL_LEVEL_CTRL
-  , ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL
+  ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL
 #endif
 };
 // work-around for compiler bug... IAR can't calculate size of array with #if options.
@@ -727,14 +1043,432 @@ SimpleDescriptionFormat_t zha_project_SimpleDesc =
 #else
   ZCL_HA_DEVICEID_ON_OFF_LIGHT,          //  uint16 AppDeviceId;
 #endif
-  SAMPLELIGHT_DEVICE_VERSION,            //  int   AppDevVer:4;
-  SAMPLELIGHT_FLAGS,                     //  int   AppFlags:4;
+  0,            //  int   AppDevVer:4;
+  0,                     //  int   AppFlags:4;
   ZCLSAMPLELIGHT_MAX_INCLUSTERS,         //  byte  AppNumInClusters;
-  (cId_t *)zha_project_InClusterList, //  byte *pAppInClusterList;
+  (cId_t *)&zha_project_InClusterList, //  byte *pAppInClusterList;
   ZCLSAMPLELIGHT_MAX_OUTCLUSTERS,        //  byte  AppNumInClusters;
-  (cId_t *)zha_project_OutClusterList //  byte *pAppInClusterList;
+  (cId_t *)&zha_project_OutClusterList //  byte *pAppInClusterList;
+};
+#endif
+
+
+
+
+#if ZG_BUILD_ENDDEVICE_TYPE
+
+const cId_t zclZHAtest_InClusterList1[6] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_GEN_IDENTIFY,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_GEN_ON_OFF,
+  //ZCL_CLUSTER_ID_SS_IAS_ZONE,
+  //GENERICAPP_CLUSTERID
 };
 
+const cId_t zclZHAtest_InClusterList2[7] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_GEN_IDENTIFY,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_GEN_ON_OFF,  
+  ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
+//  GENERICAPP_CLUSTERID
+};
+const cId_t zclZHAtest_InClusterList3[8] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_GEN_IDENTIFY,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_GEN_ON_OFF,
+  ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
+  ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL,  
+//  GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_InClusterList4[5] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  //ZCL_CLUSTER_ID_GEN_IDENTIFY,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_MS_TEMPERATURE_MEASUREMENT,
+  //ZCL_CLUSTER_ID_MS_RELATIVE_HUMIDITY,
+//  GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_InClusterList5[3] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_SS_IAS_ZONE,
+//  GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_InClusterList6[5] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  //ZCL_CLUSTER_ID_GEN_IDENTIFY,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_MS_RELATIVE_HUMIDITY,
+//  GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_InClusterList7[3] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_SS_IAS_ZONE,  
+//  GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_InClusterList8[5] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  //ZCL_CLUSTER_ID_GEN_IDENTIFY,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT,  
+//  GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_InClusterList10[3] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_SS_IAS_ZONE,  
+//  GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_InClusterList9[4] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_SS_IAS_WD, 
+  ZCL_CLUSTER_ID_SS_IAS_ZONE, 
+//  GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_InClusterList11[3] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_SS_IAS_ZONE,
+//  GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_InClusterList14[7] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  //ZCL_CLUSTER_ID_GEN_IDENTIFY,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_GEN_ON_OFF,
+  ZCL_CLUSTER_ID_SE_METERING,
+  ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+ //   GENERICAPP_CLUSTERID
+};
+
+
+const cId_t zclZHAtest_OutClusterList1[4] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  //ZCL_CLUSTER_ID_SS_IAS_ZONE
+ //   GENERICAPP_CLUSTERID
+};
+
+
+const cId_t zclZHAtest_OutClusterList2[4] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+ //   GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_OutClusterList3[4] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+ //   GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_OutClusterList4[5] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_MS_TEMPERATURE_MEASUREMENT,  
+ //   GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_OutClusterList5[3] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_SS_IAS_ZONE,
+ //   GENERICAPP_CLUSTERID
+};
+
+
+
+const cId_t zclZHAtest_OutClusterList6[5] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_MS_RELATIVE_HUMIDITY,
+  //GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_OutClusterList7[3] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_SS_IAS_ZONE,
+  //GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_OutClusterList8[5] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT,
+ //   GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_OutClusterList9[4] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_SS_IAS_ZONE,
+  ZCL_CLUSTER_ID_SS_IAS_WD,
+ //   GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_OutClusterList10[3] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_SS_IAS_ZONE,
+ //   GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_OutClusterList11[3] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_SS_IAS_ZONE,
+ //   GENERICAPP_CLUSTERID
+};
+
+const cId_t zclZHAtest_OutClusterList14[7] =
+{
+  ZCL_CLUSTER_ID_GEN_BASIC,
+  ZCL_CLUSTER_ID_GEN_POWER_CFG,
+  ZCL_CLUSTER_ID_GEN_SCENES,
+  ZCL_CLUSTER_ID_GEN_GROUPS,
+  ZCL_CLUSTER_ID_GEN_ON_OFF,
+  ZCL_CLUSTER_ID_SE_METERING,
+  ZCL_CLUSTER_ID_HA_ELECTRICAL_MEASUREMENT,
+ //   GENERICAPP_CLUSTERID
+};
+
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc1 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  ZCL_HA_DEVICEID_ON_OFF_LIGHT,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  6,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList1, //  byte *pAppInClusterList;
+  4,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList1 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc2 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  ZCL_HA_DEVICEID_DIMMABLE_LIGHT,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  7,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList2, //  byte *pAppInClusterList;
+  4,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList2 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc3 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  ZCL_HA_DEVICEID_COLORED_DIMMABLE_LIGHT,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  8,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList3, //  byte *pAppInClusterList;
+  4,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList3 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc4 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  ZCL_HA_DEVICEID_TEMPERATURE_SENSOR,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  5,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList4, //  byte *pAppInClusterList;
+  5,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList4 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc5 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  ZCL_HA_DEVICEID_IAS_ZONE,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  3,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList5, //  byte *pAppInClusterList;
+  3,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList5 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc6 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  0x0307,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  5,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList6, //  byte *pAppInClusterList;
+  5,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList6 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc7 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  ZCL_HA_DEVICEID_IAS_ZONE,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  3,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList7, //  byte *pAppInClusterList;
+  3,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList7 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc8 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  0x0308,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  5,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList8, //  byte *pAppInClusterList;
+  5,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList8 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc9 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  ZCL_HA_DEVICEID_IAS_ZONE,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  4,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList9, //  byte *pAppInClusterList;
+  4,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList9 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc10 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  ZCL_HA_DEVICEID_IAS_ZONE,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  3,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList10, //  byte *pAppInClusterList;
+  3,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList10 //  byte *pAppInClusterList;
+};
+
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc11 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  ZCL_HA_DEVICEID_IAS_ZONE,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  3,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList11, //  byte *pAppInClusterList;
+  3,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList11 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc12 =
+{
+  1,                  //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  ZCL_HA_DEVICEID_ON_OFF_LIGHT_SWITCH,        //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  4,         //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList1, //  byte *pAppInClusterList;
+  6,        //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList1 //  byte *pAppInClusterList;
+};
+
+SimpleDescriptionFormat_t zclZHAtest_SimpleDesc14 =
+{
+  1,                                    //  int Endpoint;
+  ZCL_HA_PROFILE_ID,                     //  uint16 AppProfId[2];
+  0x0202,                           //  uint16 AppDeviceId[2];
+  zha_project_DEVICE_VERSION,            //  int   AppDevVer:4;
+  zha_project_FLAGS,                     //  int   AppFlags:4;
+  7,                                //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_InClusterList14, //  byte *pAppInClusterList;
+  7,                                //  byte  AppNumInClusters;
+  (cId_t *)zclZHAtest_OutClusterList14 //  byte *pAppInClusterList;
+};
+
+
+#endif
 /*********************************************************************
  * GLOBAL FUNCTIONS
  */

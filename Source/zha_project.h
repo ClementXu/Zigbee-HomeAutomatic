@@ -68,7 +68,9 @@ extern "C"
 #define DEVICE_STATUS_EVT                0x0100
 #define ZHA_ATTRIBUTE_POWER_EVT          0x0080
 #define RESET_EVT                        0x0200  
-
+#define SET_DEVICE_STATE_EVT             0x0400  
+#define SEND_REPORT_EVT                  0x0800  
+  
 // Application Display Modes
 #define LIGHT_MAINMODE      0x00
 #define LIGHT_HELPMODE      0x01
@@ -86,7 +88,7 @@ typedef struct
     uint8		ucAge;
     uint8       batteryValue;
     uint8       deviceType[16];
-    uint8       factoryName[17];
+    uint8       factoryName[16];
     uint8       version;
     uint8       ep[5];
 }NODE_INFO_t;
@@ -98,7 +100,6 @@ typedef struct
 typedef struct
 {
     uint16 uiNwk_Addr;
-    uint16 supportOD;
     uint8  deviceType[16];
     uint16 status[3];
     uint16 seq;
@@ -137,6 +138,43 @@ extern uint16 zha_project_LevelOffTransitionTime;
 extern uint8  zha_project_LevelDefaultMoveRate;
 #endif
 
+extern uint8  zha_project_OnOff;
+extern uint8  zha_project_Level_to_Level;
+extern uint8 zha_project_PIR_Status;
+extern uint16 zha_project_Smoke_Type;
+extern uint16 zha_project_Light_Color_Status;
+
+extern int16 zha_project_Temperature_Value;
+extern uint16 zha_project_Humidity_Value;
+extern uint16 zha_project_Smoke_Type;
+extern uint8 zha_project_BatteryVoltage;
+extern const uint8 zha_project_PowerSource;
+extern uint16 zha_project_Illumiance_Value;
+extern uint8 zha_project_Saturation;
+extern uint16 zha_project_Alarm_Status;
+extern uint16 zha_project_HUE_Status;
+extern uint8 zha_project_WD_Duration;
+extern uint8 zha_project_Warning;
+extern uint8 zha_project_WD_SQUAWK;
+
+
+
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc1;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc2;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc3;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc4;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc5;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc6;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc7;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc8;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc9;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc10;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc11;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc12;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc13;
+extern SimpleDescriptionFormat_t zclZHAtest_SimpleDesc14;
+extern CONST zclAttrRec_t zclZHAtest_Attrs[];
 /*********************************************************************
  * FUNCTIONS
  */

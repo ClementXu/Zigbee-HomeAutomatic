@@ -9,17 +9,11 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=1060394091
+Checksum=-1145704893
 [CallStack]
-ShowArgs=0
+ShowArgs=1
 [Disassembly]
 MixedMode=1
-[Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\Source\at_command.c}.97.9" 1 0 0 0 "" 0 ""
-Count=1
-[ChipconEmu]
-Stop timers on halt=0
-Leave target running=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -27,6 +21,12 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[Aliases]
+[Breakpoints]
 Count=0
+[ChipconEmu]
+Stop timers on halt=0
+Leave target running=1
+[Aliases]
+A0=_ "C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\mac\high_level\mac_pib.c" "D:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Components\mac\high_level\mac_pib.c"
+Count=1
 SuppressDialog=0

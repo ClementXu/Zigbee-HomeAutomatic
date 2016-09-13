@@ -143,11 +143,11 @@
         <option>
           <name>Input variant</name>
           <version>2</version>
-          <state>5</state>
+          <state>0</state>
         </option>
         <option>
           <name>Input description</name>
-          <state>No float.</state>
+          <state>Automatic choice of formatter.</state>
         </option>
         <option>
           <name>Output variant</name>
@@ -156,7 +156,7 @@
         </option>
         <option>
           <name>Output description</name>
-          <state>No float, no field width, no precision.</state>
+          <state>No specifier a or A, no specifier n, no float or long long.</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -307,7 +307,7 @@
           <state>NV_INIT</state>
           <state>NV_RESTORE</state>
           <state>HOLD_AUTO_START</state>
-          <state>BUILD_ALL_DEVICES</state>
+          <state>xBUILD_ALL_DEVICES</state>
           <state>HAL_UART=TRUE</state>
           <state>xZTOOL_P1</state>
           <state>xMT_TASK</state>
@@ -325,7 +325,8 @@
           <state>ZCL_ON_OFF</state>
           <state>ZCL_SCENES</state>
           <state>ZCL_GROUPS</state>
-          <state>xZCL_LEVEL_CTRL</state>
+          <state>ZCL_LEVEL_CTRL</state>
+          <state>ZCL_WD</state>
           <state>ZCL_DIAGNOSTIC</state>
           <state>FEATURE_SYSTEM_STATS</state>
           <state>DEVICE_LOGICAL_TYPE=ZG_DEVICETYPE_COORDINATOR</state>
@@ -2617,11 +2618,12 @@
           <name>CCDefines</name>
           <state>SECURE=1</state>
           <state>TC_LINKKEY_JOIN</state>
+          <state>REFLECTOR</state>
           <state>NV_INIT</state>
           <state>xNV_RESTORE</state>
           <state>xPOWER_SAVING</state>
           <state>NWK_AUTO_POLL</state>
-          <state>HOLD_AUTO_START</state>
+          <state>xHOLD_AUTO_START</state>
           <state>xZTOOL_P1</state>
           <state>xMT_TASK</state>
           <state>xMT_APP_FUNC</state>
@@ -2638,6 +2640,7 @@
           <state>ZCL_ON_OFF</state>
           <state>ZCL_SCENES</state>
           <state>ZCL_GROUPS</state>
+          <state>ZCL_ZONE</state>
           <state>HAL_UART=TRUE</state>
           <state>xZCL_LEVEL_CTRL</state>
           <state>ZCL_DIAGNOSTIC</state>
@@ -4638,6 +4641,30 @@
       <name>$PROJ_DIR$\..\Source\at_command.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\Source\DeviceFun.c</name>
+      <excluded>
+        <configuration>CoordinatorEB</configuration>
+      </excluded>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\DeviceFun.h</name>
+      <excluded>
+        <configuration>CoordinatorEB</configuration>
+      </excluded>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\GatewayFun.c</name>
+      <excluded>
+        <configuration>EndDeviceEB</configuration>
+      </excluded>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\GatewayFun.h</name>
+      <excluded>
+        <configuration>EndDeviceEB</configuration>
+      </excluded>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\Source\OSAL_zha_project.c</name>
     </file>
     <file>
@@ -5096,6 +5123,12 @@
       <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_diagnostic.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_electrical_measurement.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_electrical_measurement.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_ezmode.c</name>
     </file>
     <file>
@@ -5112,6 +5145,24 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\zcl_ha.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_lighting.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_lighting.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_ms.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_ms.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_ss.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Components\stack\zcl\zcl_ss.h</name>
     </file>
   </group>
   <group>
