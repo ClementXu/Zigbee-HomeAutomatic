@@ -105,8 +105,8 @@ typedef struct __addInfo
 }addInfo;
 typedef struct __addStatus
 {
-    char mac[17];
-    char deviceName[17];
+    char serial[18];
+    char deviceName[10];
     uint8 batteryValue[2];
     uint8 version[4];
     uint8 sensorType[2];

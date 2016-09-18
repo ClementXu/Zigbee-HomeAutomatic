@@ -690,16 +690,20 @@ uint16 zha_project_event_loop( uint8 task_id, uint16 events )
         dscReqAddr.addr.shortAddr=simpleDescReqAddr.addr.shortAddr;
         dscReqAddr.endPoint=1;
         zclReadCmd_t BasicAttrsList;
-        BasicAttrsList.numAttr = 5;
+        BasicAttrsList.numAttr = 6;
         BasicAttrsList.attrID[0] = ATTRID_BASIC_ZCL_VERSION;
         BasicAttrsList.attrID[1] = ATTRID_BASIC_HW_VERSION;
         BasicAttrsList.attrID[2] = ATTRID_BASIC_MODEL_ID;
         BasicAttrsList.attrID[3] = ATTRID_BASIC_MANUFACTURER_NAME;
-        //BasicAttrsList.attrID[5] = ATTRID_BASIC_DATE_CODE;
+        BasicAttrsList.attrID[5] = ATTRID_BASIC_SERIAL_NUMBER;
         BasicAttrsList.attrID[4] = ATTRID_BASIC_POWER_SOURCE;
         zcl_SendRead( 1, &dscReqAddr,ZCL_CLUSTER_ID_GEN_BASIC, &BasicAttrsList,
                     ZCL_FRAME_CLIENT_SERVER_DIR, 0, 0);
         
+//        BasicAttrsList.numAttr = 1;
+//        BasicAttrsList.attrID[0] = ATTRID_BASIC_SERIAL_NUMBER;        
+//        zcl_SendRead( 1, &dscReqAddr,ZCL_CLUSTER_ID_GEN_BASIC, &BasicAttrsList,
+//                    ZCL_FRAME_CLIENT_SERVER_DIR, 0, 0);
         //return ( events ^ ZHA_ATTRIBUTE_REQ_EVT );
     }  
   
@@ -1214,7 +1218,10 @@ static uint8 zha_project_ProcessInReadRspCmd( zclIncomingMsg_t *pInMsg )
                     case ATTRID_BASIC_HW_VERSION:
                         uint8 zha_project_HWRevision = *j;
                         SetTempDeviceHW(pInMsg->srcAddr.addr.shortAddr,zha_project_HWRevision);
-                        break;                        
+                        break;           
+                    case ATTRID_BASIC_SERIAL_NUMBER:
+                      SetTempDeviceSerial(pInMsg->srcAddr.addr.shortAddr,j);
+                      break;
                     default:
                       break;
                 

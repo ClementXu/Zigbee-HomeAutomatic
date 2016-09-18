@@ -16,6 +16,9 @@
 #include "zcl_lighting.h"
 #include "zcl_ha.h"
 #include "zcl_ms.h"
+#include "hal_uart.h"
+#include "hal_led.h"
+
 
 extern uint8  zha_project_OnOff;
 
@@ -121,11 +124,11 @@ uint8 Light(RawData Setting)
     }
     if ( zha_project_OnOff == LIGHT_ON )
     {
-        HalLedSet( 0x08, 0x01 );
+        HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
     }
     else
     {
-        HalLedSet( 0x08, 0x00 );
+        HalLedSet( HAL_LED_4, HAL_LED_MODE_OFF );
     }  
     return 1;
 }

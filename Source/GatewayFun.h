@@ -8,6 +8,7 @@ extern "C"
 void SetTempDeviceManuName(uint16 shortAddr,uint8 *buffer);
 void SetTempDeviceEP(uint16 shortAddr,uint8 *buffer );
 void SetTempDeviceHW(uint16 shortAddr,uint8 version);
+void SetTempDeviceSerial(uint16 shortAddr,uint8 *buffer);
 void SetTempDeviceSA(uint16 data,uint8 *mac);
 void UpdateDeviceStatus3(uint16 shortAddr, uint16 *data);
 void UpdateDeviceStatus2(uint16 shortAddr, uint16 *data);

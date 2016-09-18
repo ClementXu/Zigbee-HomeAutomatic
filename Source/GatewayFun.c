@@ -26,7 +26,7 @@ uint8 setFlag = 0;
 
 NODE_INFO_t AssoList[5];
 
-extern uint8 TempDevice[190];
+extern uint8 TempDevice[200];
 DEVICE_STATUS_t DeviceStatus[5];
 extern uint8  zha_project_OnOff;
 extern uint8  zha_project_Level_to_Level;
@@ -141,6 +141,25 @@ void SetTempDeviceHW(uint16 shortAddr,uint8 version)
 }
 
 /*
+±£¥Ê–Ú¡–∫≈
+*/
+void SetTempDeviceSerial(uint16 shortAddr,uint8 *buffer)
+{   
+    uint8 i;
+    NODE_INFO_Group *p=(NODE_INFO_Group *)TempDevice;
+    for(i=0;i<=5;i++)
+    {  
+        if(p->device[i].uiNwk_Addr==shortAddr)
+        {
+            osal_memset(&p->device[i].serialNum,0,9);
+            osal_memcpy(p->device[i].serialNum,buffer,9);
+            //p->device[i].ep = ep;
+            return;
+        }
+    }  
+}
+
+/*
 ±£¥ÊEndpoint
 */
 void SetTempDeviceEP(uint16 shortAddr,uint8 *buffer )
@@ -201,7 +220,7 @@ void SetTempDeviceType(uint16 shortAddr,uint16 change)
 {   
     uint8 i;
     uint16 supportOD=0;
-    uint8 deviceType[16];
+    uint8 deviceType[10];
     osal_memset(deviceType,0,sizeof(deviceType));
     NODE_INFO_Group *p=(NODE_INFO_Group *)TempDevice;
     switch(change)
@@ -262,7 +281,7 @@ void SetTempDeviceType(uint16 shortAddr,uint16 change)
     {  
         if(p->device[i].uiNwk_Addr==shortAddr)
         {
-            osal_memset(&p->device[i].deviceType,0,16);
+            osal_memset(&p->device[i].deviceType,0,10);
             osal_memcpy(p->device[i].deviceType,deviceType,strlen(deviceType));
             return;
         }
@@ -522,7 +541,7 @@ uint8 AddInfo(RawData Setting)
                 s=(addInfo *)&buffer[strlen(buffer)];
                 HEXtoString(p->device[i].aucMAC,(uint8 *)(s)->mac,16);
                 strcat( buffer,",");
-                osal_memcpy(&s->name,&p->device[i].factoryName[1],16);
+                osal_memcpy(&s->name,&p->device[i].factoryName[1],p->device[i].factoryName[0]);
                 //strcat( buffer,",00");
                 //osal_memcpy(s->sel,s->mac,16);
                 k++;
@@ -560,7 +579,7 @@ uint8 AddStatus(RawData Setting)
                 if(k!=0)
                     strcat(buffer,";");
                 s=(addStatus *)&buffer[strlen(buffer)];
-                HEXtoString(p->device[i].aucMAC,(uint8 *)(s)->mac,16);
+                HEXtoString(&p->device[i].serialNum[1],(uint8 *)(s)->serial,p->device[i].serialNum[0]);
                 strcat( buffer,",");
                 osal_memcpy(&buffer[strlen(buffer)],p->device[i].deviceType,strlen(p->device[i].deviceType));
                 //strcat( buffer,"TestDevice");

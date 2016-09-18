@@ -156,7 +156,7 @@
         </option>
         <option>
           <name>Output description</name>
-          <state>No specifier a or A, no specifier n, no float or long long.</state>
+          <state>No float, no field width, no precision.</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -786,11 +786,11 @@
         </option>
         <option>
           <name>XOutOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OutputFile</name>
-          <state>zha_project.d51</state>
+          <state>GATEWAYV2.1.hex</state>
         </option>
         <option>
           <name>OutputFormat</name>

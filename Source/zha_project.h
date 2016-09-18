@@ -87,10 +87,11 @@ typedef struct
     uint16		uiNwk_Addr;
     uint8		ucAge;
     uint8       batteryValue;
-    uint8       deviceType[16];
+    uint8       deviceType[10];
     uint8       factoryName[16];
+    uint8       serialNum[9];
     uint8       version;
-    uint8       ep[5];
+    uint8       ep[2];
 }NODE_INFO_t;
 typedef struct
 {

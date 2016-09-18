@@ -64,7 +64,7 @@
 #include "zcl_appliance_control.h"
 #include "zcl_appliance_statistics.h"
 #include "zcl_hvac.h"
-
+#include "ZGlobals.h"
 #include "zha_project.h"
 
 /*********************************************************************
@@ -92,7 +92,7 @@
 // Basic Cluster
 const uint8 zha_project_HWRevision = SAMPLELIGHT_HWVERSION;
 const uint8 zha_project_ZCLVersion = SAMPLELIGHT_ZCLVERSION;
-const uint8 zha_project_ManufacturerName[] = { 16, 'T','e','x','a','s','I','n','s','t','r','u','m','e','n','t','s' };
+const uint8 zha_project_ManufacturerName[] = { 7, 'T','e','s','t','0','0','1' };
 const uint8 zha_project_ModelId[] = { 16, 'T','I','0','0','0','1',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ' };
 const uint8 zha_project_DateCode[] = { 16, '2','0','0','6','0','8','3','1',' ',' ',' ',' ',' ',' ',' ',' ' };
 const uint8 zha_project_PowerSource = POWER_SOURCE_MAINS_1_PHASE;
@@ -136,7 +136,7 @@ uint16 zha_project_HUE_Status;
 uint8 zha_project_WD_Duration;
 uint8 zha_project_Warning;
 uint8 zha_project_WD_SQUAWK;
-
+extern uint8 SerialNumber[];
 
 // Level Control Cluster
 #ifdef ZCL_LEVEL_CTRL
@@ -288,6 +288,16 @@ CONST zclAttrRec_t zha_project_Attrs[] =
       (void *)zha_project_LocationDescription
     }
   },
+    {
+    ZCL_CLUSTER_ID_GEN_BASIC,
+    { // Attribute record
+      ATTRID_BASIC_SERIAL_NUMBER,
+      ZCL_DATATYPE_CHAR_STR,
+      ACCESS_CONTROL_READ,
+      (void *)&SerialNumber
+    }
+  },
+  
   {
     ZCL_CLUSTER_ID_GEN_BASIC,
     { // Attribute record
