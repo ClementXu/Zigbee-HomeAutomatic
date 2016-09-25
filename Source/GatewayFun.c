@@ -274,7 +274,7 @@ void SetTempDeviceType(uint16 shortAddr,uint16 change)
             osal_memcpy(deviceType,"slsensor",sizeof("slsensor"));
             break;   
         default:
-
+            osal_memcpy(deviceType,"unknow",sizeof("unknow"));
             return;
     }
     for(i=0;i<=5;i++)
@@ -581,7 +581,10 @@ uint8 AddStatus(RawData Setting)
                 s=(addStatus *)&buffer[strlen(buffer)];
                 HEXtoString(&p->device[i].serialNum[1],(uint8 *)(s)->serial,p->device[i].serialNum[0]);
                 strcat( buffer,",");
-                osal_memcpy(&buffer[strlen(buffer)],p->device[i].deviceType,strlen(p->device[i].deviceType));
+                if(p->device[i].deviceType[0] != '\0')
+                    osal_memcpy(&buffer[strlen(buffer)],p->device[i].deviceType,strlen(p->device[i].deviceType));
+                else
+                    osal_memcpy(&buffer[strlen(buffer)],"unknow",sizeof("unknow"));
                 //strcat( buffer,"TestDevice");
                 strcat(buffer,",");
                 //strcat(buffer,"3");
@@ -710,8 +713,8 @@ void _SetOnlineDeveice(uint8 *data)
             DeviceStatus[i].status[2]=((data[19] &0x00FF)<<8)+data[20];
             DeviceStatus[i].uiNwk_Addr=AssoList[i].uiNwk_Addr;
             setFlag = i;
-            //osal_set_event( zha_project_TaskID, SET_DEVICE_STATE_EVT );
-            osal_start_timerEx( zha_project_TaskID, SET_DEVICE_STATE_EVT ,100);
+            osal_set_event( zha_project_TaskID, SET_DEVICE_STATE_EVT );
+            //osal_start_timerEx( zha_project_TaskID, SET_DEVICE_STATE_EVT ,10);
 //            dstAddr.addrMode=afAddr16Bit;
 //            dstAddr.addr.shortAddr=AssoList[i].uiNwk_Addr;
 //            dstAddr.endPoint=1;

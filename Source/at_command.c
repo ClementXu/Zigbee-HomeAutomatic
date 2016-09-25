@@ -291,8 +291,8 @@ uint8 Factory(RawData Setting)
     uint8 startOptions =  ZCD_STARTOPT_CLEAR_STATE;///ZCD_STARTOPT_CLEAR_CONFIG |
     osal_nv_write( ZCD_NV_STARTUP_OPTION,0, sizeof(uint8), &startOptions );
     HalUARTWrite(HAL_UART_PORT_0,"+OK\r\n",strlen("+OK\r\n"));
-    //osal_start_timerEx( zha_project_TaskID, RESET_EVT,100);
-    osal_set_event( zha_project_TaskID,RESET_EVT);
+    osal_start_timerEx( zha_project_TaskID, RESET_EVT,100);
+    //osal_set_event( zha_project_TaskID,RESET_EVT);
 }
 
 /*
@@ -300,6 +300,8 @@ uint8 Factory(RawData Setting)
 */
 uint8 Reboot(RawData Setting)
 {
+    uint8 startOptions =  0;
+    osal_nv_write( ZCD_NV_STARTUP_OPTION,0, sizeof(uint8), &startOptions );
     HalUARTWrite(HAL_UART_PORT_0,"+OK\r\n",strlen("+OK\r\n"));
     osal_start_timerEx( zha_project_TaskID, RESET_EVT,100);
     //osal_set_event( zha_project_TaskID,RESET_EVT);
@@ -612,7 +614,7 @@ void AT_Init()
     AT_GROUP[ENUM_AT_LUMIN]="LUMIN";
     AT_GROUP[ENUM_AT_COSENSOR]="COSENSOR";
     AT_GROUP[ENUM_AT_GASSENSOR]="GASSENSOR";
-    AT_GROUP[ENUM_AT_GLASSSENSOR]="GLASSSENSOR";
+    AT_GROUP[ENUM_AT_GLASSSEN]="GLASSSEN";
     AT_GROUP[ENUM_AT_ZONECONTROL]="ZONECONTROL";
     AT_GROUP[ENUM_AT_LIGHTSWITCH]="LIGHTSWITCH";
     AT_GROUP[ENUM_AT_OUTLET]="OUTLET";    
@@ -630,6 +632,7 @@ void AT_Init()
     commandProcess[ENUM_AT_LUMIN] = Lumin;
     commandProcess[ENUM_AT_COSENSOR] = Cosensor;
     commandProcess[ENUM_AT_GASSENSOR] = Gassensor;
+    commandProcess[ENUM_AT_GLASSSEN] = Glasssen;
     //commandProcess[ENUM_AT_ZONECONTROL] = Zonecontrol;
     commandProcess[ENUM_AT_OUTLET] = Outlet;
     //commandProcess[ENUM_AT_LIGHTSWITCH] = Lightswitch;

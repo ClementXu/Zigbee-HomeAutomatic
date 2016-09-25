@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR C/C++ Compiler V9.30.1.3056 for 8051                13/Sep/2016  14:45:31
+# IAR C/C++ Compiler V9.30.1.3056 for 8051                25/Sep/2016  16:45:55
 # Copyright 2004-2015 IAR Systems AB.
 #
 #    Core               =  plain
@@ -206,7 +206,7 @@ C:\Texas Instruments\Z-Stack Home 1.2.2a.44539\Projects\zstack\ZMain\TI2530DB\On
      77          
      78          #if defined MAKE_CRC_SHDW
      79          #pragma location="CRC_SHDW"
-     80          const CODE uint16 _crcShdw = 0xFFFF;
+     80          const CODE uint16 _crcShdw = 0x6a17;
      81          #pragma required=_crcShdw
      82          
      83          #elif !defined MT_UBL_FUNC

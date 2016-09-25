@@ -1085,6 +1085,19 @@ static void zha_project_OnOffCB( uint8 cmd )
     }
   }
 
+    if ( zha_project_OnOff == LIGHT_ON )
+  {
+    HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
+    //sprintf(buf,"+OK=light,%x\r\n",zclZHAtest_OnOff);
+    //HalUARTWrite(HAL_UART_PORT_0,buf,13);
+  }
+  else
+  {
+    HalLedSet( HAL_LED_4, HAL_LED_MODE_OFF );
+    //sprintf(buf,"+OK=LIGHT,%x\r\n",zclZHAtest_OnOff);
+    //HalUARTWrite(HAL_UART_PORT_0,buf,13);
+   }
+  
 #if ZCL_LEVEL_CTRL
   //zha_project_DefaultMove( );
 #endif
