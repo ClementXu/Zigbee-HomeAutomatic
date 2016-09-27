@@ -151,10 +151,16 @@ uint16 CovertACSIIFOUR(uint8 *buf)
 void sendDatatoComputer(RawData *Setting)
 {
     uint8 i=0,j=0;
+    
+#if ZG_BUILD_COORDINATOR_TYPE 
     uint8 *format;
     format = osal_mem_alloc(200);
-    //char format[200];
+#endif
+#if ZG_BUILD_ENDDEVICE_TYPE
+    char format[200];
+#endif
     osal_memset(format,0,sizeof(format));
+ 
     char valueSign[3];
     if(Setting->length==0)
     {
@@ -191,7 +197,9 @@ void sendDatatoComputer(RawData *Setting)
     }
     strcat(format,"\r\n");     
     HalUARTWrite(HAL_UART_PORT_0,format,strlen(format));
+#if ZG_BUILD_COORDINATOR_TYPE     
     osal_mem_free(format);
+#endif
     osal_memset(&Setting,0,sizeof(Setting));
 }
 
@@ -419,7 +427,7 @@ uint8 PANID(RawData Setting)
     {
         osal_nv_write(ZCD_NV_PANID, 0, sizeof(uint16),  &panid);
         _NIB.nwkPanId = panid;
-        NLME_UpdateNV(0x01);
+        //NLME_UpdateNV(0x01);
     }
     else
     {

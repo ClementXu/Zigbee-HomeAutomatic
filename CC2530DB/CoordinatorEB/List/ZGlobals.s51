@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR C/C++ Compiler V9.30.1.3056 for 8051               25/Sep/2016  17:54:29
+// IAR C/C++ Compiler V9.30.1.3056 for 8051               28/Sep/2016  00:06:43
 // Copyright 2004-2015 IAR Systems AB.
 //
 //    Core               =  plain
@@ -1498,10 +1498,10 @@ zgItemTable:
 //  400   {
 //  401     ZCD_NV_ROUTE_DISCOVERY_TIME, sizeof(zgRouteDiscoveryTime), &zgRouteDiscoveryTime
 //  402   },
-//  403 //#ifndef NONWK
-//  404   {
-//  405     ZCD_NV_PANID, sizeof(zgConfigPANID), &zgConfigPANID
-//  406   },
+//  403   {
+//  404     ZCD_NV_PANID, sizeof(zgConfigPANID), &zgConfigPANID
+//  405   },
+//  406 #ifndef NONWK
 //  407   {
 //  408     ZCD_NV_PRECFGKEYS_ENABLE, sizeof(zgPreConfigKeys), &zgPreConfigKeys
 //  409   },
@@ -1520,7 +1520,7 @@ zgItemTable:
 //  422   {
 //  423     ZCD_NV_APS_LINK_KEY_TYPE, sizeof(zgApsLinkKeyType), &zgApsLinkKeyType
 //  424   },
-//  425 //#endif // NONWK
+//  425 #endif // NONWK
 //  426   {
 //  427     ZCD_NV_APS_FRAME_RETRIES, sizeof(zgApscMaxFrameRetries), &zgApscMaxFrameRetries
 //  428   },

@@ -827,7 +827,7 @@ void _GetOnlineDeveice()
                     j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d",buf,"light",time,DeviceStatus[i].status[0]);
                     break; 
                 case level:
-                    lightlevel = DeviceStatus[i].status[1]/2.55;
+                    lightlevel = DeviceStatus[i].status[1];
                     j += sprintf(sendBuffer+j+k,"%s,%s,%d,%d,%d",buf,"level",time,DeviceStatus[i].status[0],lightlevel);
                     break; 
                 case colortem: 

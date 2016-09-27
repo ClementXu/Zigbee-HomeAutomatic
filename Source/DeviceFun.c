@@ -66,7 +66,7 @@ uint8 _LeaveNet(uint8 *p)
     //#NLME_LeaveReq_t req;
     req.extAddr = NULL;
     req.removeChildren = FALSE;
-    req.rejoin         = TRUE;
+    req.rejoin         = FALSE;
     req.silent         = FALSE;
     if(NLME_LeaveReq(&req)==ZSuccess)
     {
@@ -130,7 +130,8 @@ uint8 Light(RawData Setting)
     {
         HalLedSet( HAL_LED_4, HAL_LED_MODE_OFF );
     }  
-    return 1;
+    osal_mem_free( pReportCmd );
+    //return 1;
 }
 
 /*
@@ -146,14 +147,16 @@ uint8 Level(RawData Setting)
     DstAddr.addr.shortAddr = 0;
     pReportCmd = osal_mem_alloc( sizeof(zclReportCmd_t) + sizeof(zclReport_t) );
     sendData[0] = zha_project_OnOff;
-    sendData[1] = zha_project_Level_to_Level/2.56;
+    sendData[1] = zha_project_Level_to_Level;
+    //sendData[1] = zha_project_Level_to_Level/2.56;
     Setting.data[0] =&sendData[0];
     Setting.data[1] =&sendData[1];
     Setting.length = 2;
     Setting.type = VALUE_D;
     AnaDataProcess(&Setting);
     zha_project_OnOff = sendData[0];
-    zha_project_Level_to_Level = sendData[1]*2.56;
+    zha_project_Level_to_Level = sendData[1];
+    //zha_project_Level_to_Level = sendData[1]*2.56;
     if(Setting.RecSign == 1)
     {
         pReportCmd->numAttr = 1;
@@ -174,7 +177,8 @@ uint8 Level(RawData Setting)
                    pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ ); 
     }
     Setting.RecSign = 0;
-    return 1;
+    osal_mem_free( pReportCmd );
+    //return 1;
 }
 
 /*
@@ -208,6 +212,7 @@ uint8 Pir(RawData Setting)
                        pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ );  
     }
     Setting.RecSign = 0;
+    osal_mem_free( pReportCmd );
     return 1;
 }
 
@@ -281,7 +286,8 @@ uint8 Temp(RawData Setting)
         zcl_SendReportCmd( 1, &DstAddr,
                        ZCL_CLUSTER_ID_MS_TEMPERATURE_MEASUREMENT,
                        pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ ); 
-    }        
+    }       
+    osal_mem_free( pReportCmd );
 }
 
 /*
@@ -297,7 +303,7 @@ uint8 Colortem(RawData Setting)
     DstAddr.addr.shortAddr = 0;
     pReportCmd = osal_mem_alloc( sizeof(zclReportCmd_t) + sizeof(zclReport_t) );
     sendData[0] = zha_project_OnOff;
-    sendData[1] = zha_project_Level_to_Level/2.56;
+    sendData[1] = zha_project_Level_to_Level;
     Setting.data[0] =&sendData[0];
     Setting.data[1] =&sendData[1];
     Setting.data[2] =(uint32 *)&zha_project_Light_Color_Status;
@@ -305,7 +311,7 @@ uint8 Colortem(RawData Setting)
     Setting.type = VALUE_D;
     AnaDataProcess(&Setting);
     zha_project_OnOff = sendData[0];
-    zha_project_Level_to_Level = sendData[1]*2.56;
+    zha_project_Level_to_Level = sendData[1];
     
     if(Setting.RecSign == 1)
     {
@@ -336,6 +342,7 @@ uint8 Colortem(RawData Setting)
                            ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL,
                            pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ ); 
     }
+    osal_mem_free( pReportCmd );
     return 1;
 }
 
@@ -402,6 +409,7 @@ uint8 Humility(RawData Setting)
                        ZCL_CLUSTER_ID_MS_RELATIVE_HUMIDITY,
                        pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ );
     }  
+    osal_mem_free( pReportCmd );
 }
 
 /*
@@ -435,6 +443,7 @@ uint8 Doorsen(RawData Setting)
                        pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ );  
     }
     Setting.RecSign = 0;
+    osal_mem_free( pReportCmd );
     return 1;  
 }  
   
@@ -489,6 +498,7 @@ uint8 Smoke(RawData Setting)
                        pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ );  
     }
     Setting.RecSign = 0;
+    osal_mem_free( pReportCmd );
     return 1; 
 }
 
@@ -497,10 +507,30 @@ uint8 Smoke(RawData Setting)
 */
 uint8 Lumin(RawData Setting)
 {
+    afAddrType_t dstAddr;
+    zclReportCmd_t *pReportCmd;
+    pReportCmd = osal_mem_alloc( sizeof(zclReportCmd_t) + sizeof(zclReport_t) );
+    dstAddr.addrMode=afAddr16Bit;
+    dstAddr.addr.shortAddr=0;
+    dstAddr.endPoint=1;  
+    uint32 data[4];
     Setting.data[0] =(uint32 *)&zha_project_Illumiance_Value;
     Setting.length = 1;
     Setting.type = VALUE_D;
     AnaDataProcess(&Setting);    
+    if(Setting.RecSign == 1)
+    {
+    pReportCmd->numAttr = 1;
+                pReportCmd->attrList[0].attrID = ATTRID_MS_ILLUMINANCE_MEASURED_VALUE;
+                pReportCmd->attrList[0].dataType = ZCL_DATATYPE_UINT16;
+                pReportCmd->attrList[0].attrData = (void *)(&zha_project_Illumiance_Value);
+                zcl_SendReportCmd( 1, &dstAddr,
+                               ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT,
+                               pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ ); 
+    }
+    Setting.RecSign = 0;
+    osal_mem_free( pReportCmd );
+    //return 1;     
 }
 
 /*
@@ -534,6 +564,7 @@ uint8 Watersen(RawData Setting)
                        pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ );  
     }
     Setting.RecSign = 0;
+    osal_mem_free( pReportCmd );
     return 1;    
 }
 
@@ -568,6 +599,7 @@ uint8 Cosensor(RawData Setting)
                        pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ );  
     }
     Setting.RecSign = 0;
+    osal_mem_free( pReportCmd );
     return 1;     
 }
 
@@ -602,6 +634,7 @@ uint8 Gassensor(RawData Setting)
                        pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ );  
     }
     Setting.RecSign = 0;
+    osal_mem_free( pReportCmd );
     return 1;      
 }
 
@@ -636,6 +669,7 @@ uint8 Glasssen(RawData Setting)
                        pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ );  
     }
     Setting.RecSign = 0;
+    osal_mem_free( pReportCmd );
     return 1;
 }
 
@@ -668,6 +702,7 @@ uint8 Outlet(RawData Setting)
                            ZCL_CLUSTER_ID_GEN_ON_OFF,
                            pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, seqnum++ );     
     }
+    osal_mem_free( pReportCmd );
     return 1;
 }
 
